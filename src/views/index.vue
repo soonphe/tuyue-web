@@ -9,7 +9,7 @@
 (1,10)
 <script>
 import axios from 'axios'
-import { getAdvertList } from '../api/server.js'
+import { advertGetList } from '../api/server.js'
 /* 1.引入组件 */
 import FooterNav from '../components/common/Footer.vue'
 
@@ -29,7 +29,7 @@ export default {
       // 测试请求携带参数
       let pageNum=1
       let pageSize=2
-      getAdvertList({pageNum, pageSize}).then(res => {
+      advertGetList({pageNum, pageSize}).then(res => {
         console.log(res)
         // if (res.resultCode === 200) {
         //   // this.ads = res.result
