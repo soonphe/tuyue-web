@@ -28,9 +28,9 @@ const http = axios.create({
 http.interceptors.request.use(
   req => {
     // 判断是否存在token
-    if (store.state.Login.token) {
+    if (store.state.Login.user.token) {
       // config.headers.Authorization = store.state.Login.token
-      req.headers.common['X-Authorization'] = `Bearer ${store.state.Login.token}`
+      req.headers.common['X-Authorization'] = `Bearer ${store.state.Login.user.token}`
       req.headers.common['X-Requester'] = 'pc'
     }
     return req

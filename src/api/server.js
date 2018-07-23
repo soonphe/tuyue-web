@@ -31,7 +31,7 @@ export const sysMenuGetMenuListByRoleId = params => api.get('/sysMenu/getMenuLis
 /**
  * 广告
  */
-export const advertGetList = params => api.get('/advert/getList', params)
-// export const advertAdd = params => post('/advert/add', params)
-// export const advertDelete = params => post('/advert/delete', params)
-// export const advertUpdate = params => post('/advert/update', params)
+export const advertGetList = params => api.get('/advertType/getList', params)
+// export const advertAdd = params => post('/advertType/add', params)
+// export const advertDelete = params => post('/advertType/delete', params)
+// export const advertUpdate = params => post('/advertType/update', params)

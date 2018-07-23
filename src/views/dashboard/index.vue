@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" type="text/scss" scoped>
 .dashboard {
   &-container {
     margin: 30px;

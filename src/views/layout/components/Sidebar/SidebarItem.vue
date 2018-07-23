@@ -1,7 +1,7 @@
 <template>
   <div class="menu-wrapper">
     <template v-if="!item.subs">
-      <el-menu-item :index="item.url" :class="{'submenu-title-noDropdown':!isNest}">
+      <el-menu-item :index="basePath" :class="{'submenu-title-noDropdown':!isNest}">
         <i class="el-icon-info"></i>
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
@@ -14,7 +14,7 @@
         </template>
         <template v-for="child in item.subs">
           <el-menu-item :index="child.url">
-            <i class="el-icon-menu"></i>
+            <!--<i class="el-icon-menu"></i>-->
             <span slot="title">{{child.name}}</span>
           </el-menu-item>
         </template>

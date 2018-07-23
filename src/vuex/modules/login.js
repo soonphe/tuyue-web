@@ -6,9 +6,9 @@
 // 模块：内部的mutation和getter接收的第一个参数是模块的局部状态对象
 const state = {
   // token状态
-  token: '',
+  user: '',
   // 其他数据Array
-  items: []
+  menu: ''
 }
 
 // actions类似于mutation，Action 提交的是 mutation，而不是直接变更状态。Action 可以包含任意异步操作
@@ -28,10 +28,14 @@ const actions = {
     //   }, 1000)
     // })
   },
-  saveMenus:
-    ({commit}, payload) => {
-      commit('SAVEMENUS', payload)
-    }
+  saveMenus: ({commit}, payload) => {
+    commit('SAVEMENUS', payload)
+  },
+  // 用户登出
+  logout: ({commit}, payload) => {
+    commit('SAVELOGIN', payload)
+    commit('SAVEMENUS', payload)
+  }
 }
 
 // 更改store的状态的唯一方法就是提交mutation，类似于事件
@@ -42,13 +46,12 @@ const mutations = {
   // payload：store.commit 传入额外的参数，即 mutation 的 载荷
   // 保存登录token
   SAVELOGIN: (state, payload) => {
-    state.token = payload.token
+    state.user = payload.token
   },
   // 保存登录菜单list
-  SAVEMENUS:
-    (state, payload) => {
-      state.items = payload
-    }
+  SAVEMENUS: (state, payload) => {
+    state.menu = payload
+  }
 }
 
 // 处理store 中的 state 中派生出一些状态，例如对列表进行过滤并计数
@@ -58,7 +61,7 @@ const mutations = {
 //   }
 // }
 const getters = {
-  getItems: state => state.items
+  getMenu: state => state.menu
 }
 
 // 系统可以有多个export，但只有一个default输出

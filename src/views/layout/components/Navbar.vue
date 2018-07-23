@@ -67,16 +67,13 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" type="text/scss" scoped>
 .navbar {
   height: 50px;
   line-height: 50px;
   border-radius: 0px !important;
   .hamburger-container {
-    /*line-height: 58px;*/
-    line-height: 33%;
-    vertical-align: middle;
-    text-align: center;
+    line-height: 45px;
     height: 50px;
     float: left;
     padding: 0 10px;
