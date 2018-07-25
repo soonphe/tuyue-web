@@ -6,7 +6,7 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
 import { getStore } from '@/utils/local' // 验权
 
-const whiteList = [ '/login'] // 不重定向白名单
+const whiteList = ['/login'] // 不重定向白名单
 /**
  * 钩子函数：在跳转之前执行
  * 判断用户是否登录——是否跳转登录界面
@@ -15,8 +15,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getStore('token')) {
     if (to.path === '/login') {
-      next({ path: '/login' })
-      // next({ path: '/' })
+      next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       // if (store.state.Login.user) {

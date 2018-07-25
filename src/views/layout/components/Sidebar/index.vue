@@ -30,9 +30,9 @@ import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
   computed: {
-    onRoutes() {
-      return this.$route.path.replace('/', '');
-    },
+    // onRoutes() {
+    //   return this.$route.path.replace('/', '');
+    // },
     ...mapState({
       menu_: state => state.Login.menu,
       _sidebar:state => state.App.sidebar

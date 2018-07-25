@@ -14,7 +14,7 @@
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">退出</span>
+          <span @click="loginOut" style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -26,6 +26,7 @@ import { mapState } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import {mapActions} from 'vuex'
+import { setStore,removeStore } from '@/utils/local' // 验权
 
 export default {
   components: {
@@ -52,13 +53,18 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["ToggleSideBar", 'LogOut']),
+    ...mapActions(["ToggleSideBar", 'logout',"saveLogin"]),
     toggleSideBar() {
       this.ToggleSideBar();
       // this.$store.dispatch('ToggleSideBar')
     },
-    logout() {
-      this.LogOut()
+    loginOut() {
+      this.logout('')
+      //清除localStore中保存的token
+      removeStore("token")
+      //清除store用户信息
+      this.saveLogin("")
+      this.$router.push({path: '/login'})
       // this.$store.dispatch('LogOut').then(() => {
       //   location.reload() // 为了重新实例化vue-router对象 避免bug
       // })

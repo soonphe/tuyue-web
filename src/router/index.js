@@ -12,7 +12,7 @@ Vue.use(Router)
 // export default new Router({
 const router = new Router({
   // 定义基础路径
-  base: '/portal/',
+  base: '/dist/',
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: [
