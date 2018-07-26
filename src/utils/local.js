@@ -1,15 +1,3 @@
-export const picLocation = '/api/bk/uploadPicture'
-export const movieLocation = '/api/bk/uploadMovie'
-// export const pic_location = 'https://www.yuwubao.cn/tide/bk/uploadPicture'
-// export const pic_location = 'http://192.168.1.6:8080/tide/bk/uploadPicture'
-// export const pic_location = 'http://47.98.121.127/tide/bk/uploadPicture'
-// export const movie_location = 'http://47.98.121.127/tide/bk/uploadMovie'
-// export const movie_location = 'http://192.168.1.6:8080/tide/bk/uploadMovie'
-// export const movie_location = 'https://www.yuwubao.cn/tide/bk/uploadMovie'
-// export const pic_location = 'http://47.93.158.24:8081/tide/bk/uploadPicture'
-// export const movie_loadtion = '/api/bk/uploadMovie'
-// export const movie_loadtion = 'http://47.93.158.24:8081/tide/bk/uploadMovie'
-
 /**
  * localStorage存入数据
  * @param name

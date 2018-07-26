@@ -49,7 +49,7 @@
   import {isvalidUsername} from '@/utils/validate'
 
   export default {
-    name: 'login',
+    // name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!isvalidUsername(value)) {
@@ -59,7 +59,7 @@
         }
       };
       const validatePass = (rule, value, callback) => {
-        if (value.length < 5) {
+        if (!value || value.length < 5) {
           callback(new Error('密码不能小于5位'))
         } else {
           callback()
@@ -72,11 +72,9 @@
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
-          password: [{required: true, trigger: 'blur', validator: validatePass}]
+          password: [{required: true, trigger: 'blur', validator: validatePass}],
+          checkCode: [{required: true, trigger: 'blur', message: '请输入验证码'}]
         },
-        checkCode: [
-          {required: true, message: '请输入验证码', trigger: 'blur'}
-        ],
         loading: false,
         pwdType: 'password',
         check_code: "",
@@ -149,7 +147,7 @@
             })
           } else {
             this.createCode()
-            console.log('error submit!!')
+            console.log('param error submit!!')
             return false
           }
         })

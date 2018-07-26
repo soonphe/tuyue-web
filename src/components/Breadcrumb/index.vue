@@ -26,10 +26,13 @@ export default {
   },
   methods: {
     getBreadcrumb() {
+      // 获取父子级路径
       let matched = this.$route.matched.filter(item => item.name)
+      // 获取父路径
       const first = matched[0]
-      if (first && first.name !== 'dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+      // 判断是否为首页——是则不添加控制台连接，否则添加
+      if (first && first.name !== 'Dashboard') {
+        matched = [{ path: '/dashboard', meta: { title: '控制台' }}].concat(matched)
       }
       this.levelList = matched
     }
@@ -37,7 +40,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" type="text/scss" scoped>
   .app-breadcrumb.el-breadcrumb {
     display: inline-block;
     font-size: 14px;

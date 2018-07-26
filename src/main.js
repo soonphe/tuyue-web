@@ -31,7 +31,10 @@ Vue.config.productionTip = false
 /**
  * 配置ElementUI界面与富文本编辑器
  */
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, {
+  size: 'medium' // set element-ui default size
+
+})
 Vue.use(VueQuillEditor, {
   'toolbar': [{
     'font': [true, '宋体']

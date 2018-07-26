@@ -1,3 +1,9 @@
+/**
+ * 日期格式化
+ * @param date
+ * @param fmt
+ * @returns {*}
+ */
 export const myformatDate = (date, fmt) => {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
@@ -17,6 +23,7 @@ export const myformatDate = (date, fmt) => {
   }
   return fmt
 }
+
 const padLeftZero = (str) => {
   return ('00' + str).substring(str.length)
 }

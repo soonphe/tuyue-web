@@ -1,7 +1,8 @@
 <template>
   <div class="menu-wrapper">
     <template v-if="!item.subs">
-      <el-menu-item :index="basePath" :class="{'submenu-title-noDropdown':!isNest}">
+      <el-menu-item :index="basePath.substring(6)" :class="{'submenu-title-noDropdown':!isNest}">
+        <!--<i class="icons(basePath.substring(6))||el-icon-info"></i>-->
         <i class="el-icon-info"></i>
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
@@ -13,7 +14,7 @@
           <span slot="title">{{item.name}}</span>
         </template>
         <template v-for="child in item.subs">
-          <el-menu-item :index="child.url">
+          <el-menu-item :index="child.url.substring(6)">
             <!--<i class="el-icon-menu"></i>-->
             <span slot="title">{{child.name}}</span>
           </el-menu-item>
@@ -50,6 +51,14 @@
       }
     },
     methods: {
+      icons(url) {
+        let icon = this.$route.filter(item => {
+            if (item.path == url.substring(url.indexOf("/")+1, url.lastIndexOf("/"))) {
+              return item.meta.icon
+            }
+          }
+        )
+      },
       hasOneShowingChild(children) {
         const showingChildren = children.filter(item => {
           if (item.hidden) {

@@ -25,36 +25,119 @@ const router = new Router({
       redirect: '/dashboard',
       name: 'Dashboard',
       hidden: true,
+      meta: { title: '控制台', icon: 'el-icon-info' },
       children: [
         {
           path: 'dashboard',
           component: () => import('@/views/dashboard/index')
-        },
-        {
-          path: 'portal/advertType/index',
-          name: '广告类型管理',
-          component: () => import('@/views/advertType/index')
-        }]
+        }
+      ]
     },
-    // {
-    //   path: '/login', /* 无路径时展示 */
-    //   name: 'login',
-    //   component: () => import('@/views/Login') // 首页Index.vue路由配置
-    // },
     {
-      path: '/home',
-      name: 'home',
-      component: resolve => require(['@/views/Home.vue'], resolve),
+      path: '/version',
+      component: Layout,
+      redirect: '/index',
+      name: 'version',
+      meta: { title: '版本管理', icon: 'el-icon-info' },
+      children: [{
+        path: 'index',
+        component: () => import('@/views/dashboard/index')
+      }]
+    },
+    {
+      path: '/push',
+      component: Layout,
+      redirect: '/index',
+      name: 'push',
+      meta: { title: '推送管理', icon: 'el-icon-info' },
+      children: [{
+        path: 'index',
+        component: () => import('@/views/dashboard/index')
+      }]
+    },
+    {
+      path: '/user',
+      component: Layout,
+      redirect: '/index',
+      name: 'user',
+      meta: { title: '用户管理', icon: 'el-icon-info' },
+      children: [{
+        path: 'index',
+        component: () => import('@/views/dashboard/index')
+      }]
+    },
+    {
+      path: '/stats',
+      component: Layout,
+      redirect: '/stats/unlock',
+      name: 'stats',
+      meta: { title: '统计管理', icon: 'el-icon-goods' },
       children: [
         {
-          path: '/ads',
-          name: '广告位',
-          component: resolve => require(['@/views/Index.vue'], resolve)
+          path: 'unlock',
+          name: 'unlock',
+          component: () => import('@/views/advert/index'),
+          meta: { title: '解锁统计', icon: 'el-icon-picture-outline' }
         },
         {
-          path: '/openPad',
-          name: '开机统计',
-          component: resolve => require(['@/views/Index.vue'], resolve)
+          path: 'stay',
+          name: 'stay',
+          component: () => import('@/views/advert/index'),
+          meta: { title: '板块停留时长', icon: 'el-icon-picture-outline' }
+        },
+        {
+          path: 'click',
+          name: 'click',
+          component: () => import('@/views/advert/index'),
+          meta: { title: '模块点击次数', icon: 'el-icon-picture-outline' }
+        },
+        {
+          path: 'open',
+          name: 'open',
+          component: () => import('@/views/advert/index'),
+          meta: { title: '开机统计', icon: 'el-icon-picture-outline' }
+        }
+      ]
+    },
+    {
+      path: '/advertType',
+      component: Layout,
+      redirect: '/advertType/index',
+      name: 'advertType',
+      meta: { title: '广告管理', icon: 'el-icon-goods' },
+      children: [
+        {
+          path: 'index',
+          name: 'index',
+          component: () => import('@/views/advert/type/index'),
+          meta: { title: '广告类型', icon: 'el-icon-picture-outline' }
+        },
+        {
+          path: 'add',
+          name: 'add',
+          component: () => import('@/views/advert/type/add'),
+          meta: { title: '添加广告类型', icon: 'el-icon-picture-outline' }
+        }
+      ]
+    },
+    {
+      path: '/advert',
+      component: Layout,
+      redirect: '/advert/index',
+      name: 'advert',
+      meta: { title: '广告管理', icon: 'el-icon-goods' },
+      children: [
+        {
+          path: 'index',
+          name: 'index',
+          component: () => import('@/views/advert/index'),
+          meta: { title: '广告', icon: 'el-icon-picture-outline' }
+        },
+        {
+          path: 'add',
+          name: 'add',
+          component: () => import('@/views/advert/add'),
+          meta: { title: '添加广告', icon: 'el-icon-picture-outline' }
         }
       ]
     }
