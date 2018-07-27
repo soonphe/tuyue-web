@@ -108,13 +108,13 @@ const router = new Router({
       children: [
         {
           path: 'index',
-          name: 'index',
+          name: 'advertTypeIndex',
           component: () => import('@/views/advert/type/index'),
           meta: { title: '广告类型', icon: 'el-icon-picture-outline' }
         },
         {
           path: 'add',
-          name: 'add',
+          name: 'advertTypeAdd',
           component: () => import('@/views/advert/type/add'),
           meta: { title: '添加广告类型', icon: 'el-icon-picture-outline' }
         }
@@ -129,13 +129,13 @@ const router = new Router({
       children: [
         {
           path: 'index',
-          name: 'index',
+          name: 'advertIndex',
           component: () => import('@/views/advert/index'),
           meta: { title: '广告', icon: 'el-icon-picture-outline' }
         },
         {
           path: 'add',
-          name: 'add',
+          name: 'advertAdd',
           component: () => import('@/views/advert/add'),
           meta: { title: '添加广告', icon: 'el-icon-picture-outline' }
         }

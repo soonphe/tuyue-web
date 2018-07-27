@@ -1,15 +1,27 @@
 <template>
-
   <div class="app-container">
+    <div class="filter-container">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
+                :placeholder="$t('table.title')" v-model="listQuery.title"></el-input>
+      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.type"
+                 :placeholder="$t('table.type')">
+        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id">
+        </el-option>
+      </el-select>
+      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
+      </el-button>
+    </div>
+
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column label='序号' align="center" width="95">
+      <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
+      <el-table-column prop="type" label="类型" align="center"></el-table-column>
+      <el-table-column prop="title" label="标题" align="center"></el-table-column>
+      <el-table-column label="图片" align="center">
         <template slot-scope="scope">
-          {{scope.$index}}
+          <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="typeid" label="类型" align="center"></el-table-column>
-      <el-table-column prop="title" label="标题" align="center"></el-table-column>
       <el-table-column prop="sort" label="排序" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
@@ -24,25 +36,44 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div class="pagination-container">
+      <el-pagination background
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="listQuery.pageNum"
+                     :page-sizes="[10,20,30,50]"
+                     :page-size="listQuery.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
+      </el-pagination>
+    </div>
   </div>
-  <!--<div class="block">-->
-  <!--<span class="demonstration">大于 7 页时的效果</span>-->
-  <!--<el-pagination @current-change="handleCurrentChange"-->
-  <!--:current-page="page.number+1"-->
-  <!--layout="total,prev, pager, next,jumper"-->
-  <!--:total="totalElements">-->
-  <!--</el-pagination>-->
-  <!--</div>-->
 </template>
 
 <script>
-  import {advertGetList} from '@/api/server'
+  import {advertTypeGetList, advertGetList} from '@/api/server'
+  import waves from '@/directive/waves' // 水波纹指令
+  import {imageServer, pageSize} from '@/utils/global'
 
   export default {
+    // 定义局部指令
+    directives: {
+      waves
+    },
     data() {
       return {
         list: null,
-        listLoading: true
+        listLoading: true,
+        total: 0,
+        listQuery: {
+          pageNum: 1,
+          pageSize: pageSize,
+          title: undefined,
+          type: undefined
+        },
+        imageServer: imageServer,
+        typeList: ''
       }
     },
     filters: {
@@ -56,17 +87,51 @@
       }
     },
     created() {
-      this.fetchData()
+      this.getTypeData()
+      this.getList()
     },
     methods: {
-      fetchData() {
+      clearType() {
+        this.listQuery.type = undefined
+      },
+      getTypeData() {
+        advertTypeGetList()
+          .then(res => {
+            this.typeList = res.data
+          })
+      },
+      getList() {
         this.listLoading = true
-        advertGetList()
+        advertGetList(this.listQuery)
           .then(res => {
             this.list = res.data
+            this.total = parseInt(res.ext)
             this.listLoading = false
-          }).catch(() => {
-          this.loading = false
+            // 延迟进度条1.5秒
+            // setTimeout(() => {
+            //   this.listLoading = false
+            // }, 1.5 * 1000)
+          })
+      },
+      handleFilter() {
+        this.listQuery.pageNum = 1
+        this.getList()
+      },
+      handleSizeChange(val) {
+        this.listQuery.pageSize = val
+        this.getList()
+      },
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val
+        this.getList()
+      },
+      add() {
+        this.$router.push({
+          // path: '/advert/add'
+          // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
+          // path: ({path: '/advert/add', params: {typeList: this.typeList}})
+          // 通过路由名称跳转，携带参数
+          name: 'advertAdd', params: {typeList: this.typeList}
         })
       }
     }

@@ -8,7 +8,6 @@ import router from './router'
 // ElementUI
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 /* 转换ES6语法，应对某些浏览器不兼容 */
 import 'babel-polyfill'
 // vuex
@@ -20,6 +19,7 @@ import 'normalize.css'
 // js加密
 import JsEncrypt from 'jsencrypt/bin/jsencrypt'
 
+import i18n from './lang' // Internationalization
 import '@/styles/index.scss' // global css
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -32,8 +32,8 @@ Vue.config.productionTip = false
  * 配置ElementUI界面与富文本编辑器
  */
 Vue.use(ElementUI, {
-  size: 'medium' // set element-ui default size
-
+  size: 'medium', // set element-ui default size
+  i18n: (key, value) => i18n.t(key, value)
 })
 Vue.use(VueQuillEditor, {
   'toolbar': [{
@@ -49,6 +49,8 @@ new Vue({
   el: '#app', /* 定义作用范围就是index.html里的id为app的范围内 */
   store, /* 引入vuex */
   router, /* 引入路由 */
-  components: {App}, /* 给vue实例初始一个APP组件作为template 相当于默认组件 */
-  template: '<App/>' /* 注册引入的组建App.vue */
+  i18n,
+  render: h => h(App)
+  // components: {App}, /* 给vue实例初始一个APP组件作为template 相当于默认组件 */
+  // template: '<App/>' /* 注册引入的组建App.vue */
 })

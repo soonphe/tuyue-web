@@ -4,7 +4,7 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="addType" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column label='序号' align="center" width="95">
+      <el-table-column label='类型' align="center" width="95">
         <template slot-scope="scope">
           {{scope.$index}}
         </template>
@@ -57,15 +57,13 @@
           .then(res => {
             this.list = res.data
             this.listLoading = false
-          }).catch(() => {
-          this.loading = false
-        })
+          })
       },
       addType() {
         this.$router.push({
           path: '/advertType/add'
         })
-      },
+      }
     }
   }
 </script>

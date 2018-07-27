@@ -1,5 +1,4 @@
 import api from './index'
-/* 定义接口访问路径与参数，这里添加的/api/会被proxyTable匹配 */
 
 /**
  * 用户
