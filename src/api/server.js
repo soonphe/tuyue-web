@@ -1,6 +1,11 @@
 import api from './index'
 
 /**
+ * 公共
+ */
+export const upload = params => api.post('/common/upload', params)
+
+/**
  * 用户
  */
 export const login = params => api.post('/sysUser/login', params)

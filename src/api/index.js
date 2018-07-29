@@ -11,6 +11,7 @@ const http = axios.create({
   withCredentials: true,
   /* 配置请求头 */
   headers: {
+    // 'content-type': 'application/json',
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
   },
   transformRequest: [function (data) {
