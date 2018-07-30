@@ -1,7 +1,7 @@
 import api from './index'
 
 /**
- * 公共
+ * 公共——暂未使用
  */
 export const upload = params => api.post('/common/upload', params)
 
@@ -44,6 +44,6 @@ export const advertTypeUpdate = params => api.post('/advertType/update', params)
  * 广告
  */
 export const advertGetList = params => api.get('/advert/getList', params)
-export const advertAdd = params => api.post('/advert/add', params)
+export const advertAdd = params => api.put('/advert/add', params)
 export const advertDelete = params => api.post('/advert/delete', params)
 export const advertUpdate = params => api.post('/advert/update', params)

@@ -8,21 +8,20 @@ const http = axios.create({
   // baseURL: 'http://localhost:8080/',
   baseURL: process.env.API_ROOT,
   timeout: 5000,
-  withCredentials: true,
-  /* 配置请求头 */
-  headers: {
-    // 'content-type': 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-  },
-  transformRequest: [function (data) {
-    let newData = ''
-    for (let k in data) {
-      if (data.hasOwnProperty(k) === true) {
-        newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&'
-      }
-    }
-    return newData
-  }]
+  withCredentials: true
+  /* 配置请求头，axios默认上传json格式数据 */
+  // headers: {
+  //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+  // },
+  // transformRequest: [function (data) {
+  //   let newData = ''
+  //   for (let k in data) {
+  //     if (data.hasOwnProperty(k) === true) {
+  //       newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&'
+  //     }
+  //   }
+  //   return newData
+  // }]
 })
 
 /* 配置http请求拦截器——先header中添加header信息 */
@@ -105,14 +104,44 @@ http.interceptors.response.use(
  */
 function apiAxios (method, url, params) {
   return new Promise((resolve, reject) => {
-    http({
-      method: method,
-      url: url,
-      data: method === 'POST' || method === 'PUT' ? params : null,
-      params: method === 'GET' || method === 'DELETE' ? params : null
-    }).then(res => resolve(res),
+    let options
+    // post上传为form-data数据
+    if (method === 'POST') {
+      options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: qs.stringify(params),
+        // √——使用param会在地址栏拼接参数
+        // params: params,
+        // ×——默认使用data上传的仍然是json数据
+        // data: params,
+        url
+      }
+      // PUT上传json对象
+    } else if (method === 'PUT') {
+      options = {
+        method: 'POST',
+        data: params,
+        url
+      }
+    } else {
+      options = {
+        method: method,
+        params: params,
+        url
+      }
+    }
+    http(options).then(res => resolve(res),
       err => reject(err)
     )
+    // http({
+    //   method: method,
+    //   url: url,
+    //   data: method === 'POST' || method === 'PUT' ? params : null,
+    //   params: method === 'GET' || method === 'DELETE' ? params : null,
+    // }).then(res => resolve(res),
+    //   err => reject(err)
+    // )
   })
 }
 

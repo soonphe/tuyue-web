@@ -1,151 +1,172 @@
 <template>
-  <div class="app-container">
-    <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-      <el-form-item prop="typeid" label="广告类型">
-        <el-select v-model="form.type" placeholder="请选择类型">
-          <el-option v-for="item in this.$route.params.typeList" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="title" label="广告标题">
-        <el-input v-model="form.title"></el-input>
-      </el-form-item>
-      <el-form-item prop="picurl" label="封面图" >
-        <el-upload class="avatar-uploader"
-                   :action="uploadAction"
-                   :data="upLoadData"
-                   name="file"
-                   :show-file-list="false"
-                   :on-success="handleAvatarSuccess"
-                   :before-upload="beforeAvatarUpload"
-                   v-loading.fullscreen.lock="fullscreenLoading"
-                   ref="upload">
-          <img v-if="form.picurl" :src="imageServer+form.picurl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="广告内容" prop="content">
-        <quill-editor v-model="form.content" ref="myEdit"></quill-editor>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
-        <el-button @click="onCancel">取消</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <div>
+    <div class="app-container">
+      <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
+        <el-form-item prop="typeid" label="广告类型">
+          <el-select v-model="form.type" placeholder="请选择类型">
+            <el-option v-for="item in this.$route.params.typeList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="title" label="广告标题">
+          <el-input v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item prop="picurl" label="封面图">
+          <el-upload class="avatar-uploader"
+                     :action="uploadAction"
+                     :data="upLoadData"
+                     name="file"
+                     :show-file-list="false"
+                     :on-success="handleAvatarSuccess"
+                     :before-upload="beforeAvatarUpload"
+                     v-loading.fullscreen.lock="fullscreenLoading"
+                     ref="upload">
+            <img v-if="form.picurl" :src="imageServer+form.picurl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="广告内容">
+          <quill-editor v-model="form.content" ref="myEdit"></quill-editor>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
+          <el-button @click="onCancel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
+  </div>
 </template>
 
 <script>
-import { quillEditor } from 'vue-quill-editor'
-import {advertAdd} from '@/api/server'
-import {imageServer, uploadServer} from '@/utils/global'
+  import {upload} from 'vue-quill-editor'
+  import {advertAdd} from '@/api/server'
+  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+  import {onSuccess} from '../../utils/quill.js'
 
-export default {
-  data () {
-    return {
-      upLoadData: {
-        file_type: 'img'
+  export default {
+    created() {
+      if (process.env.NODE_ENV === 'development') {
+        // dev
+        this.uploadAction = localUploadServer
+      } else {
+        // build
+        this.uploadAction = uploadServer
+      }
+    },
+    data() {
+      return {
+        upLoadData: {
+          file_type: 'img'
+        },
+        uploadAction: '',
+        imageServer: imageServer,
+        form: {
+          type: '',
+          title: '',
+          picurl: '',
+          sort: '',
+          content: ''
+        },
+        formRules: {
+          type: [{required: true, trigger: 'blur', message: '请选择类型'}],
+          title: [{required: true, trigger: 'blur', message: '请输入标题'}],
+          picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
+          sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
+          content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
+        },
+        loading: false,
+        fullscreenLoading: false
+      }
+    },
+    methods: {
+      handleAvatarSuccess(res) {
+        this.form.picurl = res.data
+        this.fullscreenLoading = false
       },
-      uploadAction: uploadServer,
-      imageServer: imageServer,
-      form: {
-        type: '',
-        title: '',
-        picurl: '',
-        sort: '',
-        content: ''
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg'
+        const isLt2M = file.size / 1024 / 1024 < 100
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 100MB!')
+        }
+        this.fullscreenLoading = true
+        // return isJPG && isLt2M
+
+        // 利用beforeAvatarUpload上传文件——报错
+        // let fd = new FormData();
+        // fd.append('file',file);//传文件
+        // fd.append('file_type','img');//传其他参数
+        //
+        // upload(fd).then(function(res){
+        //   this.form.picurl = res.data
+        //   this.fullscreenLoading = false
+        // })
+
       },
-      formRules: {
-        type: [{required: true, trigger: 'blur', message: '请选择类型'}],
-        title: [{required: true, trigger: 'blur', message: '请输入标题'}],
-        picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
-        sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
-        content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
+      videoHandler(state) {
+        this.addRange = this.$refs.myEdit.quill.getSelection()
+        if (state) {
+          document.getElementById('imgInput').click()
+        }
+        this.uploadType = 'video'
       },
-      loading: false,
-      fullscreenLoading: false
-    }
-  },
-  methods: {
-    upload (file) {
-      this.fullscreenLoading = true
-    },
-    handleAvatarSuccess (res) {
-      this.form.picurl = res.data
-      this.fullscreenLoading = false
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 100
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 100MB!')
-      }
-      this.upload(file)
-      return isJPG && isLt2M
-    },
-    videoHandler (state) {
-      this.addRange = this.$refs.myEdit.quill.getSelection()
-      if (state) {
-        document.getElementById('imgInput').click()
-      }
-      this.uploadType = 'video'
-    },
-    imgHandler (state) {
-      this.addRange = this.$refs.myEdit.quill.getSelection()
-      if (state) {
-        document.getElementById('imgInput').click()
-      }
-      this.uploadType = 'image'
-    },
-    onSubmit () {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.loading = true
-          advertAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/advertType/index'
-              })
-            }).catch(() => {
+      imgHandler(state) {
+        this.addRange = this.$refs.myEdit.quill.getSelection()
+        if (state) {
+          document.getElementById('imgInput').click()
+        }
+        this.uploadType = 'image'
+      },
+      onSubmit() {
+        this.$refs.form.validate(valid => {
+          if (valid) {
+            this.loading = true
+            advertAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/advert/index'
+                })
+              }).catch(() => {
               this.loading = false
               this.$message({
                 message: '添加失败!',
                 type: 'warning'
               })
             })
-        } else {
-          this.loading = false
-          this.$message({
-            message: '请完善表单信息!',
-            type: 'warning'
-          })
-        }
-      })
-    },
-    onCancel () {
-      this.$message({
-        message: '取消添加!',
-        type: 'warning'
-      })
-    },
-    mounted () {
-      this.$refs.myEdit.quill.getModule('toolbar').addHandler('image', this.imgHandler),
-      this.$refs.myEdit.quill.getModule('toolbar').addHandler('video', this.videoHandler)
+          } else {
+            this.loading = false
+            this.$message({
+              message: '请完善表单信息!',
+              type: 'warning'
+            })
+          }
+        })
+      },
+      onCancel() {
+        this.$message({
+          message: '取消添加!',
+          type: 'warning'
+        })
+      },
+      mounted() {
+        this.$refs.myEdit.quill.getModule('toolbar').addHandler('image', this.imgHandler),
+          this.$refs.myEdit.quill.getModule('toolbar').addHandler('video', this.videoHandler)
+      }
     }
   }
-}
 </script>
 
 <style scoped>
   .line {
     text-align: center;
   }
+
   .avatar-uploader {
     width: 640px;
     height: 150px;
