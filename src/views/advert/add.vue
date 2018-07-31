@@ -2,31 +2,38 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="typeid" label="广告类型">
+        <el-form-item prop="type" label="广告类型">
           <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option v-for="item in this.$route.params.typeList" :key="item.id" :label="item.name" :value="item.id">
+            <el-option v-for="item in advertType" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="title" label="广告标题">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
+        <el-form-item prop="sort" label="排序">
+          <el-input v-model="form.sort"></el-input>
+        </el-form-item>
         <el-form-item prop="picurl" label="封面图">
           <el-upload class="avatar-uploader"
                      :action="uploadAction"
-                     :data="upLoadData"
+                     :data="uploadData"
                      name="file"
                      :show-file-list="false"
                      :on-success="handleAvatarSuccess"
                      :before-upload="beforeAvatarUpload"
-                     v-loading.fullscreen.lock="fullscreenLoading"
-                     ref="upload">
+                     v-loading.fullscreen.lock="fullscreenLoading">
             <img v-if="form.picurl" :src="imageServer+form.picurl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="广告内容">
-          <quill-editor v-model="form.content" ref="myEdit"></quill-editor>
+        <el-form-item label="广告内容" prop="content">
+          <div id="app">
+            <vue-editor id="editor"
+                        useCustomImageHandler
+                        @imageAdded="handleImageAdded" v-model="form.content">
+            </vue-editor>
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -39,13 +46,18 @@
 </template>
 
 <script>
-  import {upload} from 'vue-quill-editor'
-  import {advertAdd} from '@/api/server'
+  import axios from 'axios'
+  import {VueEditor, Quill} from 'vue2-editor'
+  import {upload, advertAdd} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
-  import {onSuccess} from '../../utils/quill.js'
+  import {mapState} from 'vuex'
 
   export default {
+    components: {
+      VueEditor
+    },
     created() {
+      // 判断是否为dev环境
       if (process.env.NODE_ENV === 'development') {
         // dev
         this.uploadAction = localUploadServer
@@ -53,26 +65,39 @@
         // build
         this.uploadAction = uploadServer
       }
+      // if (this.advert.length > 0) {
+      //   this.type = this.advert.type + ''
+      //   this.title = this.advert.title + ''
+      //   this.picurl = this.advert.picurl + ''
+      //   this.sort = this.advert.sort + ''
+      //   this.content = this.advert.content + ''
+      // }
+    },
+    computed: {
+      ...mapState({
+        form: state => state.Advert.advert,
+        advertType: state => state.Advert.advertType
+      })
     },
     data() {
       return {
-        upLoadData: {
+        uploadData: {
           file_type: 'img'
         },
         uploadAction: '',
         imageServer: imageServer,
-        form: {
-          type: '',
-          title: '',
-          picurl: '',
-          sort: '',
-          content: ''
-        },
+        // form: {
+        //   type: '',
+        //   title: '',
+        //   picurl: '',
+        //   sort: '',
+        //   content: ''
+        // },
         formRules: {
           type: [{required: true, trigger: 'blur', message: '请选择类型'}],
           title: [{required: true, trigger: 'blur', message: '请输入标题'}],
-          picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
           sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
+          picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
           content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
         },
         loading: false,
@@ -80,10 +105,6 @@
       }
     },
     methods: {
-      handleAvatarSuccess(res) {
-        this.form.picurl = res.data
-        this.fullscreenLoading = false
-      },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg'
         const isLt2M = file.size / 1024 / 1024 < 100
@@ -94,32 +115,28 @@
           this.$message.error('上传头像图片大小不能超过 100MB!')
         }
         this.fullscreenLoading = true
-        // return isJPG && isLt2M
-
-        // 利用beforeAvatarUpload上传文件——报错
-        // let fd = new FormData();
-        // fd.append('file',file);//传文件
-        // fd.append('file_type','img');//传其他参数
-        //
-        // upload(fd).then(function(res){
-        //   this.form.picurl = res.data
-        //   this.fullscreenLoading = false
-        // })
-
+        return isJPG && isLt2M
       },
-      videoHandler(state) {
-        this.addRange = this.$refs.myEdit.quill.getSelection()
-        if (state) {
-          document.getElementById('imgInput').click()
-        }
-        this.uploadType = 'video'
+      handleAvatarSuccess(res) {
+        this.form.picurl = res.data
+        this.fullscreenLoading = false
       },
-      imgHandler(state) {
-        this.addRange = this.$refs.myEdit.quill.getSelection()
-        if (state) {
-          document.getElementById('imgInput').click()
-        }
-        this.uploadType = 'image'
+      // 处理富文本图片上传
+      handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
+        var formData = new FormData();
+        formData.append('file', file)
+        formData.append('file_type', 'img')
+        axios({
+          url: this.uploadAction,
+          method: 'POST',
+          data: formData
+        }).then((result) => {
+          let url = result.data.data // Get url from response
+          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url);
+          resetUploader();
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       onSubmit() {
         this.$refs.form.validate(valid => {
@@ -153,10 +170,6 @@
           message: '取消添加!',
           type: 'warning'
         })
-      },
-      mounted() {
-        this.$refs.myEdit.quill.getModule('toolbar').addHandler('image', this.imgHandler),
-          this.$refs.myEdit.quill.getModule('toolbar').addHandler('video', this.videoHandler)
       }
     }
   }
@@ -168,8 +181,26 @@
   }
 
   .avatar-uploader {
-    width: 640px;
-    height: 150px;
+    width: 430px;
+    height: 320px;
     border: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .avatar {
+    width: 430px;
+    height: 320px;
+    display: block;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 140px;
+    line-height: 140px;
+    text-align: center;
   }
 </style>

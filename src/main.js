@@ -14,12 +14,8 @@ import 'babel-polyfill'
 import store from './vuex/index'
 // 富文本编辑器
 import VueQuillEditor from 'vue-quill-editor'
-// require styles
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 /* 提供跨浏览器一致性，相较于reset */
-import 'normalize.css'
+import 'normalize.css/normalize.css'
 // js加密
 import JsEncrypt from 'jsencrypt/bin/jsencrypt'
 

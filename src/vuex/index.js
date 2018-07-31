@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Login from './modules/login'
 import App from './modules/app'
-import Ads from './modules/ads'
+import Advert from './modules/advert'
 // import getters from './getters'
 
 // 使用Vuex
@@ -13,7 +13,7 @@ export default new Vuex.Store({
   modules: {
     Login,
     App,
-    Ads
+    Advert
   }
   // ,
   // getters

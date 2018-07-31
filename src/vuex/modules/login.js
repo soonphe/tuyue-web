@@ -5,8 +5,8 @@
 // store.commit 方法触发状态变更
 // 模块：内部的mutation和getter接收的第一个参数是模块的局部状态对象
 const state = {
-  // token状态
-  user: '',
+  // 用户对象——包括token状态等信息
+  user: {},
   // 其他数据Array
   menu: ''
 }

@@ -15,7 +15,7 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="type" label="类型" align="center"></el-table-column>
+      <el-table-column prop="type" label="类型" align="center" :formatter = "typeFormat"></el-table-column>
       <el-table-column prop="title" label="标题" align="center"></el-table-column>
       <el-table-column label="图片" align="center">
         <template slot-scope="scope">
@@ -52,9 +52,10 @@
 </template>
 
 <script>
-  import {advertTypeGetList, advertGetList} from '@/api/server'
+  import {advertTypeGetList, advertGetList,advertDelete} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
+  import {mapActions} from 'vuex'
 
   export default {
     // 定义局部指令
@@ -73,7 +74,7 @@
           type: undefined
         },
         imageServer: imageServer,
-        typeList: ''
+        typeList: []
       }
     },
     filters: {
@@ -91,6 +92,16 @@
       this.getList()
     },
     methods: {
+      ...mapActions(['saveAdvert', 'saveAdvertType','clearAdvert']),
+      typeFormat(row, column) {
+        this.typeList.forEach((item,index)=>{
+          console.log(row.type+'___'+item.id);
+          if (row.type === item.id) {
+            console.log('equals___'+item.name);
+            return item.name
+          }
+        })
+      },
       clearType() {
         this.listQuery.type = undefined
       },
@@ -98,6 +109,7 @@
         advertTypeGetList()
           .then(res => {
             this.typeList = res.data
+            this.saveAdvertType(this.typeList)
           })
       },
       getList() {
@@ -126,13 +138,48 @@
         this.getList()
       },
       add() {
+        // 清除store中存储的advert数据
+        this.clearAdvert()
         this.$router.push({
-          // path: '/advert/add'
+          /**
+           * 页面间传值 ①使用路由带参数 ②使用vuex
+           */
+          path: '/advert/add'
           // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
-          // path: ({path: '/advert/add', params: {typeList: this.typeList}})
-          // 通过路由名称跳转，携带参数
-          name: 'advertAdd', params: {typeList: this.typeList}
+          // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
+          // 通过路由名称跳转，携带参数（已成功）
+          // name: 'advertAdd', params: {typeList: this.typeList}
         })
+      },
+      put(row) {
+        this.saveAdvert(row)
+        this.$router.push({
+          path: '/advert/add'
+        })
+      },
+      del(id) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          advertDelete({ id })
+            .then(res => {
+              this.$message.success('删除成功')
+              // 两种message写法
+              // this.$message({
+              //   type: 'success',
+              //   message: '删除成功!'
+              // });
+              this.getList()
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       }
     }
   }
