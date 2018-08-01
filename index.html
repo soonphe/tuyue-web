@@ -2,8 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0"> <!-- 面向web端的网页开发 -->
-    <title>vue_tuyue</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>途悦</title>
   </head>
   <body>
     <div id="app"></div>  <!-- 必须挂载Vue实例对象"#app" -->
@@ -11,16 +13,16 @@
     <router-view></router-view>  <!-- 这里是展示来自路由页面数据的 -->
   </body>
 
-  <script type="text/javascript">
-    /* 因为我们后面用的是rem布局，所以这里做下处理，根据不用设备分辨率更改跟字体大小。 rem相关布局[请参考](http://www.jianshu.com/p/65f80d4b44bb)*/
-    (function(win,doc){
-      change();
-      function change(){
-        doc.documentElement.style.fontSize = doc.documentElement.clientWidth *20/320+'px';
-      }
-      win.addEventListener('resize',change,false);
-      win.addEventListener('orientationchange',change,false);  /* 这个是移动端设备横屏、竖屏转换时触发的事件处理函数 */
-    })(window,document);
-  </script>
+  <!--<script type="text/javascript">-->
+    <!--/* 因为我们后面用的是rem布局，所以这里做下处理，根据不用设备分辨率更改跟字体大小。 rem相关布局[请参考](http://www.jianshu.com/p/65f80d4b44bb)*/-->
+    <!--(function(win,doc){-->
+      <!--change();-->
+      <!--function change(){-->
+        <!--doc.documentElement.style.fontSize = doc.documentElement.clientWidth *20/320+'px';-->
+      <!--}-->
+      <!--win.addEventListener('resize',change,false);-->
+      <!--win.addEventListener('orientationchange',change,false);  /* 这个是移动端设备横屏、竖屏转换时触发的事件处理函数 */-->
+    <!--})(window,document);-->
+  <!--</script>-->
 
 </html>

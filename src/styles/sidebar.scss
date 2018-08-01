@@ -56,17 +56,13 @@
       padding-left: 10px !important;
       position: relative;
       .el-tooltip {
-        /* 2018-07-27 */
-        //padding: 0 10px !important;
-        padding: 0 5px !important;
+        padding: 0 10px !important;
       }
     }
     .el-submenu {
       overflow: hidden;
       &>.el-submenu__title {
-        /* 2018-07-27 */
-        //padding-left: 10px !important;
-        padding-left: 5px !important;
+        padding-left: 10px !important;
         .el-submenu__icon-arrow {
           display: none;
         }

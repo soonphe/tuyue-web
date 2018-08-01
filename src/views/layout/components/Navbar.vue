@@ -2,116 +2,147 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            首页
+    <div class="right-menu">
+      <!--<error-log class="errLog-container right-menu-item"></error-log>-->
+
+      <el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
+        <screenfull class="screenfull right-menu-item"></screenfull>
+      </el-tooltip>
+
+      <el-dropdown class="avatar-container" trigger="click">
+        <div class="avatar-wrapper">
+          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+          <i class="el-icon-caret-bottom"></i>
+        </div>
+        <el-dropdown-menu class="user-dropdown" slot="dropdown">
+          <router-link class="inlineBlock" to="/">
+            <el-dropdown-item>
+              首页
+            </el-dropdown-item>
+          </router-link>
+          <el-dropdown-item divided>
+            <span @click="loginOut" style="display:block;">退出</span>
           </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
-          <span @click="loginOut" style="display:block;">退出</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </el-menu>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import {mapActions} from 'vuex'
-import { setStore,removeStore } from '@/utils/local' // 验权
+  import {mapState} from 'vuex'
+  import Breadcrumb from '@/components/Breadcrumb'
+  import Hamburger from '@/components/Hamburger'
+  import ErrorLog from '@/components/ErrorLog'
+  import Screenfull from '@/components/Screenfull'
 
-export default {
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
-  computed: {
-    // ...mapGetters([
-    //   'sidebar',
-    //   'avatar'
-    // ])
-    ...mapState({
-      _sidebar:state => state.App.sidebar,
+  import {mapActions} from 'vuex'
+  import {setStore, removeStore} from '@/utils/local' // 验权
 
-    }),
-    avatar(){
-      return 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
+  export default {
+    components: {
+      Breadcrumb,
+      Hamburger,
+      Screenfull
     },
-    sidebar() {
-      return this._sidebar
+    computed: {
+      // ...mapGetters([
+      //   'sidebar',
+      //   'avatar'
+      // ])
+      ...mapState({
+        _sidebar: state => state.App.sidebar,
+
+      }),
+      avatar() {
+        return 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
+      },
+      sidebar() {
+        return this._sidebar
+      },
+      device() {
+        return this._device
+      },
     },
-    device() {
-      return this._device
-    },
-  },
-  methods: {
-    ...mapActions(["ToggleSideBar", 'logout',"saveLogin"]),
-    toggleSideBar() {
-      this.ToggleSideBar();
-      // this.$store.dispatch('ToggleSideBar')
-    },
-    loginOut() {
-      this.logout('')
-      //清除localStore中保存的token
-      removeStore("token")
-      //清除store用户信息
-      this.saveLogin("")
-      this.$router.push({path: '/login'})
-      // this.$store.dispatch('LogOut').then(() => {
-      //   location.reload() // 为了重新实例化vue-router对象 避免bug
-      // })
+    methods: {
+      ...mapActions(["ToggleSideBar", 'logout', "saveLogin"]),
+      toggleSideBar() {
+        this.ToggleSideBar();
+        // this.$store.dispatch('ToggleSideBar')
+      },
+      loginOut() {
+        this.logout('')
+        //清除localStore中保存的token
+        removeStore("token")
+        //清除store用户信息
+        this.saveLogin("")
+        this.$router.push({path: '/login'})
+        // this.$store.dispatch('LogOut').then(() => {
+        //   location.reload() // 为了重新实例化vue-router对象 避免bug
+        // })
+      }
     }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" type="text/scss" scoped>
-.navbar {
-  height: 50px;
-  line-height: 50px;
-  border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 45px;
+  .navbar {
     height: 50px;
-    float: left;
-    padding: 0 10px;
-  }
-  .screenfull {
-    position: absolute;
-    right: 90px;
-    top: 16px;
-    color: red;
-  }
-  .avatar-container {
-    height: 50px;
-    display: inline-block;
-    position: absolute;
-    right: 35px;
-    .avatar-wrapper {
-      cursor: pointer;
-      margin-top: 5px;
-      position: relative;
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+    line-height: 50px;
+    border-radius: 0px !important;
+    .hamburger-container {
+      line-height: 58px;
+      height: 50px;
+      float: left;
+      padding: 0 10px;
+    }
+    .breadcrumb-container {
+      float: left;
+    }
+    .errLog-container {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .right-menu {
+      float: right;
+      height: 100%;
+      &:focus {
+        outline: none;
       }
-      .el-icon-caret-bottom {
-        position: absolute;
-        right: -20px;
-        top: 25px;
-        font-size: 12px;
+      .right-menu-item {
+        display: inline-block;
+        margin: 0 8px;
+      }
+      .screenfull {
+        height: 20px;
+      }
+      .international {
+        vertical-align: top;
+      }
+      .theme-switch {
+        vertical-align: 15px;
+      }
+      .avatar-container {
+        height: 50px;
+        margin-right: 30px;
+        .avatar-wrapper {
+          cursor: pointer;
+          margin-top: 5px;
+          position: relative;
+          .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+          }
+          .el-icon-caret-bottom {
+            position: absolute;
+            right: -20px;
+            top: 25px;
+            font-size: 12px;
+          }
+        }
       }
     }
   }
-}
 </style>
 

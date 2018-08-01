@@ -16,6 +16,7 @@
         <template v-for="child in item.subs">
           <el-menu-item :index="child.url.substring(6)">
             <!--<i class="el-icon-menu"></i>-->
+            <!--<svg-icon :icon-class="icon"></svg-icon>-->
             <span slot="title">{{child.name}}</span>
           </el-menu-item>
         </template>

@@ -17,10 +17,10 @@
           <span>{{scope.row.createtime}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button @click="put(scope.row)">编辑</el-button>
-          <el-button @click="del(scope.row.id)">删除</el-button>
+          <el-button type="primary" @click="put(scope.row)">编辑</el-button>
+          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
