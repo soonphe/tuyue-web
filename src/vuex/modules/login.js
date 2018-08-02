@@ -8,7 +8,7 @@ const state = {
   // 用户对象——包括token状态等信息
   user: {},
   // 其他数据Array
-  menu: ''
+  menu: []
 }
 
 // actions类似于mutation，Action 提交的是 mutation，而不是直接变更状态。Action 可以包含任意异步操作
@@ -18,7 +18,6 @@ const actions = {
   // { commit }使用参数解构，实际传入context，调用context.commit方法。
   // ps：也可以理解为action中的方法会自动获取context这个对象，{ ... }中的参数对象{..}就是指的context对象，而{ commit }就是指的context对象中的commit方法
   saveLogin: ({commit}, payload) => {
-    console.log('store save user', payload)
     commit('SAVELOGIN', payload)
     // 添加action回调
     // return new Promise((resolve, reject) => {
@@ -29,13 +28,12 @@ const actions = {
     // })
   },
   saveMenus: ({commit}, payload) => {
-    console.log('store save menu', payload)
     commit('SAVEMENUS', payload)
   },
   // 用户登出
-  logout: ({commit}, payload) => {
-    commit('SAVELOGIN', payload)
-    commit('SAVEMENUS', payload)
+  logout: ({commit}) => {
+    commit('SAVELOGIN', {})
+    commit('SAVEMENUS', [])
   }
 }
 

@@ -1,42 +1,23 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">username:{{username}}</div>
-    <div class="dashboard-text">rolename:{{rolename}}</div>
-    <!-- <span v-for='role in roles' :key='role'>{{role}}</span> -->
+    <component :is="currentRole"></component>
   </div>
 </template>
 
 <script>
-  import {mapState} from 'vuex'
+  import { mapGetters } from 'vuex'
+  import adminDashboard from './admin'
 
   export default {
     name: 'dashboard',
-    computed: {
-      ...mapState({
-        user: state => state.Login.user
-      }),
-      username(){
-        return this.user.name
-      },
-      rolename(){
-        return this.user.rolename
+    components: { adminDashboard },
+    data() {
+      return {
+        currentRole: 'adminDashboard'
       }
-      // ...mapGetters([
-      //   'name',
-      //   'roles'
-      // ])
+    },
+    created() {
+      this.currentRole = 'adminDashboard'
     }
   }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" type="text/scss" scoped>
-  .dashboard {
-    &-container {
-      margin: 30px;
-    }
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
-    }
-  }
-</style>

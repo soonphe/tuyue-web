@@ -71,11 +71,11 @@
         // this.$store.dispatch('ToggleSideBar')
       },
       loginOut() {
-        this.logout('')
+        // store中清除user与menu信息
+        this.logout()
         //清除localStore中保存的token
         removeStore("token")
-        //清除store用户信息
-        this.saveLogin("")
+        removeStore('menu')
         this.$router.push({path: '/login'})
         // this.$store.dispatch('LogOut').then(() => {
         //   location.reload() // 为了重新实例化vue-router对象 避免bug

@@ -1,10 +1,7 @@
 import Vue from 'vue' /* 引入vue文件 */
 import Router from 'vue-router' /* 引用vue路由模块，并赋值给变量Router  */
-// import HelloWorld from '@/components/HelloWorld' /* 英文Hello.vue模版，并赋值给变量Hello,这里是“@”相当于“../” */
-// import Login from '@/views/Login'
-// import { getStore } from '../utils/local'
-/* Layout */
-import Layout from '../views/layout/Layout'
+/* Layout:这里是“@”相当于“../” */
+import Layout from '@/views/layout/Layout'
 
 // 使用路由
 Vue.use(Router)
@@ -17,10 +14,10 @@ const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-    { path: '/404', component: () => import('@/views/404'), hidden: true },
-    { path: '*', redirect: '/404', hidden: true },
+    { path: '/404', component: () => import('@/views/errorPage/404'), hidden: true },
+    { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true },
     {
-      path: '/',
+      path: '',
       component: Layout,
       redirect: '/dashboard',
       name: 'Dashboard',
@@ -140,7 +137,8 @@ const router = new Router({
           meta: { title: '添加广告', icon: 'el-icon-picture-outline' }
         }
       ]
-    }
+    },
+    { path: '*', redirect: '/404', hidden: true }
   ]
 })
 

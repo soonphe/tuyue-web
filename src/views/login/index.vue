@@ -49,7 +49,6 @@
   import {isvalidUsername} from '@/utils/validate'
 
   export default {
-    // name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!isvalidUsername(value)) {
@@ -126,9 +125,8 @@
                   setStore('password', password)
                   setStore('remember', this.remember)
                 }
-                //保存用户信息
+                //store保存用户信息
                 this.saveLogin(res.data)
-
                 // 获取角色ID
                 let roleId = res.data.roleid
                 //根据角色ID获取角色对应菜单

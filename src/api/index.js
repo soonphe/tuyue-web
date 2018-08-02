@@ -109,8 +109,9 @@ function apiAxios (method, url, params) {
     if (method === 'POST') {
       options = {
         method: 'POST',
-        // headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        headers: {'content-type': 'multipart/form-data'},
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        // 上传文件这里使用multipart类型
+        // headers: {'content-type': 'multipart/form-data'},
         data: qs.stringify(params),
         // √——使用param会在地址栏拼接参数
         // params: params,

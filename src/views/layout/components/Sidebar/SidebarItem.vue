@@ -2,21 +2,21 @@
   <div class="menu-wrapper">
     <template v-if="!item.subs">
       <el-menu-item :index="basePath.substring(6)" :class="{'submenu-title-noDropdown':!isNest}">
-        <!--<i class="icons(basePath.substring(6))||el-icon-info"></i>-->
-        <i class="el-icon-info"></i>
+        <!--<i class="el-icon-info"></i>-->
+          <i class="sidebar-icon fa" :class="item.icon" ></i>
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
     </template>
     <template v-else>
       <el-submenu :index="item.url">
         <template slot="title">
-          <i class="el-icon-menu"></i>
+          <!--<i class="el-icon-menu"></i>-->
+          <i class="sidebar-icon fa" :class="item.icon" ></i>
           <span slot="title">{{item.name}}</span>
         </template>
         <template v-for="child in item.subs">
           <el-menu-item :index="child.url.substring(6)">
-            <!--<i class="el-icon-menu"></i>-->
-            <!--<svg-icon :icon-class="icon"></svg-icon>-->
+            <i class="sidebar-icon fa" :class="child.icon" ></i>
             <span slot="title">{{child.name}}</span>
           </el-menu-item>
         </template>

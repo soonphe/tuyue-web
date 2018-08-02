@@ -21,7 +21,7 @@ import JsEncrypt from 'jsencrypt/bin/jsencrypt'
 
 import i18n from './lang' // Internationalization
 import '@/styles/index.scss' // global css
-import '@/icons' // icon
+import 'font-awesome/css/font-awesome.min.css' // font-awesome
 import '@/permission' // permission control
 Vue.prototype.$jsEncrypt = JsEncrypt // 挂载JsEncrypt
 

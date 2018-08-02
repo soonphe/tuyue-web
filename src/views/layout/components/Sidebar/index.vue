@@ -12,7 +12,8 @@
     >
       <template>
         <el-menu-item index="/dashboard" class="submenu-title-noDropdown">
-          <i class="el-icon-info"></i>
+          <!--<i class="el-icon-info"></i>-->
+          <i class="sidebar-icon fa fa-tachometer"></i>
           <span slot="title">首页</span>
         </el-menu-item>
       </template>
@@ -51,3 +52,9 @@
     }
   }
 </script>
+<style>
+  /* 2018-08-02 */
+  .sidebar-icon {
+    margin-right: 10px;
+  }
+</style>
