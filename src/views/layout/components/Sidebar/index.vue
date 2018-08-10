@@ -55,6 +55,8 @@
 <style>
   /* 2018-08-02 */
   .sidebar-icon {
+    width: 14px;
+    height: 14px;
     margin-right: 10px;
   }
 </style>

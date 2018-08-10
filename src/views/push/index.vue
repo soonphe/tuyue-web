@@ -8,7 +8,7 @@
         <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id">
         </el-option>
       </el-select>
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" type="p05rimary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
       </el-button>
     </div>
