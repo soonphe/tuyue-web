@@ -5,23 +5,29 @@
       <h3 class="title">途悦控制台</h3>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user"></svg-icon>
+          <i class="sidebar-icon fa fa-user"></i>
+          <!--<svg-icon icon-class="user"></svg-icon>-->
         </span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on"
                   placeholder="请输入用户名"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <i class="sidebar-icon fa fa-key"></i>
+          <!--<svg-icon icon-class="password"></svg-icon>-->
         </span>
         <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"
                   autoComplete="on"
                   placeholder="请输入密码"></el-input>
-        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye"></svg-icon></span>
+        <span class="show-pwd" @click="showPwd">
+          <i class="sidebar-icon fa fa-eye"></i>
+          <!--<svg-icon icon-class="eye"></svg-icon>-->
+        </span>
       </el-form-item>
       <el-form-item prop="checkCode">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <i class="sidebar-icon fa fa-contao"></i>
+          <!--<svg-icon icon-class="password"></svg-icon>-->
         </span>
         <el-input type="text" placeholder="请输入验证码" v-model="loginForm.checkCode"
                   @keyup.enter.native="handleLogin" style="width:50%"></el-input>
@@ -30,9 +36,9 @@
           <!-- <span class="flush">点击刷新</span> -->
         </div>
       </el-form-item>
-      <el-form-item>
-        <el-checkbox v-model="remember">记住密码</el-checkbox>
-      </el-form-item>
+      <!--<el-form-item>-->
+        <!--<el-checkbox v-model="remember">记住密码</el-checkbox>-->
+      <!--</el-form-item>-->
       <el-form-item class="re">
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
           登录

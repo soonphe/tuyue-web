@@ -2,19 +2,16 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="type" label="广告类型">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option v-for="item in advertType" :key="item.id" :label="item.name" :value="item.id">
+        <el-form-item prop="typeid" label="视频类型">
+          <el-select v-model="form.typeid" placeholder="请选择类型">
+            <el-option v-for="item in videoType" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="title" label="广告标题">
-          <el-input v-model="form.title"></el-input>
+        <el-form-item prop="name" label="视频名称">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item prop="sort" label="排序">
-          <el-input v-model="form.sort"></el-input>
-        </el-form-item>
-        <el-form-item prop="picurl" label="封面图">
+        <el-form-item prop="posterurl" label="封面图">
           <el-upload class="avatar-uploader"
                      :action="uploadAction"
                      :data="uploadData"
@@ -23,17 +20,24 @@
                      :on-success="handleAvatarSuccess"
                      :before-upload="beforeAvatarUpload"
                      v-loading.fullscreen.lock="fullscreenLoading">
-            <img v-if="form.picurl" :src="imageServer+form.picurl" class="avatar">
+            <img v-if="form.posterurl" :src="imageServer+form.posterurl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="广告内容" prop="content">
-          <div id="app">
-            <vue-editor id="editor"
-                        useCustomImageHandler
-                        @imageAdded="handleImageAdded" v-model="form.content">
-            </vue-editor>
-          </div>
+        <el-form-item prop="profile" label="简介">
+          <el-input v-model="form.profile"></el-input>
+        </el-form-item>
+        <el-form-item prop="director" label="导演">
+          <el-input v-model="form.director"></el-input>
+        </el-form-item>
+        <el-form-item prop="director" label="主演">
+          <el-input v-model="form.actor"></el-input>
+        </el-form-item>
+        <el-form-item prop="director" label="内容详情">
+          <el-input v-model="form.detail"></el-input>
+        </el-form-item>
+        <el-form-item prop="filepath" label="文件路径">
+          <el-input v-model="form.filepath"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -48,7 +52,7 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd} from '@/api/server'
+  import {upload, videoAdd} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
@@ -65,18 +69,11 @@
         // build
         this.uploadAction = uploadServer
       }
-      // if (this.advert.length > 0) {
-      //   this.type = this.advert.type + ''
-      //   this.title = this.advert.title + ''
-      //   this.picurl = this.advert.picurl + ''
-      //   this.sort = this.advert.sort + ''
-      //   this.content = this.advert.content + ''
-      // }
     },
     computed: {
       ...mapState({
-        form: state => state.Advert.advert,
-        advertType: state => state.Advert.advertType
+        form: state => state.Video.video,
+        videoType: state => state.Video.videoType
       })
     },
     data() {
@@ -118,7 +115,7 @@
         return isJPG && isLt2M
       },
       handleAvatarSuccess(res) {
-        this.form.picurl = res.data
+        this.form.posterurl = res.data
         this.fullscreenLoading = false
       },
       // 处理富文本图片上传
@@ -142,12 +139,12 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            advertAdd(this.form)
+            videoAdd(this.form)
               .then(res => {
                 this.loading = false
                 this.$message.success('添加成功')
                 this.$router.push({
-                  path: '/advert/index'
+                  path: '/video/index'
                 })
               }).catch(() => {
               this.loading = false

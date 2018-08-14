@@ -2,37 +2,20 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.title')" v-model="listQuery.title"></el-input>
-      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.type"
-                 :placeholder="$t('table.type')">
-        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id">
-        </el-option>
-      </el-select>
+                :placeholder="$t('table.name')" v-model="listQuery.name"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
       </el-button>
     </div>
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="typename" label="类型" align="center"></el-table-column>
-      <el-table-column prop="title" label="标题" align="center"></el-table-column>
-      <el-table-column label="图片" align="center">
-        <template slot-scope="scope">
-          <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sort" label="排序" align="center"></el-table-column>
+      <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
+      <el-table-column prop="sex" label="性别" :formatter="sexTypeFormat" align="center"></el-table-column>
+      <el-table-column prop="age" label="年龄" :formatter="ageTypeFormat" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{scope.row.createtime}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="put(scope.row)">编辑</el-button>
-          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,7 +35,7 @@
 </template>
 
 <script>
-  import {advertTypeGetList, advertGetList, advertDelete} from '@/api/server'
+  import {userGetList} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -70,8 +53,7 @@
         listQuery: {
           pageNum: 1,
           pageSize: pageSize,
-          title: undefined,
-          type: undefined
+          name: undefined
         },
         imageServer: imageServer,
         typeList: []
@@ -88,33 +70,33 @@
       }
     },
     created() {
-      this.getTypeData()
       this.getList()
     },
     methods: {
       ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
-      typeFormat(row, column) {
-        // this.typeList.forEach((item,index)=>{
-        //   console.log(row.type+'___'+item.id);
-        //   if (row.type === item.id) {
-        //     console.log('equals___'+item.name);
-        //     return item.name
-        //   }
-        // })
+      sexTypeFormat(row, column) {
+        if (row.sex === 0) {
+          return "未知"
+        } else if (row.sex === 1) {
+          return "男"
+        }else {
+          return "女"
+        }
       },
-      clearType() {
-        this.listQuery.type = undefined
-      },
-      getTypeData() {
-        advertTypeGetList()
-          .then(res => {
-            this.typeList = res.data
-            this.saveAdvertType(this.typeList)
-          })
+      ageTypeFormat(row, column) {
+        if (row.age === 0) {
+          return "0-20岁"
+        } else if (row.age === 1) {
+          return "20-40岁"
+        } else if (row.age === 2) {
+          return "40-60岁"
+        } else {
+          return "60岁以上"
+        }
       },
       getList() {
         this.listLoading = true
-        advertGetList(this.listQuery)
+        userGetList(this.listQuery)
           .then(res => {
             this.list = res.data
             this.total = parseInt(res.ext)

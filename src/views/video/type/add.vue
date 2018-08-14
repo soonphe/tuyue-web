@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import {advertTypeAdd} from '@/api/server'
+  import {videoTypeAdd} from '@/api/server'
 
   export default {
     data() {
@@ -32,12 +32,12 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            advertTypeAdd(this.form)
+            videoTypeAdd(this.form)
               .then(res => {
                 this.loading = false
                 this.$message.success('添加成功')
                 this.$router.push({
-                  path: '/advertType/index'
+                  path: '/videoType/index'
                 })
               }).catch(() => {
               this.loading = false

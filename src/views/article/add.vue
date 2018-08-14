@@ -2,17 +2,14 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="type" label="广告类型">
-          <el-select v-model="form.type" placeholder="请选择类型">
+        <el-form-item prop="type" label="文章类型">
+          <el-select v-model="form.typeid" placeholder="请选择类型">
             <el-option v-for="item in advertType" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="title" label="广告标题">
           <el-input v-model="form.title"></el-input>
-        </el-form-item>
-        <el-form-item prop="sort" label="排序">
-          <el-input v-model="form.sort"></el-input>
         </el-form-item>
         <el-form-item prop="picurl" label="封面图">
           <el-upload class="avatar-uploader"
@@ -27,13 +24,26 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="广告内容" prop="content">
+        <el-form-item prop="classify" label="栏目">
+          <!--<el-select class="filter-item" v-model="form.classify" style="width: 130px">-->
+            <!--<el-option label="图文" value="0"></el-option>-->
+            <!--<el-option label="视频" value="1"></el-option>-->
+          <!--</el-select>-->
+          <el-select  class="filter-item" style="width: 130px" v-model="form.classify" :placeholder="$t('table.type')">
+            <el-option v-for="item in  options" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
           <div id="app">
             <vue-editor id="editor"
                         useCustomImageHandler
                         @imageAdded="handleImageAdded" v-model="form.content">
             </vue-editor>
           </div>
+        </el-form-item>
+        <el-form-item prop="pathfile" label="视频文件路径">
+          <el-input v-model="form.pathfile"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -48,7 +58,7 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd} from '@/api/server'
+  import {upload, articleAdd, articleUpdate} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
@@ -81,6 +91,13 @@
     },
     data() {
       return {
+        options: [{
+          id: 0,
+          name: '图文'
+        }, {
+          id: 1,
+          name: '视频'
+        }],
         uploadData: {
           file_type: 'img'
         },
@@ -94,9 +111,9 @@
         //   content: ''
         // },
         formRules: {
-          type: [{required: true, trigger: 'blur', message: '请选择类型'}],
+          typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
           title: [{required: true, trigger: 'blur', message: '请输入标题'}],
-          sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
+          classify: [{required: true, trigger: 'blur', message: '请选择栏目'}],
           picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
           content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
         },
@@ -142,26 +159,25 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            advertAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/advert/index'
+            if (this.form.id){
+              articleUpdate(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('修改成功')
+                  this.$router.push({
+                    path: '/article/index'
+                  })
                 })
-              }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
-              })
-            })
-          } else {
-            this.loading = false
-            this.$message({
-              message: '请完善表单信息!',
-              type: 'warning'
-            })
+            }else{
+              articleAdd(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('添加成功')
+                  this.$router.push({
+                    path: '/article/index'
+                  })
+                })
+            }
           }
         })
       },
@@ -176,9 +192,6 @@
 </script>
 
 <style scoped>
-  .line {
-    text-align: center;
-  }
 
   .avatar-uploader {
     width: 430px;

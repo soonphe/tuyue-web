@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {advertTypeGetList} from '@/api/server'
+  import {saveAdvertType,advertTypeGetList,advertTypeDelete} from '@/api/server'
 
   export default {
     data() {
@@ -48,10 +48,10 @@
       }
     },
     created() {
-      this.fetchData()
+      this.getList()
     },
     methods: {
-      fetchData() {
+      getList() {
         this.listLoading = true
         advertTypeGetList()
           .then(res => {
@@ -63,6 +63,40 @@
         this.$router.push({
           path: '/advertType/add'
         })
+      },
+      put(row) {
+        this.saveAdvertType(row)
+        this.$router.push({
+          path: '/advertType/add'
+        })
+      },
+      del(id) {
+        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          advertTypeDelete({id})
+            .then(res => {
+              this.$message.success('删除成功')
+              // 两种message写法
+              // this.$message({
+              //   type: 'success',
+              //   message: '删除成功!'
+              // });
+              //删除本地数据
+              this.list=this.list.filter(i => {
+                return i.id != id
+              })
+              //重新请求数据
+              // this.getList()
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '删除异常'
+          });
+        });
       }
     }
   }

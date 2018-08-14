@@ -4,11 +4,6 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="addType" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <!--<el-table-column label='类型' align="center" width="95">-->
-        <!--<template slot-scope="scope">-->
-          <!--{{scope.$index}}-->
-        <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
       <el-table-column prop="name" label="名称" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
@@ -28,7 +23,7 @@
 </template>
 
 <script>
-  import {advertTypeGetList} from '@/api/server'
+  import {articleTypeGetList} from '@/api/server'
 
   export default {
     data() {
@@ -53,7 +48,7 @@
     methods: {
       fetchData() {
         this.listLoading = true
-        advertTypeGetList()
+        articleTypeGetList()
           .then(res => {
             this.list = res.data
             this.listLoading = false
@@ -61,7 +56,7 @@
       },
       addType() {
         this.$router.push({
-          path: '/advertType/add'
+          path: '/articleType/add'
         })
       }
     }

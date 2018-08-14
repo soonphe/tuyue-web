@@ -22,7 +22,7 @@
           <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
         </template>
       </el-table-column>
-      <el-table-column prop="sort" label="排序" align="center"></el-table-column>
+      <el-table-column prop="classify" label="栏目" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-  import {advertTypeGetList, advertGetList, advertDelete} from '@/api/server'
+  import {articleTypeGetList, articleGetList, articleDelete} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -106,7 +106,7 @@
         this.listQuery.type = undefined
       },
       getTypeData() {
-        advertTypeGetList()
+        articleTypeGetList()
           .then(res => {
             this.typeList = res.data
             this.saveAdvertType(this.typeList)
@@ -114,7 +114,7 @@
       },
       getList() {
         this.listLoading = true
-        advertGetList(this.listQuery)
+        articleGetList(this.listQuery)
           .then(res => {
             this.list = res.data
             this.total = parseInt(res.ext)
@@ -144,7 +144,7 @@
           /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
            */
-          path: '/advert/add'
+          path: '/article/add'
           // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
           // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
           // 通过路由名称跳转，携带参数（已成功）
@@ -154,7 +154,7 @@
       put(row) {
         this.saveAdvert(row)
         this.$router.push({
-          path: '/advert/add'
+          path: '/article/add'
         })
       },
       del(id) {
@@ -163,23 +163,14 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          advertDelete({id})
+          articleDelete({id})
             .then(res => {
               this.$message.success('删除成功')
-              // 两种message写法
-              // this.$message({
-              //   type: 'success',
-              //   message: '删除成功!'
-              // });
-              this.getList()
+              this.list=this.list.filter(i => {
+                return i.id != id
+              })
             })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
         });
-
       }
     }
   }

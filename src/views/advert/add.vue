@@ -2,8 +2,8 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="type" label="广告类型">
-          <el-select v-model="form.type" placeholder="请选择类型">
+        <el-form-item prop="typeid" label="广告类型">
+          <el-select v-model="form.typeid" placeholder="请选择类型">
             <el-option v-for="item in advertType" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +48,7 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd} from '@/api/server'
+  import {upload, advertAdd, advertUpdate} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
@@ -65,13 +65,6 @@
         // build
         this.uploadAction = uploadServer
       }
-      // if (this.advert.length > 0) {
-      //   this.type = this.advert.type + ''
-      //   this.title = this.advert.title + ''
-      //   this.picurl = this.advert.picurl + ''
-      //   this.sort = this.advert.sort + ''
-      //   this.content = this.advert.content + ''
-      // }
     },
     computed: {
       ...mapState({
@@ -94,7 +87,7 @@
         //   content: ''
         // },
         formRules: {
-          type: [{required: true, trigger: 'blur', message: '请选择类型'}],
+          typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
           title: [{required: true, trigger: 'blur', message: '请输入标题'}],
           sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
           picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
@@ -142,20 +135,25 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            advertAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/advert/index'
+            if (this.form.id) {
+              advertUpdate(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('更新成功')
+                  this.$router.push({
+                    path: '/advert/index'
+                  })
                 })
-              }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
-              })
-            })
+            }else{
+              advertAdd(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('添加成功')
+                  this.$router.push({
+                    path: '/advert/index'
+                  })
+                })
+            }
           } else {
             this.loading = false
             this.$message({
@@ -176,9 +174,6 @@
 </script>
 
 <style scoped>
-  .line {
-    text-align: center;
-  }
 
   .avatar-uploader {
     width: 430px;
