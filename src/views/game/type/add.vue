@@ -13,57 +13,56 @@
 </template>
 
 <script>
-  import {advertTypeAdd} from '@/api/server'
+import {gameTypeAdd} from '@/api/server'
 
-  export default {
-    data() {
-      return {
-        form: {
-          name: ''
-        },
-        formRules: {
-          name: [{required: true,trigger: 'blur', message: '请输入名称'}]
-        },
-        loading: false,
-      }
-    },
-    methods: {
-      onSubmit() {
-        this.$refs.form.validate(valid => {
-          if (valid) {
-            this.loading = true
-            advertTypeAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/advertType/index'
-                })
-              }).catch(() => {
+export default {
+  data () {
+    return {
+      form: {
+        name: ''
+      },
+      formRules: {
+        name: [{required: true, trigger: 'blur', message: '请输入名称'}]
+      },
+      loading: false
+    }
+  },
+  methods: {
+    onSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          gameTypeAdd(this.form)
+            .then(res => {
+              this.loading = false
+              this.$message.success('添加成功')
+              this.$router.push({
+                path: '/gameType/index'
+              })
+            }).catch(() => {
               this.loading = false
               this.$message({
                 message: '添加失败!',
                 type: 'warning'
               })
             })
-          }else{
-            this.loading = false
-            this.$message({
-              message: '请完善表单信息!',
-              type: 'warning'
-            })
-          }
-        })
-      },
-      onCancel()
-        {
+        } else {
+          this.loading = false
           this.$message({
-            message: '取消添加!',
+            message: '请完善表单信息!',
             type: 'warning'
           })
         }
-      }
+      })
+    },
+    onCancel () {
+      this.$message({
+        message: '取消添加!',
+        type: 'warning'
+      })
     }
+  }
+}
 </script>
 
 <style scoped>
@@ -71,4 +70,3 @@
     text-align: center;
   }
 </style>
-

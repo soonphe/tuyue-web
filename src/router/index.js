@@ -85,13 +85,21 @@ const router = new Router({
     {
       path: '/city',
       component: Layout,
-      redirect: '/index',
+      redirect: '/city/index',
       name: 'city',
       meta: {title: '城市管理', icon: 'el-icon-info'},
       children: [{
         path: 'index',
+        name: 'cityIndex',
         component: () => import('@/views/city/index')
-      }]
+      },
+      {
+        path: 'add',
+        name: 'cityAdd',
+        component: () => import('@/views/city/add'),
+        meta: {title: '添加城市', icon: 'el-icon-picture-outline'}
+      }
+      ]
     },
     {
       path: '/stats',
@@ -365,7 +373,7 @@ const router = new Router({
       meta: {title: '餐饮管理', icon: 'el-icon-goods'},
       children: [
         {
-          path: 'food',
+          path: 'index',
           name: 'foodTypeIndex',
           component: () => import('@/views/food/type/index'),
           meta: {title: '餐饮类型', icon: 'el-icon-picture-outline'}
@@ -381,7 +389,7 @@ const router = new Router({
     {
       path: '/food',
       component: Layout,
-      redirect: '/food/index',
+      // redirect: '/food/index',
       name: 'food',
       meta: {title: '餐饮管理', icon: 'el-icon-goods'},
       children: [
@@ -399,7 +407,33 @@ const router = new Router({
         }
       ]
     },
-
+    {
+      path: '/sys',
+      component: Layout,
+      redirect: '/sys/menu',
+      name: 'sys',
+      meta: {title: '系统管理', icon: 'el-icon-goods'},
+      children: [
+        // {
+        //   path: 'menu',
+        //   name: 'sysMenu',
+        //   component: () => import('@/views/sys/menu/index'),
+        //   meta: {title: '系统模块', icon: 'el-icon-picture-outline'}
+        // },
+        // {
+        //   path: 'role',
+        //   name: 'sysRole',
+        //   component: () => import('@/views/sys/role/index'),
+        //   meta: {title: '系统角色', icon: 'el-icon-picture-outline'}
+        // },
+        // {
+        //   path: 'user',
+        //   name: 'sysUser',
+        //   component: () => import('@/views/sys/user/index'),
+        //   meta: {title: '系统用户', icon: 'el-icon-picture-outline'}
+        // }
+      ]
+    },
     {path: '*', redirect: '/404', hidden: true}
   ]
 })

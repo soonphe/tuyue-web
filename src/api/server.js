@@ -2,6 +2,8 @@ import api from './index'
 
 /**
  * 公共——暂未使用
+ * elementh中使用路径直接上传
+ * quill(图片)中使用axios单独上传
  */
 export const upload = params => api.post('/common/upload', params)
 
