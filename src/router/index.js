@@ -102,6 +102,25 @@ const router = new Router({
       ]
     },
     {
+      path: '/cityArticle',
+      component: Layout,
+      redirect: '/cityArticle/index',
+      name: 'cityArticle',
+      meta: {title: '城市文章管理', icon: 'el-icon-info'},
+      children: [{
+        path: 'index',
+        name: 'cityArticleIndex',
+        component: () => import('@/views/cityArticle/index')
+      },
+      {
+        path: 'add',
+        name: 'cityArticleAdd',
+        component: () => import('@/views/cityArticle/add'),
+        meta: {title: '添加城市文章', icon: 'el-icon-picture-outline'}
+      }
+      ]
+    },
+    {
       path: '/stats',
       component: Layout,
       redirect: '/stats/unlock',
@@ -111,25 +130,25 @@ const router = new Router({
         {
           path: 'unlock',
           name: 'unlock',
-          component: () => import('@/views/advert/index'),
+          component: () => import('@/views/stats/unlock'),
           meta: {title: '解锁统计', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'stay',
           name: 'stay',
-          component: () => import('@/views/advert/index'),
+          component: () => import('@/views/stats/stay'),
           meta: {title: '板块停留时长', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'click',
           name: 'click',
-          component: () => import('@/views/advert/index'),
+          component: () => import('@/views/stats/click'),
           meta: {title: '模块点击次数', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'open',
           name: 'open',
-          component: () => import('@/views/advert/index'),
+          component: () => import('@/views/stats/openpad'),
           meta: {title: '开机统计', icon: 'el-icon-picture-outline'}
         }
       ]

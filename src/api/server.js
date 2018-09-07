@@ -55,15 +55,15 @@ export const userGetList = params => api.get('/user/getList', params)
 export const userAdd = params => api.put('/user/add', params)
 export const userDelete = params => api.get('/user/delete', params)
 export const userUpdate = params => api.post('/user/update', params)
+export const userGetUserCount = params => api.get('/user/getUserCount', params)
 
 /**
  * 统计管理
  */
-export const openGeUnlock = params => api.get('/open/getUnlock', params)
-export const openGetDetail = params => api.put('/open/getDetail', params)
+export const statsGetUnlock = params => api.get('/stats/getUnlock', params)
 export const statsGetClick = params => api.get('/stats/getClick', params)
-export const statsGetStay = params => api.post('/stats/getStay', params)
-export const statsGetDatail = params => api.post('/stats/getDetail', params)
+export const statsGetStay = params => api.get('/stats/getStay', params)
+export const statsGetDatail = params => api.get('/stats/getDetail', params)
 
 /**
  * 广告类别

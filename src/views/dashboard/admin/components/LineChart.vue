@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
+import {userGetUserCount} from '@/api/server'
 
 export default {
   props: {
@@ -31,11 +32,13 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: null
     }
   },
   mounted() {
-    this.initChart()
+
+    // this.initChart()
     if (this.autoResize) {
       this.__resizeHanlder = debounce(() => {
         if (this.chart) {
@@ -71,11 +74,31 @@ export default {
       }
     }
   },
+  created () {
+    this.getList()
+  },
   methods: {
+    getList () {
+      userGetUserCount()
+        .then(res => {
+          this.list = res.data
+          if (this.list.length) {
+            this.initChart()
+          }
+        })
+    },
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: [
+            this.list[0].createTime,
+            this.list[1].createTime,
+            this.list[2].createTime,
+            this.list[3].createTime,
+            this.list[4].createTime,
+            this.list[5].createTime,
+            this.list[6].createTime
+          ],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -104,7 +127,10 @@ export default {
           data: ['expected', 'actual']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '每日新增用户数',
+          smooth: true,
+          type: 'line',
+          itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -113,32 +139,47 @@ export default {
               }
             }
           },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
+          data: [
+            this.list[0].total,
+            this.list[1].total,
+            this.list[2].total,
+            this.list[3].total,
+            this.list[4].total,
+            this.list[5].total,
+            this.list[6].total
+          ],
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+        // {
+        //   name: '用户总数',
+        //   smooth: true,
+        //   type: 'line',
+        //   itemStyle: {
+        //     normal: {
+        //       color: '#3888fa',
+        //       lineStyle: {
+        //         color: '#3888fa',
+        //         width: 2
+        //       },
+        //       areaStyle: {
+        //         color: '#f3f8ff'
+        //       }
+        //     }
+        //   },
+        //   data: [
+        //     this.list[0].total+100,
+        //     this.list[1].total+100,
+        //     this.list[2].total+100,
+        //     this.list[3].total+100,
+        //     this.list[4].total+100,
+        //     this.list[5].total+100,
+        //     this.list[6].total+100
+        //   ],
+        //   animationDuration: 2800,
+        //   animationEasing: 'quadraticOut'
+        // }
+        ]
       })
     },
     initChart() {

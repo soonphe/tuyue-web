@@ -12,7 +12,7 @@
         <el-form-item prop="name" label="版本内容说明">
           <el-input v-model="form.content"></el-input>
         </el-form-item>
-        <el-form-item prop="name" label="版本内容说明">
+        <el-form-item prop="name" label="版本文件路径">
           <el-input v-model="form.filepath"></el-input>
         </el-form-item>
 

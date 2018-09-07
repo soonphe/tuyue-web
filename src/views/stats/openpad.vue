@@ -1,35 +1,31 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.title')" v-model="listQuery.name"></el-input>
+      <el-date-picker v-model="this.listQuery.searchTime"
+                      value-format="yyyy-MM-dd"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期">
+      </el-date-picker>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
+      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">导出
       </el-button>
     </div>
-
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="name" label="名称" align="center"></el-table-column>
-      <el-table-column label="图片" align="center">
-        <template slot-scope="scope">
-          <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
-        </template>
-      </el-table-column>
-      <el-table-column prop="click" label="点击量" align="center"></el-table-column>
-      <el-table-column prop="createtime" label="创建时间" align="center" width="200">
+      <el-table-column prop="createDate" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span>{{scope.row.createtime}}</span>
+          <span>{{scope.row.createDate}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="success" @click="detail(scope.row.id)">城市文章</el-button>
-          <el-button type="primary" @click="put(scope.row)">编辑</el-button>
-          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column prop="padNum" label="开机次数" align="center"></el-table-column>
+      <el-table-column prop="100%" label="使用率" align="center"></el-table-column>
+      <!--<el-table-column label="基数" align="center" width="300" class-name="small-padding fixed-width">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
 
     <div class="pagination-container">
@@ -47,7 +43,7 @@
 </template>
 
 <script>
-import {cityGetList, cityDelete} from '@/api/server'
+import {statsGetUnlock} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
 import {mapActions} from 'vuex'
@@ -65,8 +61,7 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
-        title: undefined,
-        type: undefined
+        searchTime: undefined,
       },
       imageServer: imageServer,
       typeList: []
@@ -87,18 +82,10 @@ export default {
   },
   methods: {
     ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
-    typeFormat (row, column) {
-      // this.typeList.forEach((item,index)=>{
-      //   console.log(row.type+'___'+item.id);
-      //   if (row.type === item.id) {
-      //     console.log('equals___'+item.name);
-      //     return item.name
-      //   }
-      // })
-    },
+
     getList () {
       this.listLoading = true
-      cityGetList(this.listQuery)
+      statsGetUnlock(this.listQuery)
         .then(res => {
           this.list = res.data
           this.total = parseInt(res.ext)
@@ -121,18 +108,8 @@ export default {
       this.listQuery.pageNum = val
       this.getList()
     },
-    add () {
-      this.clearAdvert()
-      this.$router.push({
-        /**
-           * 页面间传值 ①使用路由带参数 ②使用vuex
-           */
-        path: '/city/add'
-        // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
-        // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
-        // 通过路由名称跳转，携带参数（已成功）
-        // name: 'advertAdd', params: {typeList: this.typeList}
-      })
+    exportExcel () {
+      alert("导出暂停中")
     },
     detail (row) {
       this.saveAdvertType(row)

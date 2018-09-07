@@ -40,7 +40,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {cityAdd} from '@/api/server'
+import {cityAdd, cityUpdate} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -120,20 +120,25 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          cityAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/city/index'
+          if (this.form.id) {
+            cityUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/city/index'
+                })
               })
-            }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
+          }else{
+            cityAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/city/index'
+                })
               })
-            })
+          }
         } else {
           this.loading = false
           this.$message({

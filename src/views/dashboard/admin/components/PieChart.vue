@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
+import {statsGetClick} from '@/api/server'
 
 export default {
   props: {
@@ -24,11 +25,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: null
     }
   },
   mounted() {
-    this.initChart()
+    // this.initChart()
     this.__resizeHanlder = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -44,7 +46,19 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  created () {
+    this.getList()
+  },
   methods: {
+    getList () {
+      statsGetClick()
+        .then(res => {
+          this.list = res.data
+          if (this.list.length) {
+            this.initChart()
+          }
+        })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -56,22 +70,23 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: ['电影', '游戏', '书吧', '点餐', '城市','城铁']
         },
         calculable: true,
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '平板点击比例',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: this.list[0].movies, name: '电影' },
+              { value: this.list[0].game, name: '游戏' },
+              { value: this.list[0].book, name: '书吧' },
+              { value: this.list[0].food, name: '点餐' },
+              { value: this.list[0].city, name: '城市' },
+              { value: this.list[0].subway, name: '城铁' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

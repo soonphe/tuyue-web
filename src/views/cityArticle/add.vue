@@ -2,9 +2,20 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-
-        <el-form-item prop="name" label="广告标题">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item prop="cityid" label="城市id" hidden >
+          <el-input v-model="form.cityid"></el-input>
+        </el-form-item>
+        <el-form-item prop="typeid" label="城市文章类型">
+          <el-select v-model="form.typeid" placeholder="请选择类型">
+            <el-option v-for="item in advertType" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="title" label="标题">
+          <el-input v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item prop="intro" label="简介">
+          <el-input v-model="form.intro"></el-input>
         </el-form-item>
         <el-form-item prop="picurl" label="封面图">
           <el-upload class="avatar-uploader"
@@ -19,6 +30,15 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <div id="app">
+            <vue-editor id="editor"
+                        useCustomImageHandler
+                        @imageAdded="handleImageAdded" v-model="form.content">
+            </vue-editor>
+          </div>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
           <el-button @click="onCancel">取消</el-button>
@@ -32,9 +52,9 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd} from '@/api/server'
+  import {cityArticleAdd, cityArticleUpdate} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
-
+  import {mapState} from 'vuex'
 
   export default {
     components: {
@@ -49,28 +69,46 @@
         // build
         this.uploadAction = uploadServer
       }
-      // if (this.advert.length > 0) {
-      //   this.type = this.advert.type + ''
-      //   this.title = this.advert.title + ''
-      //   this.picurl = this.advert.picurl + ''
-      //   this.sort = this.advert.sort + ''
-      //   this.content = this.advert.content + ''
-      // }
+    },
+    computed: {
+      ...mapState({
+        form: state => state.Advert.advert,
+        city_id: state => state.Advert.advertType
+      })
     },
     data() {
       return {
+        advertType: [
+          {
+            'id': 0,
+            'name': '文化'
+          },
+          {
+            'id': 1,
+            'name': '美食'
+          },
+          {
+            'id': 2,
+            'name': '生活'
+          },
+          {
+            'id': 3,
+            'name': '旅游'
+          }
+        ],
         uploadData: {
           file_type: 'img'
         },
         uploadAction: '',
         imageServer: imageServer,
-        form: {
-          name: '',
-          picurl: ''
-        },
         formRules: {
-          name: [{required: true, trigger: 'blur', message: '请输入推送名称'}],
+          // typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
+          // cityid: [{required: true, trigger: 'blur', message: '城市ID不能为空'}],
+          type: [{required: true, trigger: 'blur', message: '请选择类型'}],
+          title: [{required: true, trigger: 'blur', message: '请输入标题'}],
+          sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
           picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
+          content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
         },
         loading: false,
         fullscreenLoading: false
@@ -95,7 +133,7 @@
       },
       // 处理富文本图片上传
       handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
-        var formData = new FormData();
+        var formData = new FormData()
         formData.append('file', file)
         formData.append('file_type', 'img')
         axios({
@@ -104,30 +142,35 @@
           data: formData
         }).then((result) => {
           let url = result.data.data // Get url from response
-          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url);
-          resetUploader();
+          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+          resetUploader()
         }).catch((err) => {
-          console.log(err);
+          console.log(err)
         })
       },
       onSubmit() {
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            advertAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/push/index'
+            if (this.form.id) {
+              cityArticleUpdate(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('更新成功')
+                  this.$router.push({
+                    path: '/cityArticle/index'
+                  })
                 })
-              }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
-              })
-            })
+            } else {
+              cityArticleAdd(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('添加成功')
+                  this.$router.push({
+                    path: '/cityArticle/index'
+                  })
+                })
+            }
           } else {
             this.loading = false
             this.$message({
