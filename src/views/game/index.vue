@@ -9,7 +9,7 @@
         </el-option>
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
+      <el-button class="filter-item" style="margin-left: 10px;" @clroick="add" type="primary" icon="el-icon-edit">添加
       </el-button>
     </div>
 
@@ -22,6 +22,7 @@
           <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
         </template>
       </el-table-column>
+      <el-table-column prop="click" label="点击量" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>

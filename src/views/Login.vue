@@ -29,93 +29,93 @@
 </template>
 
 <script>
-  import {login, sysMenuGetMenuListByRoleId} from '../api/server.js'
-  import {setStore, getStore, rasPublic} from '../utils/local.js'
-  import {mapActions} from 'vuex'
-  import {menu_items} from '../utils/items'
+import {login, sysMenuGetMenuListByRoleId} from '../api/server.js'
+import {setStore, getStore, rasPublic} from '../utils/local.js'
+import {mapActions} from 'vuex'
+import {menu_items} from '../utils/items'
 
-  import md5 from 'js-md5';
+import md5 from 'js-md5'
 
-  export default {
-    data: function () {
-      return {
-        ruleForm: {
-          username: '',
-          password: ''
-        },
-        rules: {
-          username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: '请输入密码', trigger: 'blur'}
-          ],
-          checkCode: [
-            {required: true, message: '请输入验证码', trigger: 'blur'}
-          ]
-        },
-        err: '',
-        flag: false,
-        check_code: "",
-        checkCode: '',
-        remember: true
-      }
-    },
-    created() {
-      let username = getStore('u')
-      let password = getStore('p')
-      console.log('username', username, password)
-      this.ruleForm.username = username
-      this.ruleForm.password = password
-      this.remember = getStore('r')
-      console.log('this.', this.remember)
-    },
-    methods: {
-      // 分发Actions
-      // this.$store.dispatch('xxx')
-      // 这里使用辅助函数分发
-      ...mapActions(["saveLogin", 'saveMenus']),
-      submitForm(formName) {
-        const self = this;
-        let code1 = self.check_code
-        let code2 = self.ruleForm.checkCode
-        //表单验证
-        self.$refs[formName].validate((valid) => {
-          let username = self.ruleForm.username
-          let jse = new this.$jsEncrypt.JSEncrypt()
-          jse.setPublicKey(rasPublic)
-          let password = self.ruleForm.password
-          // md5加密密码
-          // let pwd = self.ruleForm.password
-          // let password = jse.encrypt(md5(pwd).toLowerCase())
-          if (valid) {
-            if (code1.toLowerCase() !== code2.toLowerCase()) {
-              self.$message.error('验证码输入错误，请重新输入')
-              self.createCode()
-              return
-            }
-            login({username, password})
-              .then(res => {
-                //保存用户名密码
-                setStore('u', username)
-                if (this.remember) {
-                  setStore('p', pwd)
-                  setStore('r', this.remember)
-                }
-                //保存用户信息
-                self.saveLogin(res.data)
+export default {
+  data: function () {
+    return {
+      ruleForm: {
+        username: '',
+        password: ''
+      },
+      rules: {
+        username: [
+          {required: true, message: '请输入用户名', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'}
+        ],
+        checkCode: [
+          {required: true, message: '请输入验证码', trigger: 'blur'}
+        ]
+      },
+      err: '',
+      flag: false,
+      check_code: '',
+      checkCode: '',
+      remember: true
+    }
+  },
+  created () {
+    let username = getStore('u')
+    let password = getStore('p')
+    console.log('username', username, password)
+    this.ruleForm.username = username
+    this.ruleForm.password = password
+    this.remember = getStore('r')
+    console.log('this.', this.remember)
+  },
+  methods: {
+    // 分发Actions
+    // this.$store.dispatch('xxx')
+    // 这里使用辅助函数分发
+    ...mapActions(['saveLogin', 'saveMenus']),
+    submitForm (formName) {
+      const self = this
+      let code1 = self.check_code
+      let code2 = self.ruleForm.checkCode
+      // 表单验证
+      self.$refs[formName].validate((valid) => {
+        let username = self.ruleForm.username
+        let jse = new this.$jsEncrypt.JSEncrypt()
+        jse.setPublicKey(rasPublic)
+        let password = self.ruleForm.password
+        // md5加密密码
+        // let pwd = self.ruleForm.password
+        // let password = jse.encrypt(md5(pwd).toLowerCase())
+        if (valid) {
+          if (code1.toLowerCase() !== code2.toLowerCase()) {
+            self.$message.error('验证码输入错误，请重新输入')
+            self.createCode()
+            return
+          }
+          login({username, password})
+            .then(res => {
+              // 保存用户名密码
+              setStore('u', username)
+              if (this.remember) {
+                setStore('p', pwd)
+                setStore('r', this.remember)
+              }
+              // 保存用户信息
+              self.saveLogin(res.data)
 
-                // 获取角色ID
-                let roleId = res.data.roleid
-                //根据角色ID获取角色对应菜单
-                sysMenuGetMenuListByRoleId({roleId})
-                  .then(res => {
-                    let arr = res.data
-                    // localStorage中保存用户菜单
-                    setStore('m', arr)
-                    //store中保存用户菜单
-                    self.saveMenus(arr)
-                  })
+              // 获取角色ID
+              let roleId = res.data.roleid
+              // 根据角色ID获取角色对应菜单
+              sysMenuGetMenuListByRoleId({roleId})
+                .then(res => {
+                  let arr = res.data
+                  // localStorage中保存用户菜单
+                  setStore('m', arr)
+                  // store中保存用户菜单
+                  self.saveMenus(arr)
+                })
 
                 // let arr = res.result.menus
                 // console.log('munu_items', menu_items)
@@ -134,50 +134,50 @@
                 // setStore('m', items)
                 // //保存用户菜单
                 // self.saveMenus(items)
-                self.$router.push({
-                  path: '/'
-                })
+              self.$router.push({
+                path: '/'
               })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      // 创建验证码
-      createCode() {
-        var code = []
-        code.length = 4
-        let random = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-        for (let i = 0; i < 4; i++) {
-          let index = Math.floor(Math.random() * 34)
-          code.push(random[index])
+            })
+        } else {
+          console.log('error submit!!')
+          return false
         }
-        this.check_code = code.join("")
-        this.draw_check(this.check_code)
-      },
-      draw_check(code) {
-        let canvas = document.querySelector('.code')
-        let ctx = canvas.getContext('2d')
-        canvas.height = canvas.height
-        ctx.font = '94px Arial'
-        ctx.fillStyle = this.randomColor(180, 230)
-        ctx.fillText(code, 0, canvas.height)
-      },
-      randomColor(min, max) {
-        let r = this.randomNum(min, max)
-        let g = this.randomNum(min, max)
-        let b = this.randomNum(min, max)
-        return `rgb(${r},${g},${b})`
-      },
-      randomNum(min, max) {
-        return parseInt(Math.random() * (max - min) + min)
-      }
+      })
     },
-    mounted() {
-      this.createCode()
+    // 创建验证码
+    createCode () {
+      var code = []
+      code.length = 4
+      let random = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+      for (let i = 0; i < 4; i++) {
+        let index = Math.floor(Math.random() * 34)
+        code.push(random[index])
+      }
+      this.check_code = code.join('')
+      this.draw_check(this.check_code)
+    },
+    draw_check (code) {
+      let canvas = document.querySelector('.code')
+      let ctx = canvas.getContext('2d')
+      canvas.height = canvas.height
+      ctx.font = '94px Arial'
+      ctx.fillStyle = this.randomColor(180, 230)
+      ctx.fillText(code, 0, canvas.height)
+    },
+    randomColor (min, max) {
+      let r = this.randomNum(min, max)
+      let g = this.randomNum(min, max)
+      let b = this.randomNum(min, max)
+      return `rgb(${r},${g},${b})`
+    },
+    randomNum (min, max) {
+      return parseInt(Math.random() * (max - min) + min)
     }
+  },
+  mounted () {
+    this.createCode()
   }
+}
 </script>
 
 <style lang="less" scoped>

@@ -3,7 +3,7 @@
 import Vue from 'vue'
 /* 引入同目录下的App.vue模块 */
 import App from './App'
-// Router
+// 引入本地定义的Router
 import router from './router'
 // ElementUI
 import ElementUI from 'element-ui'
@@ -46,11 +46,11 @@ Vue.use(VueQuillEditor, {
  */
 /* eslint-disable no-new */
 new Vue({
-  el: '#app', /* 定义作用范围就是index.html里的id为app的范围内 */
+  el: '#app', /* 挂载点 */
   store, /* 引入vuex */
   router, /* 引入路由 */
   i18n,
-  render: h => h(App)
-  // components: {App}, /* 给vue实例初始一个APP组件作为template 相当于默认组件 */
-  // template: '<App/>' /* 注册引入的组建App.vue */
+  render: h => h(App) /* 2.0必须通过render方法来渲染 */
+  // components: {App}, /* 引入组件 */
+  // template: '<App/>' /* 模板，即要显示的html */
 })

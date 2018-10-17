@@ -12,7 +12,8 @@ Vue.use(Router)
 const router = new Router({
   // 定义基础路径
   base: '/dist/',
-  // mode: 'history', //后端支持可开
+  // 后端支持可开
+  mode: 'history',
   scrollBehavior: () => ({y: 0}),
   routes: [
     {path: '/login', component: () => import('@/views/login/index'), hidden: true},

@@ -23,6 +23,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="classify" label="栏目" align="center"></el-table-column>
+      <el-table-column prop="click" label="点击量" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>

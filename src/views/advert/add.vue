@@ -46,131 +46,131 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd, advertUpdate} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
-  import {mapState} from 'vuex'
+import axios from 'axios'
+import {VueEditor, Quill} from 'vue2-editor'
+import {upload, advertAdd, advertUpdate} from '@/api/server'
+import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import {mapState} from 'vuex'
 
-  export default {
-    components: {
-      VueEditor
-    },
-    created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
+export default {
+  components: {
+    VueEditor
+  },
+  created () {
+    // 判断是否为dev环境
+    if (process.env.NODE_ENV === 'development') {
+      // dev
+      this.uploadAction = localUploadServer
+    } else {
+      // build
+      this.uploadAction = uploadServer
+    }
+  },
+  computed: {
+    ...mapState({
+      form: state => state.Advert.advert,
+      advertType: state => state.Advert.advertType
+    })
+  },
+  data () {
+    return {
+      uploadData: {
+        file_type: 'img'
+      },
+      uploadAction: '',
+      imageServer: imageServer,
+      // form: {
+      //   type: '',
+      //   title: '',
+      //   picurl: '',
+      //   sort: '',
+      //   content: ''
+      // },
+      formRules: {
+        typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
+        title: [{required: true, trigger: 'blur', message: '请输入标题'}],
+        sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
+        picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
+        content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
+      },
+      loading: false,
+      fullscreenLoading: false
+    }
+  },
+  methods: {
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 100
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
       }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 100MB!')
+      }
+      this.fullscreenLoading = true
+      return isJPG && isLt2M
     },
-    computed: {
-      ...mapState({
-        form: state => state.Advert.advert,
-        advertType: state => state.Advert.advertType
+    handleAvatarSuccess (res) {
+      this.form.picurl = res.data
+      this.fullscreenLoading = false
+    },
+    // 处理富文本图片上传
+    handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
+      var formData = new FormData()
+      formData.append('file', file)
+      formData.append('file_type', 'img')
+      axios({
+        url: this.uploadAction,
+        method: 'POST',
+        data: formData
+      }).then((result) => {
+        let url = result.data.data // Get url from response
+        Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+        resetUploader()
+      }).catch((err) => {
+        console.log(err)
       })
     },
-    data() {
-      return {
-        uploadData: {
-          file_type: 'img'
-        },
-        uploadAction: '',
-        imageServer: imageServer,
-        // form: {
-        //   type: '',
-        //   title: '',
-        //   picurl: '',
-        //   sort: '',
-        //   content: ''
-        // },
-        formRules: {
-          typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
-          title: [{required: true, trigger: 'blur', message: '请输入标题'}],
-          sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
-          picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
-          content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
-        },
-        loading: false,
-        fullscreenLoading: false
-      }
-    },
-    methods: {
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'
-        const isLt2M = file.size / 1024 / 1024 < 100
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 100MB!')
-        }
-        this.fullscreenLoading = true
-        return isJPG && isLt2M
-      },
-      handleAvatarSuccess(res) {
-        this.form.picurl = res.data
-        this.fullscreenLoading = false
-      },
-      // 处理富文本图片上传
-      handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
-        var formData = new FormData();
-        formData.append('file', file)
-        formData.append('file_type', 'img')
-        axios({
-          url: this.uploadAction,
-          method: 'POST',
-          data: formData
-        }).then((result) => {
-          let url = result.data.data // Get url from response
-          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url);
-          resetUploader();
-        }).catch((err) => {
-          console.log(err);
-        })
-      },
-      onSubmit() {
-        this.$refs.form.validate(valid => {
-          if (valid) {
-            this.loading = true
-            if (this.form.id) {
-              advertUpdate(this.form)
-                .then(res => {
-                  this.loading = false
-                  this.$message.success('更新成功')
-                  this.$router.push({
-                    path: '/advert/index'
-                  })
+    onSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          if (this.form.id) {
+            advertUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/advert/index'
                 })
-            }else{
-              advertAdd(this.form)
-                .then(res => {
-                  this.loading = false
-                  this.$message.success('添加成功')
-                  this.$router.push({
-                    path: '/advert/index'
-                  })
-                })
-            }
+              })
           } else {
-            this.loading = false
-            this.$message({
-              message: '请完善表单信息!',
-              type: 'warning'
-            })
+            advertAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/advert/index'
+                })
+              })
           }
-        })
-      },
-      onCancel() {
-        this.$message({
-          message: '取消添加!',
-          type: 'warning'
-        })
-      }
+        } else {
+          this.loading = false
+          this.$message({
+            message: '请完善表单信息!',
+            type: 'warning'
+          })
+        }
+      })
+    },
+    onCancel () {
+      this.$message({
+        message: '取消添加!',
+        type: 'warning'
+      })
     }
   }
+}
 </script>
 
 <style scoped>
