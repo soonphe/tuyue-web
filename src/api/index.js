@@ -109,7 +109,7 @@ function apiAxios (method, url, params) {
     if (method === 'POST') {
       options = {
         method: 'POST',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         // 上传文件这里使用multipart类型
         // headers: {'content-type': 'multipart/form-data'},
         data: qs.stringify(params),
@@ -119,11 +119,11 @@ function apiAxios (method, url, params) {
         // data: params,
         url
       }
-      // PUT上传json对象
     } else if (method === 'PUT') {
       options = {
         method: 'POST',
         data: params,
+        // param: params,
         url
       }
     } else {

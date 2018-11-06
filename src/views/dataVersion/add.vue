@@ -21,80 +21,80 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, dataVersionAdd} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import axios from 'axios'
+import {VueEditor, Quill} from 'vue2-editor'
+import {upload, dataVersionAdd} from '@/api/server'
+import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 
-  export default {
-    components: {
-      VueEditor
-    },
-    created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
-      }
-    },
-    data() {
-      return {
-        uploadData: {
-          file_type: 'img'
-        },
-        uploadAction: '',
-        imageServer: imageServer,
-        form: {
-          advertversion: '',
-          dataversion: ''
-        },
-        formRules: {
-          name: [{required: true, trigger: 'blur', message: '请输入推送名称'}],
-          picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
-        },
-        loading: false,
-        fullscreenLoading: false
-      }
-    },
-    methods: {
-      onSubmit() {
-        this.$refs.form.validate(valid => {
-          if (valid) {
-            this.loading = true
-            dataVersionAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/dataVersion/index'
-                })
-              }).catch(() => {
+export default {
+  components: {
+    VueEditor
+  },
+  created () {
+    // 判断是否为dev环境
+    if (process.env.NODE_ENV === 'development') {
+      // dev
+      this.uploadAction = localUploadServer
+    } else {
+      // build
+      this.uploadAction = uploadServer
+    }
+  },
+  data () {
+    return {
+      uploadData: {
+        file_type: 'img'
+      },
+      uploadAction: '',
+      imageServer: imageServer,
+      form: {
+        advertversion: '',
+        dataversion: ''
+      },
+      formRules: {
+        advertversion: [{required: true, trigger: 'blur', message: '请输入推送名称'}],
+        dataversion: [{required: true, trigger: 'blur', message: '请选择图片'}]
+      },
+      loading: false,
+      fullscreenLoading: false
+    }
+  },
+  methods: {
+    onSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          dataVersionAdd(this.form)
+            .then(res => {
+              this.loading = false
+              this.$message.success('添加成功')
+              this.$router.push({
+                path: '/dataVersion/index'
+              })
+            }).catch(() => {
               this.loading = false
               this.$message({
                 message: '添加失败!',
                 type: 'warning'
               })
             })
-          } else {
-            this.loading = false
-            this.$message({
-              message: '请完善表单信息!',
-              type: 'warning'
-            })
-          }
-        })
-      },
-      onCancel() {
-        this.$message({
-          message: '取消添加!',
-          type: 'warning'
-        })
-      }
+        } else {
+          this.loading = false
+          this.$message({
+            message: '请完善表单信息!',
+            type: 'warning'
+          })
+        }
+      })
+    },
+    onCancel () {
+      this.$message({
+        message: '取消添加!',
+        type: 'warning'
+      })
     }
   }
+}
 </script>
 
 <style scoped>

@@ -99,7 +99,7 @@ export default {
               // 保存用户名密码
               setStore('u', username)
               if (this.remember) {
-                setStore('p', pwd)
+                setStore('p', password)
                 setStore('r', this.remember)
               }
               // 保存用户信息

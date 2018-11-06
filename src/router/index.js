@@ -10,10 +10,10 @@ Vue.use(Router)
 
 // export default new Router({
 const router = new Router({
-  // 定义基础路径
+  // 定义基础路径 //
   base: '/dist/',
   // 后端支持可开
-  mode: 'history',
+  // mode: 'history',
   scrollBehavior: () => ({y: 0}),
   routes: [
     {path: '/login', component: () => import('@/views/login/index'), hidden: true},
@@ -55,6 +55,24 @@ const router = new Router({
       ]
     },
     {
+      path: '/devices',
+      component: Layout,
+      redirect: '/devices/index',
+      name: 'devices',
+      meta: {title: '设备管理', icon: 'el-icon-info'},
+      children: [
+        {
+          path: 'index',
+          component: () => import('@/views/devices/index')
+        },
+        {
+          path: 'add',
+          name: 'devicesAdd',
+          component: () => import('@/views/devices/add'),
+          meta: {title: '编辑', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
       path: '/push',
       component: Layout,
       redirect: '/push/index',
@@ -70,6 +88,24 @@ const router = new Router({
           name: 'pushAdd',
           component: () => import('@/views/push/add'),
           meta: {title: '添加推送', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
+      path: '/pushLocation',
+      component: Layout,
+      redirect: '/pushLocation/index',
+      name: 'pushLocation',
+      meta: {title: '地域推送', icon: 'el-icon-info'},
+      children: [
+        {
+          path: 'index',
+          component: () => import('@/views/pushLocation/index')
+        },
+        {
+          path: 'add',
+          name: 'pushLocationAdd',
+          component: () => import('@/views/pushLocation/add'),
+          meta: {title: '添加地域', icon: 'el-icon-picture-outline'}
         }]
     },
     {

@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+import echarts from 'echarts' // echarts theme
 import { debounce } from '@/utils'
 import {userGetUserCount} from '@/api/server'
+require('echarts/theme/macarons')
 
 export default {
   props: {
@@ -30,14 +30,13 @@ export default {
       type: Object
     }
   },
-  data() {
+  data () {
     return {
       chart: null,
       list: null
     }
   },
-  mounted() {
-
+  mounted () {
     // this.initChart()
     if (this.autoResize) {
       this.__resizeHanlder = debounce(() => {
@@ -52,7 +51,7 @@ export default {
     const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (!this.chart) {
       return
     }
@@ -69,7 +68,7 @@ export default {
   watch: {
     chartData: {
       deep: true,
-      handler(val) {
+      handler (val) {
         this.setOptions(val)
       }
     }
@@ -87,7 +86,7 @@ export default {
           }
         })
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions ({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
           data: [
@@ -150,7 +149,7 @@ export default {
           ],
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
-        },
+        }
         // {
         //   name: '用户总数',
         //   smooth: true,
@@ -182,7 +181,7 @@ export default {
         ]
       })
     },
-    initChart() {
+    initChart () {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     }

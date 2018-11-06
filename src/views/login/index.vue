@@ -37,7 +37,7 @@
         </div>
       </el-form-item>
       <!--<el-form-item>-->
-        <!--<el-checkbox v-model="remember">记住密码</el-checkbox>-->
+      <!--<el-checkbox v-model="remember">记住密码</el-checkbox>-->
       <!--</el-form-item>-->
       <el-form-item class="re">
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
@@ -49,147 +49,149 @@
 </template>
 
 <script>
-  import {login, sysMenuGetMenuListByRoleId} from '@/api/server'
-  import {mapActions} from 'vuex'
-  import {setStore, getStore, rasPublic} from '@/utils/local'
-  import {isvalidUsername} from '@/utils/validate'
+import {login, sysMenuGetMenuListByRoleId} from '@/api/server'
+import {mapActions} from 'vuex'
+import {setStore, getStore, rasPublic} from '@/utils/local'
+import {isvalidUsername} from '@/utils/validate'
 
-  export default {
-    data() {
-      const validateUsername = (rule, value, callback) => {
-        if (!isvalidUsername(value)) {
-          callback(new Error('请输入正确的用户名'))
-        } else {
-          callback()
-        }
-      };
-      const validatePass = (rule, value, callback) => {
-        if (!value || value.length < 5) {
-          callback(new Error('密码不能小于5位'))
-        } else {
-          callback()
-        }
-      };
-      return {
-        loginForm: {
-          username: 'admin',
-          password: 'admin'
-        },
-        loginRules: {
-          username: [{required: true, trigger: 'blur', validator: validateUsername}],
-          password: [{required: true, trigger: 'blur', validator: validatePass}],
-          checkCode: [{required: true, trigger: 'blur', message: '请输入验证码'}]
-        },
-        loading: false,
-        pwdType: 'password',
-        check_code: "",
-        checkCode: '',
-        remember: true
+export default {
+  data () {
+    const validateUsername = (rule, value, callback) => {
+      if (!isvalidUsername(value)) {
+        callback(new Error('请输入正确的用户名'))
+      } else {
+        callback()
+      }
+    }
+    const validatePass = (rule, value, callback) => {
+      if (!value || value.length < 5) {
+        callback(new Error('密码不能小于5位'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      loginForm: {
+        username: 'admin',
+        password: 'admin'
+      },
+      loginRules: {
+        username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        password: [{required: true, trigger: 'blur', validator: validatePass}],
+        checkCode: [{required: true, trigger: 'blur', message: '请输入验证码'}]
+      },
+      loading: false,
+      pwdType: 'password',
+      check_code: '',
+      checkCode: '',
+      remember: true,
+      roleId: 1
+    }
+  },
+  created () {
+    this.loginForm.username = getStore('username')
+    this.loginForm.password = getStore('password')
+    this.remember = getStore('remember')
+  },
+  methods: {
+    // 分发Actions
+    // this.$store.dispatch('xxx')
+    // 这里使用辅助函数分发
+    ...mapActions(['saveLogin', 'saveMenus']),
+    showPwd () {
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
+      } else {
+        this.pwdType = 'password'
       }
     },
-    created() {
-      this.loginForm.username = getStore('username')
-      this.loginForm.password = getStore('password')
-      this.remember = getStore('remember')
-    },
-    methods: {
-      // 分发Actions
-      // this.$store.dispatch('xxx')
-      // 这里使用辅助函数分发
-      ...mapActions(["saveLogin", 'saveMenus']),
-      showPwd() {
-        if (this.pwdType === 'password') {
-          this.pwdType = ''
-        } else {
-          this.pwdType = 'password'
-        }
-      },
-      handleLogin() {
-        this.$refs.loginForm.validate(valid => {
-          if (valid) {
-            this.loading = true
-            let username = this.loginForm.username
-            let password = this.loginForm.password
-            // md5加密密码
-            // let jse = new this.$jsEncrypt.JSEncrypt()
-            // jse.setPublicKey(rasPublic)
-            // let pwd = self.ruleForm.password
-            // let password = jse.encrypt(md5(pwd).toLowerCase())
-            let code1 = this.check_code
-            let code2 = this.loginForm.checkCode
-            if (code1.toLowerCase() !== code2.toLowerCase()) {
-              this.$message.error('验证码输入错误，请重新输入')
-              this.createCode()
-              return
-            }
-            login({username, password})
-              .then(res => {
-                //保存用户名
-                setStore('username', username)
-                setStore('token', res.data.token)
-                if (this.remember) {
-                  setStore('password', password)
-                  setStore('remember', this.remember)
-                }
-                //store保存用户信息
-                this.saveLogin(res.data)
-                // 获取角色ID
-                let roleId = res.data.roleid
-                //根据角色ID获取角色对应菜单
-                sysMenuGetMenuListByRoleId({roleId})
-                  .then(res => {
-                    let arr = res.data
-                    // localStorage中保存用户菜单
-                    setStore('menu', arr)
-                    //store中保存用户菜单
-                    this.saveMenus(arr)
-                  })
-                this.loading = false
-                this.$router.push({path: '/'})
-              }).catch(() => {
+    handleLogin () {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          let username = this.loginForm.username
+          let password = this.loginForm.password
+          // md5加密密码
+          // let jse = new this.$jsEncrypt.JSEncrypt()
+          // jse.setPublicKey(rasPublic)
+          // let pwd = self.ruleForm.password
+          // let password = jse.encrypt(md5(pwd).toLowerCase())
+          let code1 = this.check_code
+          let code2 = this.loginForm.checkCode
+          if (code1.toLowerCase() !== code2.toLowerCase()) {
+            this.$message.error('验证码输入错误，请重新输入')
+            this.createCode()
+            return
+          }
+          login({username, password})
+            .then(res => {
+              // 保存用户名
+              setStore('username', username)
+              setStore('token', res.data.token)
+              if (this.remember) {
+                setStore('password', password)
+                setStore('remember', this.remember)
+              }
+              // store保存用户信息
+              this.saveLogin(res.data)
+              // 获取角色ID
+              let roleId = res.data.roleid
+              console.log('这里答应roleId' + roleId)
+              // 根据角色ID获取角色对应菜单
+              sysMenuGetMenuListByRoleId({roleId})
+                .then(res => {
+                  let arr = res.data
+                  // localStorage中保存用户菜单
+                  setStore('menu', arr)
+                  // store中保存用户菜单
+                  this.saveMenus(arr)
+                })
+              this.loading = false
+              this.$router.push({path: '/'})
+            }).catch(() => {
               this.loading = false
             })
-          } else {
-            this.createCode()
-            console.log('param error submit!!')
-            return false
-          }
-        })
-      },
-      // 创建验证码
-      createCode() {
-        var code = []
-        code.length = 4
-        let random = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-        for (let i = 0; i < 4; i++) {
-          let index = Math.floor(Math.random() * 34)
-          code.push(random[index])
+        } else {
+          this.createCode()
+          console.log('param error submit!!')
+          return false
         }
-        this.check_code = code.join("")
-        this.draw_check(this.check_code)
-      },
-      draw_check(code) {
-        let canvas = document.querySelector('.code')
-        let ctx = canvas.getContext('2d')
-        canvas.height = canvas.height
-        ctx.font = '94px Arial'
-        ctx.fillStyle = this.randomColor(180, 230)
-        ctx.fillText(code, 0, canvas.height)
-      },
-      randomColor(min, max) {
-        let r = this.randomNum(min, max)
-        let g = this.randomNum(min, max)
-        let b = this.randomNum(min, max)
-        return `rgb(${r},${g},${b})`
-      },
-      randomNum(min, max) {
-        return parseInt(Math.random() * (max - min) + min)
-      }
+      })
     },
-    mounted() {
-      this.createCode()
+    // 创建验证码
+    createCode () {
+      var code = []
+      code.length = 4
+      let random = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+      for (let i = 0; i < 4; i++) {
+        let index = Math.floor(Math.random() * 34)
+        code.push(random[index])
+      }
+      this.check_code = code.join('')
+      this.draw_check(this.check_code)
+    },
+    draw_check (code) {
+      let canvas = document.querySelector('.code')
+      let ctx = canvas.getContext('2d')
+      canvas.height = canvas.height
+      ctx.font = '94px Arial'
+      ctx.fillStyle = this.randomColor(180, 230)
+      ctx.fillText(code, 0, canvas.height)
+    },
+    randomColor (min, max) {
+      let r = this.randomNum(min, max)
+      let g = this.randomNum(min, max)
+      let b = this.randomNum(min, max)
+      return `rgb(${r},${g},${b})`
+    },
+    randomNum (min, max) {
+      return parseInt(Math.random() * (max - min) + min)
     }
+  },
+  mounted () {
+    this.createCode()
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" type="text/scss">

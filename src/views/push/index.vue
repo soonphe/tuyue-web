@@ -16,6 +16,9 @@
           <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
         </template>
       </el-table-column>
+      <el-table-column prop="piclink" label="图片链接" align="center"></el-table-column>
+      <el-table-column prop="content" label="文字" align="center"></el-table-column>
+      <el-table-column prop="contentlink" label="文字链接" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>

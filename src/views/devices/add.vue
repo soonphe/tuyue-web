@@ -2,34 +2,11 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-
-        <el-form-item prop="name" label="推送名称">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item prop="imcode" label="IM码">
+          <el-input v-model="form.imcode" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item prop="groupid" label="推送分组">
-          <el-input v-model="form.groupid" type="number" ></el-input>
-        </el-form-item>
-        <el-form-item prop="picurl" label="推送图片">
-          <el-upload class="avatar-uploader"
-                     :action="uploadAction"
-                     :data="uploadData"
-                     name="file"
-                     :show-file-list="false"
-                     :on-success="handleAvatarSuccess"
-                     :before-upload="beforeAvatarUpload"
-                     v-loading.fullscreen.lock="fullscreenLoading">
-            <img v-if="form.picurl" :src="imageServer+form.picurl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item prop="piclink" label="图片链接">
-          <el-input v-model="form.piclink"></el-input>
-        </el-form-item>
-        <el-form-item prop="content" label="文字">
-          <el-input v-model="form.content"></el-input>
-        </el-form-item>
-        <el-form-item prop="contentlink" label="文字链接">
-          <el-input v-model="form.contentlink"></el-input>
+        <el-form-item prop="groupid" label="组号">
+          <el-input v-model="form.groupid"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -44,7 +21,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, pushAdd} from '@/api/server'
+import {devicesUpdate} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -61,17 +38,11 @@ export default {
       // build
       this.uploadAction = uploadServer
     }
-    // if (this.advert.length > 0) {
-    //   this.type = this.advert.type + ''
-    //   this.title = this.advert.title + ''
-    //   this.picurl = this.advert.picurl + ''
-    //   this.sort = this.advert.sort + ''
-    //   this.content = this.advert.content + ''
-    // }
   },
   computed: {
     ...mapState({
-      form: state => state.Advert.advert
+      form: state => state.Advert.advert,
+      city_id: state => state.Advert.advertType
     })
   },
   data () {
@@ -82,8 +53,9 @@ export default {
       uploadAction: '',
       imageServer: imageServer,
       formRules: {
-        name: [{required: true, trigger: 'blur', message: '请输入推送名称'}]
-
+        // typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
+        // cityid: [{required: true, trigger: 'blur', message: '城市ID不能为空'}],
+        groupid: [{required: true, trigger: 'blur', message: '请选择组号'}]
       },
       loading: false,
       fullscreenLoading: false
@@ -127,20 +99,16 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          pushAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/push/index'
+          if (this.form.id) {
+            devicesUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/devices/index'
+                })
               })
-            }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
-              })
-            })
+          }
         } else {
           this.loading = false
           this.$message({

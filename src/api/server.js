@@ -8,6 +8,15 @@ import api from './index'
 export const upload = params => api.post('/common/upload', params)
 
 /**
+ * 设备管理
+ * @param params
+ * @returns {*}
+ */
+export const devicesGetList = params => api.get('/devices/getList', params)
+export const devicesUpdate = params => api.put('/devices/update', params)
+export const devicesDelete = params => api.get('/devices/delete', params)
+
+/**
  * 用户
  */
 export const login = params => api.post('/sysUser/login', params)
@@ -47,6 +56,14 @@ export const versionAdd = params => api.put('/version/add', params)
  */
 export const pushGetList = params => api.get('/push/getList', params)
 export const pushAdd = params => api.put('/push/add', params)
+
+/**
+ * 地域推送
+ */
+export const pushLocationGetList = params => api.get('/pushLocation/getList', params)
+export const pushLocationAdd = params => api.put('/pushLocation/add', params)
+export const pushLocationDelete = params => api.get('/pushLocation/delete', params)
+export const pushLocationUpdate = params => api.post('/pushLocation/update', params)
 
 /**
  * 用户

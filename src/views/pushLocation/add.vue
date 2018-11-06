@@ -3,11 +3,8 @@
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
 
-        <el-form-item prop="name" label="推送名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item prop="groupid" label="推送分组">
-          <el-input v-model="form.groupid" type="number" ></el-input>
+        <el-form-item prop="location" label="地域">
+          <el-input v-model="form.location"></el-input>
         </el-form-item>
         <el-form-item prop="picurl" label="推送图片">
           <el-upload class="avatar-uploader"
@@ -44,7 +41,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, pushAdd} from '@/api/server'
+import {upload, pushLocationAdd} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -81,8 +78,9 @@ export default {
       },
       uploadAction: '',
       imageServer: imageServer,
+      groupid: 0,
       formRules: {
-        name: [{required: true, trigger: 'blur', message: '请输入推送名称'}]
+        location: [{required: true, trigger: 'blur', message: '请输入推送地域'}]
 
       },
       loading: false,
@@ -127,12 +125,12 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          pushAdd(this.form)
+          pushLocationAdd(this.form)
             .then(res => {
               this.loading = false
               this.$message.success('添加成功')
               this.$router.push({
-                path: '/push/index'
+                path: '/pushLocation/index'
               })
             }).catch(() => {
               this.loading = false
