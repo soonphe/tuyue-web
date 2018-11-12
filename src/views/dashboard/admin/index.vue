@@ -26,17 +26,17 @@
         </div>
       </el-col>
       <!-- 柱状图 -->
-      <el-col :xs="24" :sm="24" :lg="8">
+      <el-col :xs="48" :sm="48" :lg="16">
         <div class="chart-wrapper">
           <bar-chart></bar-chart>
         </div>
       </el-col>
       <!-- 柱状图 -->
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart></bar-chart>
-        </div>
-      </el-col>
+      <!--<el-col :xs="24" :sm="24" :lg="8">-->
+        <!--<div class="chart-wrapper">-->
+          <!--<bar-chart></bar-chart>-->
+        <!--</div>-->
+      <!--</el-col>-->
     </el-row>
 
   </div>
