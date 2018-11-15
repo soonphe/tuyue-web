@@ -27,6 +27,7 @@
       <el-table-column prop="book" label="书吧" align="center"></el-table-column>
       <el-table-column prop="city" label="城市" align="center"></el-table-column>
       <el-table-column prop="subway" label="城铁" align="center"></el-table-column>
+      <el-table-column prop="food" label="点餐" align="center"></el-table-column>
       <el-table-column prop="clickSum" label="总计" align="center"></el-table-column>
       <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
         <!--<template slot-scope="scope">-->

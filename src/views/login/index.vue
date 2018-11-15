@@ -136,7 +136,7 @@ export default {
               this.saveLogin(res.data)
               // 获取角色ID
               let roleId = res.data.roleid
-              console.log('这里答应roleId' + roleId)
+              console.log('roleId' + roleId)
               // 根据角色ID获取角色对应菜单
               sysMenuGetMenuListByRoleId({roleId})
                 .then(res => {

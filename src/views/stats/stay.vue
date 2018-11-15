@@ -27,6 +27,7 @@
       <el-table-column prop="bookTime" label="书吧" align="center"></el-table-column>
       <el-table-column prop="cityTime" label="城市" align="center"></el-table-column>
       <el-table-column prop="subwayTime" label="城铁" align="center"></el-table-column>
+      <el-table-column prop="foodTime" label="点餐" align="center"></el-table-column>
       <el-table-column prop="staySum" label="总计" align="center"></el-table-column>
       <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
       <!--<template slot-scope="scope">-->

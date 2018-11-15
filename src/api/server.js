@@ -99,12 +99,20 @@ export const advertDelete = params => api.get('/advert/delete', params)
 export const advertUpdate = params => api.put('/advert/update', params)
 
 /**
- * 视频类别
+ * 电影类别
  */
 export const videoTypeGetList = params => api.get('/videoType/getList', params)
 export const videoTypeAdd = params => api.post('/videoType/add', params)
 export const videoTypeDelete = params => api.get('/videoType/delete', params)
 export const videoTypeUpdate = params => api.post('/videoType/update', params)
+
+/**
+ * 视频
+ */
+export const movieGetList = params => api.get('/movie/getList', params)
+export const movieAdd = params => api.put('/movie/add', params)
+export const movieDelete = params => api.get('/movie/delete', params)
+export const movieUpdate = params => api.put('/movie/update', params)
 
 /**
  * 视频

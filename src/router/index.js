@@ -296,6 +296,21 @@ const router = new Router({
       ]
     },
     {
+      path: '/movie',
+      component: Layout,
+      redirect: '/movie/index',
+      name: 'movie',
+      meta: {title: '电影管理', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'videoIndex',
+          component: () => import('@/views/movie/index'),
+          meta: {title: '电影', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
       path: '/bookType',
       component: Layout,
       redirect: '/bookType/index',
