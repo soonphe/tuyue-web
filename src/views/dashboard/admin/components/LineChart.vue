@@ -88,6 +88,7 @@ export default {
     },
     setOptions ({ expectedData, actualData } = {}) {
       this.chart.setOption({
+        title: { text: '每日新增用户' },
         xAxis: {
           data: [
             this.list[0].createTime,

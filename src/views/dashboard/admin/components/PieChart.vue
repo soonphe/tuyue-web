@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import {statsGetClick} from '@/api/server'
+import {statsGetStay} from '@/api/server'
 
 export default {
   props: {
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     getList () {
-      statsGetClick()
+      statsGetStay()
         .then(res => {
           this.list = res.data
           if (this.list.length) {
@@ -63,6 +63,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        title: { text: '每日停留统计' },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -81,12 +82,12 @@ export default {
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: this.list[0].movies, name: '电影' },
-              { value: this.list[0].game, name: '游戏' },
-              { value: this.list[0].book, name: '书吧' },
-              { value: this.list[0].food, name: '点餐' },
-              { value: this.list[0].city, name: '城市' },
-              { value: this.list[0].subway, name: '城铁' }
+              { value: this.list[0].moviesTime, name: '电影' },
+              { value: this.list[0].gameTime, name: '游戏' },
+              { value: this.list[0].bookTime, name: '书吧' },
+              { value: this.list[0].foodTime, name: '点餐' },
+              { value: this.list[0].cityTime, name: '城市' },
+              { value: this.list[0].subwayTime, name: '城铁' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
