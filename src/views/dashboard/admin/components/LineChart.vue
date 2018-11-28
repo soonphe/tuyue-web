@@ -88,7 +88,9 @@ export default {
     },
     setOptions ({ expectedData, actualData } = {}) {
       this.chart.setOption({
-        title: { text: '每日新增用户' },
+        title: {
+          text: '每日新增用户'
+        },
         xAxis: {
           data: [
             this.list[0].createTime,
@@ -108,7 +110,7 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 40,
           containLabel: true
         },
         tooltip: {

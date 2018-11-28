@@ -242,7 +242,7 @@ export default {
       position: absolute;
       left: 0;
       right: 0;
-      width: 520px;
+      width: 380px;
       padding: 35px 35px 15px 35px;
       margin: 120px auto;
     }
@@ -286,14 +286,12 @@ export default {
   }
 
   .show_canvas {
-    width: calc(50% - 40px);
     float: right;
     height: 47px;
     text-align: center;
   }
 
   .code {
-    width: 50%;
     height: 47px;
   }
 

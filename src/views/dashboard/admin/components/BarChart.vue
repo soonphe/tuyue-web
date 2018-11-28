@@ -74,7 +74,7 @@
             }
           },
           grid: {
-            top: 30,
+            top: 40,
             left: '2%',
             right: '2%',
             bottom: '3%',

@@ -76,11 +76,11 @@ export default {
         calculable: true,
         series: [
           {
-            name: '平板点击比例',
+            name: '停留比例',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
-            center: ['50%', '38%'],
+            center: ['50%', '48%'],
             data: [
               { value: this.list[0].moviesTime, name: '电影' },
               { value: this.list[0].gameTime, name: '游戏' },
