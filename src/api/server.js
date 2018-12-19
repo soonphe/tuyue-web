@@ -22,7 +22,7 @@ export const devicesDelete = params => api.get('/devices/delete', params)
 export const login = params => api.post('/sysUser/login', params)
 export const logout = params => api.get('/sysUser/logout', params)
 export const sysUserGetList = params => api.get('/sysUser/getList', params)
-export const sysUserAdd = params => api.post('/sysUser/add', params)
+export const sysUserAdd = params => api.put('/sysUser/add', params)
 export const sysUserDelete = params => api.get('/sysUser/delete', params)
 export const sysUserUpdate = params => api.post('/sysUser/update', params)
 
@@ -30,7 +30,7 @@ export const sysUserUpdate = params => api.post('/sysUser/update', params)
  * 角色
  */
 export const sysRoleGetList = params => api.get('/sysRole/getList', params)
-export const sysRoleAdd = params => api.post('/sysRole/add', params)
+export const sysRoleAdd = params => api.put('/sysRole/add', params)
 export const sysRoleDelete = params => api.get('/sysRole/delete', params)
 export const sysRoleUpdate = params => api.post('/sysRole/update', params)
 
@@ -38,10 +38,10 @@ export const sysRoleUpdate = params => api.post('/sysRole/update', params)
  * 模块
  */
 export const sysMenuGetMenuListByRoleId = params => api.get('/sysMenu/getMenuListByRoleId', params)
-// export const sysMenuGetList = params => get('/sysMenu/getList', params)
-// export const sysMenuAdd = params => post('/sysMenu/add', params)
-// export const sysMenuDelete = params => post('/sysMenu/delete', params)
-// export const sysMenuUpdate = params => post('/sysMenu/update', params)
+export const sysMenuGetList = params => api.get('/sysMenu/getList', params)
+export const sysMenuAdd = params => api.put('/sysMenu/add', params)
+export const sysMenuDelete = params => api.post('/sysMenu/delete', params)
+export const sysMenuUpdate = params => api.post('/sysMenu/update', params)
 
 /**
  * 版本管理
@@ -217,3 +217,19 @@ export const articleGetList = params => api.get('/article/getList', params)
 export const articleAdd = params => api.put('/article/add', params)
 export const articleDelete = params => api.get('/article/delete', params)
 export const articleUpdate = params => api.put('/article/update', params)
+
+/**
+ * 车组
+ */
+export const groupGetList = params => api.get('/group/getList', params)
+export const groupAdd = params => api.put('/group/add', params)
+export const groupDelete = params => api.get('/group/delete', params)
+export const groupUpdate = params => api.put('/group/update', params)
+
+/**
+ * 出入库
+ */
+export const storageGetList = params => api.get('/storage/getList', params)
+export const storageleAdd = params => api.put('/storage/add', params)
+export const storageDelete = params => api.get('/storage/delete', params)
+export const storageUpdate = params => api.put('/storage/update', params)

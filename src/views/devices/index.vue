@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.title')" v-model="listQuery.imCode"></el-input>
+                :placeholder="$t('table.name')" v-model="listQuery.imCode"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加</el-button>-->
     </div>
@@ -10,7 +10,8 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
       <el-table-column prop="imcode" label="IM码" align="center"></el-table-column>
-      <el-table-column prop="groupid" label="组号" align="center"></el-table-column>
+      <el-table-column prop="assetnumber" label="资产编码" align="center"></el-table-column>
+      <el-table-column prop="groupid" label="推送组号" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>

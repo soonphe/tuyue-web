@@ -9,28 +9,33 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="file_name" label="电影名称" align="center"></el-table-column>
-      <!--<el-table-column label="封面" align="center">-->
-        <!--<template slot-scope="scope">-->
-          <!--<img :src="imageServer+scope.row.posterurl" style="width:100%;height:100%"/>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="director" label="导演" align="center"></el-table-column>-->
-      <!--<el-table-column prop="actor" label="主演" align="center"></el-table-column>-->
-      <!--<el-table-column prop="profile" label="简介" align="center"></el-table-column>-->
-      <el-table-column prop="click" label="点击量" align="center" ></el-table-column>
-      <!--<el-table-column prop="ctime" label="创建时间" align="center" width="200">-->
-        <!--<template slot-scope="scope">-->
-          <!--<i class="el-icon-time"></i>-->
-          <!--<span>{{scope.row.ctime}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">-->
-        <!--<template slot-scope="scope">-->
+      <el-table-column prop="deviceid" label="IM码" align="center"></el-table-column>
+      <el-table-column prop="assetnumber" label="资产编码" align="center"></el-table-column>
+      <el-table-column prop="groupid" label="组名" align="center"></el-table-column>
+      <el-table-column prop="battery" label="电量" align="center">
+        <template slot-scope="scope">
+          <span>{{scope.row.battery}}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status == 0">出库</span>
+          <span v-else>入库</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="operator" label="操作人" align="center"></el-table-column>
+      <el-table-column prop="createtime" label="创建时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.createtime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
           <!--<el-button type="primary" @click="put(scope.row)">编辑</el-button>-->
-          <!--<el-button type="danger" @click="del(scope.row.id)">删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
+          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="pagination-container">
@@ -48,7 +53,7 @@
 </template>
 
 <script>
-  import {movieGetList, movieDelete} from '@/api/server'
+  import {storageGetList, storageDelete} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -100,16 +105,9 @@
       clearType() {
         this.listQuery.type = undefined
       },
-      getTypeData() {
-        videoTypeGetList()
-          .then(res => {
-            this.typeList = res.data
-            this.saveVideoType(this.typeList)
-          })
-      },
       getList() {
         this.listLoading = true
-        movieGetList(this.listQuery)
+        storageGetList(this.listQuery)
           .then(res => {
             this.list = res.data
             this.total = parseInt(res.ext)
@@ -139,7 +137,7 @@
           /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
            */
-          path: '/movie/add'
+          path: '/storage/add'
           // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
           // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
           // 通过路由名称跳转，携带参数（已成功）
@@ -149,7 +147,7 @@
       put(row) {
         this.saveVideo(row)
         this.$router.push({
-          path: '/movie/add'
+          path: '/storage/add'
         })
       },
       del(id) {
@@ -158,7 +156,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          movieDelete({id})
+          storageDelete({id})
             .then(res => {
               this.$message.success('删除成功')
               // 两种message写法
