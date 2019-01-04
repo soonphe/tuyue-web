@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-date-picker v-model="this.searchTime"
+      <el-date-picker v-model="searchTime"
                       value-format="yyyy-MM-dd"
                       type="daterange"
                       range-separator="至"

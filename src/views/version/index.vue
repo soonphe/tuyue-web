@@ -20,6 +20,12 @@
           <span>{{scope.row.createtime}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <!--<el-button type="primary" @click="put(scope.row)">编辑</el-button>-->
+          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="pagination-container">
@@ -37,7 +43,7 @@
 </template>
 
 <script>
-  import {versionGetList} from '@/api/server'
+  import {versionGetList,versionDelete} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -115,12 +121,12 @@
         })
       },
       del(id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          advertDelete({id})
+          versionDelete({id})
             .then(res => {
               this.$message.success('删除成功')
               // 两种message写法

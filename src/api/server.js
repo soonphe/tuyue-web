@@ -50,6 +50,7 @@ export const dataVersionGetList = params => api.get('/dataVersion/getList', para
 export const dataVersionAdd = params => api.put('/dataVersion/add', params)
 export const versionGetList = params => api.get('/version/getList', params)
 export const versionAdd = params => api.put('/version/add', params)
+export const versionDelete = params => api.get('/version/delete', params)
 
 /**
  * 推送管理

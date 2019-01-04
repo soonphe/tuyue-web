@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-date-picker v-model="this.listQuery.searchTime"
+      <el-date-picker v-model="searchTime"
                       value-format="yyyy-MM-dd"
                       type="daterange"
                       range-separator="至"
@@ -60,10 +60,12 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
+      searchTime:'',
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
-        searchTime: undefined,
+        startDate: '',
+        endDate: ''
       },
       imageServer: imageServer,
       typeList: []
@@ -87,6 +89,11 @@ export default {
 
     getList () {
       this.listLoading = true
+      let time = this.searchTime
+      if (time.length) {
+        this.listQuery.startDate = time[0]
+        this.listQuery.endDate  = time[1]
+      }
       statsGetUnlock(this.listQuery)
         .then(res => {
           this.list = res.data

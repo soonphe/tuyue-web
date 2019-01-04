@@ -1,8 +1,24 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-date-picker v-model="searchTime"
+                      value-format="yyyy-MM-dd"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期">
+      </el-date-picker>
+      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.group"
+                 placeholder="车组">
+        <el-option v-for="item in  typeList" :key="item.id" :label="item.groupid" :value="item.groupid"></el-option>
+      </el-select>
+      <el-select clearable @clear="clearType2" class="filter-item" style="width: 130px" v-model="listQuery.status"
+                 placeholder="状态">
+        <el-option  label="出库" value="0"></el-option>
+        <el-option  label="入库" value="1"></el-option>
+      </el-select>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.name')" v-model="listQuery.name"></el-input>
+                placeholder="操作人" v-model="listQuery.operator"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加</el-button>-->
     </div>
@@ -53,7 +69,7 @@
 </template>
 
 <script>
-  import {storageGetList, storageDelete} from '@/api/server'
+  import {storageGetList, storageDelete,groupGetList} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -68,10 +84,15 @@
         list: null,
         listLoading: true,
         total: 0,
+        searchTime: '',
         listQuery: {
           pageNum: 1,
           pageSize: pageSize,
-          name: undefined
+          group: undefined,
+          status: undefined,
+          operator: undefined,
+          startDate: '',
+          endDate: ''
         },
         imageServer: imageServer,
         typeList: []
@@ -88,7 +109,7 @@
       }
     },
     created() {
-      // this.getTypeData()
+      this.getTypeData()
       this.getList()
     },
     methods: {
@@ -103,10 +124,25 @@
         // })
       },
       clearType() {
-        this.listQuery.type = undefined
+        this.listQuery.group = undefined
+      },
+      clearType2() {
+        this.listQuery.status = undefined
+      },
+      getTypeData() {
+        groupGetList()
+          .then(res => {
+            this.typeList = res.data
+            this.saveAdvertType(this.typeList)
+          })
       },
       getList() {
         this.listLoading = true
+        let time = this.searchTime
+        if (time.length) {
+          this.listQuery.startDate = time[0]
+          this.listQuery.endDate  = time[1]
+        }
         storageGetList(this.listQuery)
           .then(res => {
             this.list = res.data
