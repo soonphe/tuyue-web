@@ -100,6 +100,22 @@ export const advertDelete = params => api.get('/advert/delete', params)
 export const advertUpdate = params => api.put('/advert/update', params)
 
 /**
+ * 广告商
+ */
+export const advertiserGetList = params => api.get('/advertiser/getList', params)
+export const advertiserAdd = params => api.put('/advertiser/add', params)
+export const advertiserDelete = params => api.get('/advertiser/delete', params)
+export const advertiserUpdate = params => api.put('/advertiser/update', params)
+
+/**
+ * 广告主
+ */
+export const advertSponsorGetList = params => api.get('/advertSponsor/getList', params)
+export const advertSponsorAdd = params => api.put('/advertSponsor/add', params)
+export const advertSponsorDelete = params => api.get('/advertSponsor/delete', params)
+export const advertSponsorUpdate = params => api.put('/advertSponsor/update', params)
+
+/**
  * 电影类别
  */
 export const videoTypeGetList = params => api.get('/videoType/getList', params)

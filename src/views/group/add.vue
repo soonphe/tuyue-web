@@ -2,8 +2,20 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="imcode" label="组名">
-          <el-input v-model="form.groupid" disabled="true"></el-input>
+        <el-form-item prop="name" label="组名">
+          <el-input v-model="form.name" ></el-input>
+        </el-form-item>
+        <el-form-item prop="spec" label="规格">
+          <el-input v-model="form.spec"></el-input>
+        </el-form-item>
+        <el-form-item prop="status" label="是否运营">
+          <el-select v-model="form.status" placeholder="请选择类型">
+            <el-option  label="未运营" value="0" ></el-option>
+            <el-option  label="运营" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="remark" label="说明">
+          <el-input v-model="form.remark" ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -18,7 +30,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {groupAdd} from '@/api/server'
+import {groupAdd,groupUpdate} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -44,6 +56,8 @@ export default {
   },
   data () {
     return {
+      groupTrue: true,
+      groupFalse: false,
       uploadData: {
         file_type: 'img'
       },
@@ -52,7 +66,7 @@ export default {
       formRules: {
         // typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
         // cityid: [{required: true, trigger: 'blur', message: '城市ID不能为空'}],
-        groupid: [{required: true, trigger: 'blur', message: '请选择组号'}]
+        name: [{required: true, trigger: 'blur', message: '请选择组号'}]
       },
       loading: false,
       fullscreenLoading: false
@@ -97,10 +111,19 @@ export default {
         if (valid) {
           this.loading = true
           if (this.form.id) {
-            groupAdd(this.form)
+            groupUpdate(this.form)
               .then(res => {
                 this.loading = false
                 this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/group/index'
+                })
+              })
+          } else {
+            groupAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
                 this.$router.push({
                   path: '/group/index'
                 })

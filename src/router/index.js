@@ -254,6 +254,48 @@ const router = new Router({
       ]
     },
     {
+      path: '/advertiser',
+      component: Layout,
+      redirect: '/advertiser/index',
+      name: 'advertiser',
+      meta: {title: '广告商管理', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'advertiserIndex',
+          component: () => import('@/views/advertiser/index'),
+          meta: {title: '广告商', icon: 'el-icon-picture-outline'}
+        },
+        {
+          path: 'add',
+          name: 'advertiserAdd',
+          component: () => import('@/views/advertiser/add'),
+          meta: {title: '添加广告商', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
+      path: '/advertSponsor',
+      component: Layout,
+      redirect: '/advertSponsor/index',
+      name: 'advertSponsor',
+      meta: {title: '广告主管理', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'advertSponsorIndex',
+          component: () => import('@/views/advertSponsor/index'),
+          meta: {title: '广告主', icon: 'el-icon-picture-outline'}
+        },
+        {
+          path: 'add',
+          name: 'advertSponsorAdd',
+          component: () => import('@/views/advertSponsor/add'),
+          meta: {title: '添加广告主', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
       path: '/videoType',
       component: Layout,
       redirect: '/videoType/index',
@@ -279,19 +321,19 @@ const router = new Router({
       component: Layout,
       redirect: '/video/index',
       name: 'video',
-      meta: {title: '广告管理', icon: 'el-icon-goods'},
+      meta: {title: '视频管理', icon: 'el-icon-goods'},
       children: [
         {
           path: 'index',
           name: 'videoIndex',
           component: () => import('@/views/video/index'),
-          meta: {title: '广告', icon: 'el-icon-picture-outline'}
+          meta: {title: '视频', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'add',
           name: 'videoAdd',
           component: () => import('@/views/video/add'),
-          meta: {title: '添加广告', icon: 'el-icon-picture-outline'}
+          meta: {title: '添加视频', icon: 'el-icon-picture-outline'}
         }
       ]
     },
@@ -342,7 +384,7 @@ const router = new Router({
           path: 'index',
           name: 'bookIndex',
           component: () => import('@/views/book/index'),
-          meta: {title: '广告', icon: 'el-icon-picture-outline'}
+          meta: {title: '书吧', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'add',
@@ -405,7 +447,7 @@ const router = new Router({
           path: 'index',
           name: 'gameTypeIndex',
           component: () => import('@/views/game/type/index'),
-          meta: {title: '广告类型', icon: 'el-icon-picture-outline'}
+          meta: {title: '游戏类型', icon: 'el-icon-picture-outline'}
         },
         {
           path: 'add',

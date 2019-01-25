@@ -2,14 +2,24 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="imcode" label="IM码">
-          <el-input v-model="form.imcode" disabled="true"></el-input>
+
+        <el-form-item prop="name" label="名称">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item prop="groupid" label="组号">
-          <el-input v-model="form.groupid"></el-input>
+        <el-form-item prop="phone" label="排序">
+          <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item prop="remark" label="备注">
-          <el-input v-model="form.remark"></el-input>
+        <el-form-item prop="contact" label="联系人">
+          <el-input v-model="form.contact"></el-input>
+        </el-form-item>
+        <el-form-item prop="state" label="状态">
+          <el-select v-model="form.state" placeholder="请选择类型">
+            <el-option  label="开启" value="0" ></el-option>
+            <el-option  label="关闭" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="advertiserid" label="广告商ID">
+          <el-input v-model="form.advertiserid"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -24,7 +34,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {devicesUpdate} from '@/api/server'
+import {upload, advertSponsorAdd, advertSponsorUpdate} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -45,7 +55,7 @@ export default {
   computed: {
     ...mapState({
       form: state => state.Advert.advert,
-      city_id: state => state.Advert.advertType
+      advertType: state => state.Advert.advertType
     })
   },
   data () {
@@ -55,10 +65,19 @@ export default {
       },
       uploadAction: '',
       imageServer: imageServer,
+      // form: {
+      //   type: '',
+      //   title: '',
+      //   picurl: '',
+      //   sort: '',
+      //   content: ''
+      // },
       formRules: {
-        // typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
-        // cityid: [{required: true, trigger: 'blur', message: '城市ID不能为空'}],
-        groupid: [{required: true, trigger: 'blur', message: '请选择组号'}]
+        typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
+        title: [{required: true, trigger: 'blur', message: '请输入标题'}],
+        sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
+        picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
+        content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
       },
       loading: false,
       fullscreenLoading: false
@@ -103,12 +122,21 @@ export default {
         if (valid) {
           this.loading = true
           if (this.form.id) {
-            devicesUpdate(this.form)
+            advertSponsorUpdate(this.form)
               .then(res => {
                 this.loading = false
                 this.$message.success('更新成功')
                 this.$router.push({
-                  path: '/devices/index'
+                  path: '/advertSponsor/index'
+                })
+              })
+          } else {
+            advertSponsorAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/advertSponsor/index'
                 })
               })
           }
@@ -132,9 +160,6 @@ export default {
 </script>
 
 <style scoped>
-  .line {
-    text-align: center;
-  }
 
   .avatar-uploader {
     width: 430px;
