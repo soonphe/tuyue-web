@@ -86,7 +86,7 @@
       this.getList()
     },
     methods: {
-      ...mapActions(['saveVideo', 'saveVideoType', 'clearVideo']),
+      ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
       typeFormat(row, column) {
         // this.typeList.forEach((item,index)=>{
         //   console.log(row.type+'___'+item.id);
@@ -103,7 +103,7 @@
         videoTypeGetList()
           .then(res => {
             this.typeList = res.data
-            this.saveVideoType(this.typeList)
+            this.saveAdvertType(this.typeList)
           })
       },
       getList() {
@@ -133,7 +133,7 @@
       },
       add() {
         // 清除store中存储的advert数据
-        this.clearVideo()
+        this.clearAdvert()
         this.$router.push({
           /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
@@ -146,7 +146,7 @@
         })
       },
       put(row) {
-        this.saveVideo(row)
+        this.saveAdvert(row)
         this.$router.push({
           path: '/group/add'
         })

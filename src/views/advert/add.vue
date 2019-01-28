@@ -35,6 +35,33 @@
             </vue-editor>
           </div>
         </el-form-item>
+
+        <el-form-item prop="sponsorid" label="广告主ID">
+          <el-input v-model="form.sponsorid"></el-input>
+        </el-form-item>
+        <el-form-item prop="starttime" label="执行开始时间">
+          <el-date-picker v-model="form.starttime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="endtime" label="执行结束时间">
+          <el-date-picker v-model="form.endtime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item prop="groupid" label="车组ID">
+          <el-input v-model="form.groupid"></el-input>
+        </el-form-item>
+        <el-form-item prop="state" label="状态">
+          <el-select v-model="form.state" placeholder="请选择类型">
+            <el-option label="开启" :value="0"></el-option>
+            <el-option label="关闭" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
           <el-button @click="onCancel">取消</el-button>
@@ -48,7 +75,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, advertAdd, advertUpdate} from '@/api/server'
+import {upload, advertAdd, advertUpdate,} from '@/api/server'
 import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -90,7 +117,7 @@ export default {
         typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
         title: [{required: true, trigger: 'blur', message: '请输入标题'}],
         sort: [{required: true, trigger: 'blur', message: '请输入排序'}],
-        picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
+        // picurl: [{required: true, trigger: 'blur', message: '请选择图片'}],
         content: [{required: true, trigger: 'blur', message: '请输入广告类容'}]
       },
       loading: false,

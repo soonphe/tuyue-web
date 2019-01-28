@@ -30,6 +30,27 @@
           <span>{{scope.row.createtime}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="sponsorid" label="广告主ID" align="center"></el-table-column>
+      <el-table-column prop="starttime" label="开始时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.starttime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endtime" label="结束时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.endtime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
+      <el-table-column prop="state" label="状态" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.state == 0">开启</span>
+          <span v-else>关闭</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>

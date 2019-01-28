@@ -14,8 +14,8 @@
         </el-form-item>
         <el-form-item prop="state" label="状态">
           <el-select v-model="form.state" placeholder="请选择类型">
-            <el-option  label="开启" value="0" ></el-option>
-            <el-option  label="关闭" value="1"></el-option>
+            <el-option  label="开启" key="0" value="0"  ></el-option>
+            <el-option  label="关闭" key="1" value="1"  ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="advertiserid" label="广告商ID">

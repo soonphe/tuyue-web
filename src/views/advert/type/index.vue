@@ -28,7 +28,8 @@
 </template>
 
 <script>
-  import {saveAdvertType,advertTypeGetList,advertTypeDelete} from '@/api/server'
+  import {advertTypeGetList,advertTypeDelete} from '@/api/server'
+  import {mapActions} from 'vuex'
 
   export default {
     data() {
@@ -51,6 +52,7 @@
       this.getList()
     },
     methods: {
+      ...mapActions([ 'saveAdvert', 'clearAdvert']),
       getList() {
         this.listLoading = true
         advertTypeGetList()
@@ -65,7 +67,7 @@
         })
       },
       put(row) {
-        this.saveAdvertType(row)
+        this.saveAdvert(row)
         this.$router.push({
           path: '/advertType/add'
         })
