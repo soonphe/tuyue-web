@@ -6,23 +6,47 @@
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
-
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
+
+      <!-- sub menu expand -->
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table :data="props.row.subs" :show-header="false" border fit highlight-current-row>
+            <el-table-column prop="id" label="ID " align="center" width="95"></el-table-column>
+            <el-table-column prop="name" align="center"></el-table-column>
+            <el-table-column prop="url" align="center"></el-table-column>
+            <el-table-column prop="icon" label="图标" align="center">
+              <template slot-scope="scope">
+                <i class="sidebar-icon fa" :class="scope.row.icon" ></i>
+              </template>
+            </el-table-column>
+            <el-table-column  align="center">
+              <template slot-scope="scope">
+                <el-button @click="put(scope.row)" type="primary">编辑</el-button>
+                <span class="btnClass"></span>
+                <el-button @click="del(scope.row.id)" type="danger">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="id" label="ID " align="center" width="95"></el-table-column>
       <el-table-column prop="name" label="模块名称" align="center" width="95"></el-table-column>
       <el-table-column prop="url" label="模块链接" align="center"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center">
-        <!--<template slot="scope">-->
-          <!--<i class="sidebar-icon fa" :class="scope.row.icon" ></i>-->
-        <!--</template>-->
+        <template slot-scope="scope">
+          <i class="sidebar-icon fa" :class="scope.row.icon" ></i>
+        </template>
       </el-table-column>
-      <el-table-column prop="sortorder" label="排序" align="center"></el-table-column>
+      <!--<el-table-column prop="sortorder" label="排序" align="center"></el-table-column>-->
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
+
     </el-table>
 
     <div class="pagination-container">
@@ -40,7 +64,7 @@
 </template>
 
 <script>
-  import {sysMenuGetList, sysMenuDelete} from '@/api/server'
+  import {sysMenuGetMenuListByRoleId, sysMenuGetList, sysMenuDelete} from '@/api/server'
   import waves from '@/directive/waves' // 水波纹指令
   import {imageServer, pageSize} from '@/utils/global'
   import {mapActions} from 'vuex'
@@ -57,8 +81,9 @@
         total: 0,
         listQuery: {
           pageNum: 1,
-          pageSize: pageSize,
-          parentId: -1
+          pageSize: 100,
+          parentId: -1,
+          roleId: -1
         },
         imageServer: imageServer,
         typeList: []
@@ -94,7 +119,7 @@
       },
       getList() {
         this.listLoading = true
-        sysMenuGetList(this.listQuery)
+        sysMenuGetMenuListByRoleId(this.listQuery)
           .then(res => {
             this.list = res.data
             this.total = parseInt(res.ext)

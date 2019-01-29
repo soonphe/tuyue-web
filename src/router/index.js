@@ -474,7 +474,7 @@ const router = new Router({
           path: 'add',
           name: 'gameAdd',
           component: () => import('@/views/game/add'),
-          meta: {title: '添加广告', icon: 'el-icon-picture-outline'}
+          meta: {title: '添加游戏', icon: 'el-icon-picture-outline'}
         }
       ]
     },

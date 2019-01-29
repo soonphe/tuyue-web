@@ -7,7 +7,11 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item prop="parentid" label="上级节点">
-          <el-input v-model="form.parentid"></el-input>
+          <!--<el-input v-model="form.parentid"></el-input>-->
+          <el-select v-model="form.parentid" placeholder="请选择类型">
+            <el-option label="无上级" :value="0"></el-option>
+            <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item prop="name" label="模块链接">
           <el-input v-model="form.url"></el-input>
@@ -31,8 +35,8 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, sysMenuAdd} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+  import {upload, sysMenuGetList, sysMenuAdd} from '@/api/server'
+  import {imageServer, localUploadServer, uploadServer,pageSize} from '@/utils/global'
 
   export default {
     components: {
@@ -47,6 +51,7 @@
         // build
         this.uploadAction = uploadServer
       }
+      this.getTypeData()
     },
     data() {
       return {
@@ -55,6 +60,12 @@
         },
         uploadAction: '',
         imageServer: imageServer,
+        typeList: [],
+        listQuery: {
+          pageNum: 1,
+          pageSize: pageSize,
+          parentId: 0
+        },
         form: {
           versioncode: '',
           name: '',
@@ -72,6 +83,12 @@
       }
     },
     methods: {
+      getTypeData() {
+        sysMenuGetList(this.listQuery)
+          .then(res => {
+            this.typeList = res.data
+          })
+      },
       onSubmit() {
         this.$refs.form.validate(valid => {
           if (valid) {

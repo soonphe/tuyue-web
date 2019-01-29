@@ -24,6 +24,7 @@
 
 <script>
 import {foodTypeGetList, foodTypeDelete} from '@/api/server'
+import {mapActions} from 'vuex'
 
 export default {
   data () {
@@ -46,6 +47,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    ...mapActions([ 'saveAdvert', 'clearAdvert']),
     fetchData () {
       this.listLoading = true
       foodTypeGetList()
@@ -60,7 +62,7 @@ export default {
       })
     },
     put (row) {
-      this.saveVideoType(row)
+      this.saveAdvert(row)
       this.$router.push({
         path: '/foodType/add'
       })

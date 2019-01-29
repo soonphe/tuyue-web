@@ -10,7 +10,7 @@
       </el-date-picker>
       <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.group"
                  placeholder="车组">
-        <el-option v-for="item in  typeList" :key="item.id" :label="item.groupid" :value="item.groupid"></el-option>
+        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
       </el-select>
       <el-select clearable @clear="clearType2" class="filter-item" style="width: 130px" v-model="listQuery.status"
                  placeholder="状态">
@@ -27,7 +27,8 @@
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
       <el-table-column prop="deviceid" label="IM码" align="center"></el-table-column>
       <el-table-column prop="assetnumber" label="资产编码" align="center"></el-table-column>
-      <el-table-column prop="groupid" label="组名" align="center"></el-table-column>
+      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
+      <el-table-column prop="groupname" label="车组名称" align="center"></el-table-column>
       <el-table-column prop="battery" label="电量" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.battery}}%</span>

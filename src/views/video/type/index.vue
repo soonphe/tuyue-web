@@ -24,6 +24,7 @@
 
 <script>
   import {saveVideoType, videoTypeDelete, videoTypeGetList} from '@/api/server'
+  import {mapActions} from 'vuex'
 
   export default {
     data() {
@@ -46,6 +47,7 @@
       this.getList()
     },
     methods: {
+      ...mapActions([ 'saveAdvert', 'clearAdvert']),
       getList() {
         this.listLoading = true
         videoTypeGetList()
@@ -60,7 +62,7 @@
         })
       },
       put(row) {
-        this.saveVideoType(row)
+        this.saveAdvert(row)
         this.$router.push({
           path: '/videoType/add'
         })

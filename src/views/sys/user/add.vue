@@ -7,13 +7,16 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item prop="username" label="账户名">
-          <el-input v-model="form.parentid"></el-input>
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item prop="password" label="密码">
-          <el-input v-model="form.url"></el-input>
+          <el-input v-model="form.password"></el-input>
         </el-form-item>
         <el-form-item prop="roleid" label="角色">
-          <el-input v-model="form.roleid"></el-input>
+          <!--<el-input v-model="form.roleid"></el-input>-->
+          <el-select v-model="form.roleid" placeholder="请选择类型">
+            <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -28,7 +31,7 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, sysUserAdd} from '@/api/server'
+  import {upload, sysUserAdd, sysRoleGetList} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 
   export default {
@@ -44,6 +47,7 @@
         // build
         this.uploadAction = uploadServer
       }
+      this.getTypeData()
     },
     data() {
       return {
@@ -52,11 +56,19 @@
         },
         uploadAction: '',
         imageServer: imageServer,
+        typeList: [],
+        listQuery: {
+          pageNum: 1,
+          pageSize: 100,
+          parentId: -1,
+          roleId: -1
+        },
+
         form: {
-          versioncode: '',
           name: '',
-          content: '',
-          filepath: ''
+          username: '',
+          password: '',
+          roleid: undefined
         },
         formRules: {
           versioncode: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
@@ -69,11 +81,20 @@
       }
     },
     methods: {
+      getTypeData() {
+        sysRoleGetList(this.listQuery)
+          .then(res => {
+            this.typeList = res.data
+          })
+      },
       onSubmit() {
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            sysUserAdd(this.form)
+            var param = {
+              roleid: this.form.roleid
+            }
+            sysUserAdd(this.form,param )
               .then(res => {
                 this.loading = false
                 this.$message.success('添加成功')

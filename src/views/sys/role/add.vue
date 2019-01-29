@@ -10,9 +10,16 @@
           <el-input v-model="form.description"></el-input>
         </el-form-item>
         <el-form-item prop="moduleArr" label="角色权限">
-          <el-input v-model="form.moduleArr"></el-input>
+          <!--<el-input v-model="form.moduleArr"></el-input>-->
+          <el-tree
+            ref="tree"
+            :data="typeList"
+            :props="defaultProps"
+            show-checkbox
+            node-key="id"
+            @node-click="handNodeClick">
+          </el-tree>
         </el-form-item>
-
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
           <el-button @click="onCancel">取消</el-button>
@@ -26,7 +33,7 @@
 <script>
   import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, sysMenuAdd} from '@/api/server'
+  import {upload, sysRoleAdd,sysMenuGetMenuListByRoleId} from '@/api/server'
   import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
 
   export default {
@@ -42,6 +49,7 @@
         // build
         this.uploadAction = uploadServer
       }
+      this.getTypeData()
     },
     data() {
       return {
@@ -50,28 +58,55 @@
         },
         uploadAction: '',
         imageServer: imageServer,
-        form: {
-          versioncode: '',
-          name: '',
-          content: '',
-          filepath: ''
+        typeList: [],
+        listQuery: {
+          pageNum: 1,
+          pageSize: 100,
+          parentId: -1,
+          roleId: -1
         },
+        defaultProps:{
+          label:"name",
+          children:'subs'
+        },
+        form: {
+          name: '',
+          description: ''
+        },
+        moduleArr: '',
         formRules: {
-          versioncode: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
+          // moduleArr: [{required: true, trigger: 'blur', message: '请填写选择模块'}],
           name: [{required: true, trigger: 'blur', message: '请输入推送名称'}],
-          content: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
-          filepath: [{required: true, trigger: 'blur', message: '请填写版本编号'}]
+          description: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
         },
         loading: false,
         fullscreenLoading: false
       }
     },
     methods: {
+      handNodeClick(data,node) {
+        // console.log(data)
+        // console.log(node)
+      },
+      getTypeData() {
+        sysMenuGetMenuListByRoleId(this.listQuery)
+          .then(res => {
+            this.typeList = res.data
+          })
+      },
       onSubmit() {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.loading = true
-            sysMenuAdd(this.form)
+            // this.loading = true
+            //获取树形控件选中的元素
+            this.arrString = this.$refs.tree.getCheckedKeys();
+            var arr  = this.arrString.join("@@")
+            // console.log(this.arrString)
+            // console.log(arr)
+            var param = {
+              moduleArr: arr
+            }
+            sysRoleAdd(this.form, param)
               .then(res => {
                 this.loading = false
                 this.$message.success('添加成功')
@@ -85,6 +120,24 @@
                 type: 'warning'
               })
             })
+            // axios({
+            //   url: this.uploadAction+'sysRole/add',
+            //   method: 'POST',
+            //   data: formData,
+            //   params: parm
+            // }).then((result) => {
+            //       this.loading = false
+            //       this.$message.success('添加成功')
+            //       this.$router.push({
+            //         path: '/sysRole/index'
+            //       })
+            // }).catch((err) => {
+            //     this.loading = false
+            //     this.$message({
+            //       message: '添加失败!',
+            //       type: 'warning'
+            //     })
+            // })
           } else {
             this.loading = false
             this.$message({

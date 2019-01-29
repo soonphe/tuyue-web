@@ -11,7 +11,7 @@
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
       <el-table-column prop="imcode" label="IM码" align="center"></el-table-column>
       <el-table-column prop="assetnumber" label="资产编码" align="center"></el-table-column>
-      <el-table-column prop="groupid" label="推送组号" align="center"></el-table-column>
+      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
       <el-table-column prop="remark" label="备注" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">

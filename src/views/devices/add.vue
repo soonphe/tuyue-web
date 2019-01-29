@@ -5,7 +5,7 @@
         <el-form-item prop="imcode" label="IM码">
           <el-input v-model="form.imcode" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item prop="groupid" label="组号">
+        <el-form-item prop="groupid" label="车组ID">
           <el-input v-model="form.groupid"></el-input>
         </el-form-item>
         <el-form-item prop="remark" label="备注">

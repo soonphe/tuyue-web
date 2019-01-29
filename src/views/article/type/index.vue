@@ -24,6 +24,7 @@
 
 <script>
   import {articleTypeGetList} from '@/api/server'
+  import {mapActions} from 'vuex'
 
   export default {
     data() {
@@ -46,6 +47,7 @@
       this.fetchData()
     },
     methods: {
+      ...mapActions([ 'saveAdvert', 'clearAdvert']),
       fetchData() {
         this.listLoading = true
         articleTypeGetList()
@@ -55,6 +57,12 @@
           })
       },
       addType() {
+        this.$router.push({
+          path: '/articleType/add'
+        })
+      },
+      put(row) {
+        this.saveAdvert(row)
         this.$router.push({
           path: '/articleType/add'
         })

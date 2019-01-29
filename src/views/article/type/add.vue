@@ -14,13 +14,20 @@
 
 <script>
 import {articleTypeAdd} from '@/api/server'
+import {mapState} from 'vuex'
+
 
 export default {
+  computed: {
+    ...mapState({
+      form: state => state.Advert.advert,
+    })
+  },
   data () {
     return {
-      form: {
-        name: ''
-      },
+      // form: {
+      //   name: ''
+      // },
       formRules: {
         name: [{required: true, trigger: 'blur', message: '请输入名称'}]
       },
@@ -32,20 +39,25 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          articleTypeAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/articleType/index'
+          if (this.form.id) {
+            articleTypeUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/articleType/index'
+                })
               })
-            }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
+          } else {
+            articleTypeAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/articleType/index'
+                })
               })
-            })
+          }
         } else {
           this.loading = false
           this.$message({

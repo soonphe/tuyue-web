@@ -14,13 +14,19 @@
 
 <script>
   import {videoTypeAdd} from '@/api/server'
+  import {mapState} from 'vuex'
 
   export default {
+    computed: {
+      ...mapState({
+        form: state => state.Advert.advert,
+      })
+    },
     data() {
       return {
-        form: {
-          name: ''
-        },
+        // form: {
+        //   name: ''
+        // },
         formRules: {
           name: [{required: true,trigger: 'blur', message: '请输入名称'}]
         },
@@ -32,20 +38,25 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             this.loading = true
-            videoTypeAdd(this.form)
-              .then(res => {
-                this.loading = false
-                this.$message.success('添加成功')
-                this.$router.push({
-                  path: '/videoType/index'
+            if (this.form.id) {
+              videoTypeUpdate(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('更新成功')
+                  this.$router.push({
+                    path: '/videoType/index'
+                  })
                 })
-              }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
-              })
-            })
+            } else {
+              videoTypeAdd(this.form)
+                .then(res => {
+                  this.loading = false
+                  this.$message.success('添加成功')
+                  this.$router.push({
+                    path: '/videoType/index'
+                  })
+                })
+            }
           }else{
             this.loading = false
             this.$message({

@@ -2,7 +2,7 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-        <el-form-item prop="name" label="组名">
+        <el-form-item prop="name" label="车组名称">
           <el-input v-model="form.name" ></el-input>
         </el-form-item>
         <el-form-item prop="spec" label="规格">
@@ -10,11 +10,11 @@
         </el-form-item>
         <el-form-item prop="status" label="是否运营">
           <el-select v-model="form.status" placeholder="请选择类型">
-            <el-option  label="未运营" value="0" ></el-option>
-            <el-option  label="运营" value="1"></el-option>
+            <el-option  label="未运营" :value="0" ></el-option>
+            <el-option  label="运营" :value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="remark" label="说明">
+        <el-form-item prop="remark" label="备注">
           <el-input v-model="form.remark" ></el-input>
         </el-form-item>
         <el-form-item>

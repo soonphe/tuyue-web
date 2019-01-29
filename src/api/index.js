@@ -105,7 +105,7 @@ http.interceptors.response.use(
 function apiAxios (method, url, params) {
   return new Promise((resolve, reject) => {
     let options
-    // post上传为form-data数据
+    // post请求上传为form-data数据
     if (method === 'POST') {
       options = {
         method: 'POST',
@@ -119,6 +119,7 @@ function apiAxios (method, url, params) {
         // data: params,
         url
       }
+      // post请求上传json数据
     } else if (method === 'PUT') {
       options = {
         method: 'POST',
@@ -126,6 +127,7 @@ function apiAxios (method, url, params) {
         // param: params,
         url
       }
+      // get|delete请求
     } else {
       options = {
         method: method,
@@ -147,6 +149,26 @@ function apiAxios (method, url, params) {
   })
 }
 
+function apiAxiosMuti (method, url, data, params) {
+  return new Promise((resolve, reject) => {
+    let options
+    // 上传json和from
+    if (method === 'POST') {
+      options = {
+        method: 'POST',
+        data: data,
+        params: params,
+        url
+      }
+    } else if (method === 'PUT') {
+
+    }
+    http(options).then(res => resolve(res),
+      err => reject(err)
+    )
+  })
+}
+
 export default {
   get: function (url, params) {
     return apiAxios('GET', url, params)
@@ -159,6 +181,9 @@ export default {
   },
   delete: function (url, params) {
     return apiAxios('DELETE', url, params)
+  },
+  post2: function (url, data, params) {
+    return apiAxiosMuti('POST', url, data, params)
   }
 }
 
