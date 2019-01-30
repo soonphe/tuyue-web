@@ -38,10 +38,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
 import {cityAdd, cityUpdate} from '@/api/server'
-import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
 export default {
@@ -49,14 +48,7 @@ export default {
     VueEditor
   },
   created () {
-    // 判断是否为dev环境
-    if (process.env.NODE_ENV === 'development') {
-      // dev
-      this.uploadAction = localUploadServer
-    } else {
-      // build
-      this.uploadAction = uploadServer
-    }
+
   },
   computed: {
     ...mapState({
@@ -69,7 +61,7 @@ export default {
       uploadData: {
         file_type: 'img'
       },
-      uploadAction: '',
+      uploadAction: uploadServer,
       imageServer: imageServer,
       formRules: {
         type: [{required: true, trigger: 'blur', message: '请选择类型'}],
@@ -104,15 +96,12 @@ export default {
       var formData = new FormData()
       formData.append('file', file)
       formData.append('file_type', 'img')
-      axios({
-        url: this.uploadAction,
-        method: 'POST',
-        data: formData
-      }).then((result) => {
-        let url = result.data.data // Get url from response
-        Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-        resetUploader()
-      }).catch((err) => {
+      upload(this.formData)
+        .then(res => {
+          let url = result.data.data // Get url from response
+          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+          resetUploader()
+        }).catch((err) => {
         console.log(err)
       })
     },

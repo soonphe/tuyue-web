@@ -33,24 +33,15 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
   import {upload, sysMenuGetList, sysMenuAdd} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer,pageSize} from '@/utils/global'
+  import {imageServer, uploadServer,pageSize} from '@/utils/global'
 
   export default {
     components: {
       VueEditor
     },
     created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
-      }
       this.getTypeData()
     },
     data() {
@@ -58,7 +49,7 @@
         uploadData: {
           file_type: 'img'
         },
-        uploadAction: '',
+        uploadAction: uploadServer,
         imageServer: imageServer,
         typeList: [],
         listQuery: {

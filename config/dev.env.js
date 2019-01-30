@@ -4,7 +4,8 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  /* 定义开发模式接口访问根路径，例：API_ROOT: '"//www.baidu.com/api"' */
-  API_ROOT: '"/api"'
-  // API_ROOT: '"http://47.98.121.127:8081/tuyue/api"'
+  // 定义开发模式接口访问根路径，例：API_ROOT: '"//www.baidu.com/api"'
+  API_ROOT: '"/api"',
+  // 文件访问路径
+  FILE_SERVER :  '"http://192.168.1.6/upload"'
 })

@@ -24,8 +24,8 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item prop="filePath" label="游戏zip包">
-          <el-input v-model="form.filePath"></el-input>
+        <el-form-item prop="filepath" label="游戏zip包">
+          <el-input v-model="form.filepath"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -38,10 +38,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {gameAdd} from '@/api/server'
-import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import {gameAdd, gameUpdate} from '@/api/server'
+import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
 export default {
@@ -49,14 +48,7 @@ export default {
     VueEditor
   },
   created () {
-    // 判断是否为dev环境
-    if (process.env.NODE_ENV === 'development') {
-      // dev
-      this.uploadAction = localUploadServer
-    } else {
-      // build
-      this.uploadAction = uploadServer
-    }
+
   },
   computed: {
     ...mapState({
@@ -69,7 +61,7 @@ export default {
       uploadData: {
         file_type: 'img'
       },
-      uploadAction: '',
+      uploadAction: uploadServer,
       imageServer: imageServer,
       formRules: {
         type: [{required: true, trigger: 'blur', message: '请选择类型'}],
@@ -104,15 +96,12 @@ export default {
       var formData = new FormData()
       formData.append('file', file)
       formData.append('file_type', 'img')
-      axios({
-        url: this.uploadAction,
-        method: 'POST',
-        data: formData
-      }).then((result) => {
-        let url = result.data.data // Get url from response
-        Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-        resetUploader()
-      }).catch((err) => {
+      upload(this.formData)
+        .then(res => {
+          let url = result.data.data // Get url from response
+          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+          resetUploader()
+        }).catch((err) => {
         console.log(err)
       })
     },
@@ -120,20 +109,25 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          gameAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/game/index'
+          if (this.form.id) {
+            gameUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/game/index'
+                })
               })
-            }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
+          } else {
+            gameAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/game/index'
+                })
               })
-            })
+          }
         } else {
           this.loading = false
           this.$message({

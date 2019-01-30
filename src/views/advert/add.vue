@@ -73,10 +73,9 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
   import {upload, advertAdd, advertUpdate,} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+  import {imageServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
   export default {
@@ -84,14 +83,7 @@
       VueEditor
     },
     created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
-      }
+
     },
     computed: {
       ...mapState({
@@ -104,15 +96,8 @@
         uploadData: {
           file_type: 'img'
         },
-        uploadAction: '',
+        uploadAction: uploadServer,
         imageServer: imageServer,
-        // form: {
-        //   type: '',
-        //   title: '',
-        //   picurl: '',
-        //   sort: '',
-        //   content: ''
-        // },
         formRules: {
           typeid: [{required: true, trigger: 'blur', message: '请选择类型'}],
           title: [{required: true, trigger: 'blur', message: '请输入标题'}],
@@ -146,26 +131,26 @@
         var formData = new FormData()
         formData.append('file', file)
         formData.append('file_type', 'img')
-        // upload(this.formData)
-        //   .then(res => {
-        //     let url = result.data.data // Get url from response
-        //     Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-        //     resetUploader()
-        //   }).catch((err) => {
-        //   console.log(err)
-        // })
-
-        axios({
-          url: this.uploadAction,
-          method: 'POST',
-          data: formData
-        }).then((result) => {
-          let url = result.data.data // Get url from response
-          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-          resetUploader()
-        }).catch((err) => {
+        upload(this.formData)
+          .then(res => {
+            let url = result.data.data // Get url from response
+            Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+            resetUploader()
+          }).catch((err) => {
           console.log(err)
         })
+        // 封装axios上传
+        // axios({
+        //   url: this.uploadAction,
+        //   method: 'POST',
+        //   data: formData
+        // }).then((result) => {
+        //   let url = result.data.data // Get url from response
+        //   Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+        //   resetUploader()
+        // }).catch((err) => {
+        //   console.log(err)
+        // })
       },
       onSubmit() {
         this.$refs.form.validate(valid => {
@@ -210,28 +195,29 @@
 </script>
 
 <style scoped>
-
-  .avatar-uploader {
-    width: 430px;
-    height: 320px;
-    border: 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
 
-  .avatar {
-    width: 430px;
-    height: 320px;
-    display: block;
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
   }
 
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
     width: 178px;
-    height: 140px;
-    line-height: 140px;
+    height: 178px;
+    line-height: 178px;
     text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

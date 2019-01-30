@@ -102,145 +102,67 @@ http.interceptors.response.use(
  * @param url
  * @param params
  */
-function apiAxios (method, url, params) {
+function apiAxios (method, url, data, params) {
   return new Promise((resolve, reject) => {
     let options
-    // post请求上传为form-data数据
+    // 上传form-data数据
     if (method === 'POST') {
       options = {
         method: 'POST',
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         // 上传文件这里使用multipart类型
         // headers: {'content-type': 'multipart/form-data'},
-        data: qs.stringify(params),
-        // √——使用param会在地址栏拼接参数
-        // params: params,
-        // ×——默认使用data上传的仍然是json数据
-        // data: params,
-        url
-      }
-      // post请求上传json数据
-    } else if (method === 'PUT') {
-      options = {
-        method: 'POST',
-        data: params,
-        // param: params,
-        url
-      }
-      // get|delete请求
-    } else {
-      options = {
-        method: method,
+        // 未格式化则是json参数，{"id":1,"name":"锁屏广告"
+        // qs.stringify格式化之后才是每一个字段对象，id: 1 name: 锁屏广告1
+        // qs.stringify：将params序列化name=hehe&age=10，
+        // JSON.stringify序列化结果"{"a":"hehe","age":10}"
+        data: qs.stringify(data),
         params: params,
         url
       }
-    }
-    http(options).then(res => resolve(res),
-      err => reject(err)
-    )
-    // http({
-    //   method: method,
-    //   url: url,
-    //   data: method === 'POST' || method === 'PUT' ? params : null,
-    //   params: method === 'GET' || method === 'DELETE' ? params : null,
-    // }).then(res => resolve(res),
-    //   err => reject(err)
-    // )
-  })
-}
-
-function apiAxiosMuti (method, url, data, params) {
-  return new Promise((resolve, reject) => {
-    let options
-    // 上传json和from
-    if (method === 'POST') {
+      // (默认)上传json数据
+    } else if (method === 'POSTJSON') {
       options = {
         method: 'POST',
         data: data,
         params: params,
         url
       }
-    } else if (method === 'PUT') {
-
+      // get|delete等请求
+    } else {
+      options = {
+        method: method,
+        data: data,
+        params: params,
+        url
+      }
     }
     http(options).then(res => resolve(res),
       err => reject(err)
     )
+    // options = {
+    //   url: url,
+    //   method: method,
+    //   data: method === 'POST' || method === 'PUT' ? params : null,
+    //   params: method === 'GET' || method === 'DELETE' ? params : null
+    // }
+    // 下载文件
+    // http.get(url, {responseType: 'blob'})
+    //   .then(res => {
   })
 }
 
 export default {
+  post: function (url, data, params) {
+    return apiAxios('POST', url, data, params)
+  },
+  put: function (url, data, params) {
+    return apiAxios('POSTJSON', url, data, params)
+  },
   get: function (url, params) {
-    return apiAxios('GET', url, params)
-  },
-  post: function (url, params) {
-    return apiAxios('POST', url, params)
-  },
-  put: function (url, params) {
-    return apiAxios('PUT', url, params)
+    return apiAxios('GET', url, null, params)
   },
   delete: function (url, params) {
-    return apiAxios('DELETE', url, params)
-  },
-  post2: function (url, data, params) {
-    return apiAxiosMuti('POST', url, data, params)
+    return apiAxios('DELETE', url, null, params)
   }
-}
-
-/* 使用vue-resource方式定义请求方法 */
-// export const get = (url, params) => {
-//   return new Promise((resolve, reject) => {
-//     /* 块级变量let 相较于var没有变量提升 */
-//     let Url
-//     if (params === null || params === undefined) {
-//       Url = url
-//     } else {
-//       Url = url + '?' + qs.stringify(params)
-//     }
-//     http.get(Url)
-//       .then(res => resolve(res.data),
-//         err => reject(err))
-//   })
-// }
-//
-// export const post = (url, params) => {
-//   console.log(params)
-//   // qs.stringify：将params序列化name=hehe&age=10，JSON.stringify序列化结果"{"a":"hehe","age":10}"
-//   let Url = url + '?' + qs.stringify(params)
-//   return new Promise((resolve, reject) => {
-//     http.post(Url)
-//       .then(res => resolve(res.data),
-//         err => reject(err))
-//   })
-// }
-//
-// export const put = (url, params) => {
-//   console.log('params', params)
-//   return new Promise((resolve, reject) => {
-//     http.post(url, params)
-//       .then(res => resolve(res.data),
-//         err => reject(err))
-//   })
-// }
-//
-// export const del = (url, params) => {
-//   let Url = url + '?' + qs.stringify(params)
-//   return new Promise((resolve, reject) => {
-//     http.delete(Url)
-//       .then(res => resolve(res.data),
-//         err => reject(err))
-//   })
-// }
-
-export const download = url => {
-  return new Promise((resolve, reject) => {
-    http.get(url, {responseType: 'blob'})
-      .then(res => {
-        console.log(res)
-        resolve(res)
-      }, err => {
-        console.log('err', err)
-        reject(err)
-      })
-  })
 }

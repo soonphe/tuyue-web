@@ -12,8 +12,24 @@
         <el-form-item prop="name" label="版本内容说明">
           <el-input v-model="form.content"></el-input>
         </el-form-item>
-        <el-form-item prop="name" label="版本文件路径">
-          <el-input v-model="form.filepath"></el-input>
+        <el-form-item prop="name" label="APK文件">
+          <!--<el-input v-model="form.filepath"></el-input>-->
+          <el-upload
+            class="upload-demo"
+            :action="uploadAction"
+            :data="uploadData"
+            name="file"
+            :on-success="handleAvatarSuccess"
+            v-loading.fullscreen.lock="fullscreenLoading"
+            :before-upload="beforeAvatarUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :before-remove="beforeRemove">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传apk文件，且不超过100MB</div>
+          </el-upload>
         </el-form-item>
 
         <el-form-item>
@@ -27,31 +43,23 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
   import {upload, versionAdd} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+  import {imageServer, uploadServer} from '@/utils/global'
 
   export default {
     components: {
       VueEditor
     },
     created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
-      }
+
     },
     data() {
       return {
         uploadData: {
-          file_type: 'img'
+          file_type: 'apk'
         },
-        uploadAction: '',
+        uploadAction: uploadServer,
         imageServer: imageServer,
         form: {
           versioncode: '',
@@ -61,7 +69,7 @@
         },
         formRules: {
           versioncode: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
-          name: [{required: true, trigger: 'blur', message: '请输入推送名称'}],
+          name: [{required: true, trigger: 'blur', message: '请输入版本名称'}],
           content: [{required: true, trigger: 'blur', message: '请填写版本编号'}],
           filepath: [{required: true, trigger: 'blur', message: '请填写版本编号'}]
         },
@@ -70,6 +78,39 @@
       }
     },
     methods: {
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'application/vnd.android.package-archive'
+        const isLt2M = file.size / 1024 / 1024 < 100
+        if (!isJPG) {
+          this.$message.error('上传文件只能是 apk 文件!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传文件大小不能超过 100MB!')
+        }
+        // this.fullscreenLoading = true
+        return isJPG && isLt2M
+      },
+      handleAvatarSuccess(res) {
+        this.form.filepath = res.data
+        // this.fullscreenLoading = false
+      },
+      handleRemove(file, fileList) {
+        this.form.filepath = null
+        console.log("移除"+file, fileList);
+        console.log(this.form.filepath)
+      },
+      handlePreview(file) {
+        console.log(this.form.filepath)
+        console.log("点击"+file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制只能选择1 个文件`);
+      },
+      beforeRemove(file, fileList) {
+        if (this.form.filepath) {
+          return this.$confirm(`确定移除 ${ file.name }？`);
+        }
+      },
       onSubmit() {
         this.$refs.form.validate(valid => {
           if (valid) {

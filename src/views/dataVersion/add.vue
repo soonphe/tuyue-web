@@ -21,31 +21,23 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
 import {upload, dataVersionAdd} from '@/api/server'
-import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import {imageServer, uploadServer} from '@/utils/global'
 
 export default {
   components: {
     VueEditor
   },
   created () {
-    // 判断是否为dev环境
-    if (process.env.NODE_ENV === 'development') {
-      // dev
-      this.uploadAction = localUploadServer
-    } else {
-      // build
-      this.uploadAction = uploadServer
-    }
+
   },
   data () {
     return {
       uploadData: {
         file_type: 'img'
       },
-      uploadAction: '',
+      uploadAction: uploadServer,
       imageServer: imageServer,
       form: {
         advertversion: '',

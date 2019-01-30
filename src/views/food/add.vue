@@ -41,10 +41,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {foodAdd} from '@/api/server'
-import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+import {foodAdd, foodUpdate} from '@/api/server'
+import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
 export default {
@@ -52,14 +51,7 @@ export default {
     VueEditor
   },
   created () {
-    // 判断是否为dev环境
-    if (process.env.NODE_ENV === 'development') {
-      // dev
-      this.uploadAction = localUploadServer
-    } else {
-      // build
-      this.uploadAction = uploadServer
-    }
+
   },
   computed: {
     ...mapState({
@@ -72,7 +64,7 @@ export default {
       uploadData: {
         file_type: 'img'
       },
-      uploadAction: '',
+      uploadAction: uploadServer,
       imageServer: imageServer,
       formRules: {
         type: [{required: true, trigger: 'blur', message: '请选择类型'}],
@@ -107,15 +99,12 @@ export default {
       var formData = new FormData()
       formData.append('file', file)
       formData.append('file_type', 'img')
-      axios({
-        url: this.uploadAction,
-        method: 'POST',
-        data: formData
-      }).then((result) => {
-        let url = result.data.data // Get url from response
-        Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-        resetUploader()
-      }).catch((err) => {
+      upload(this.formData)
+        .then(res => {
+          let url = result.data.data // Get url from response
+          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+          resetUploader()
+        }).catch((err) => {
         console.log(err)
       })
     },
@@ -123,20 +112,25 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          foodAdd(this.form)
-            .then(res => {
-              this.loading = false
-              this.$message.success('添加成功')
-              this.$router.push({
-                path: '/food/index'
+          if (this.form.id) {
+            foodUpdate(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('更新成功')
+                this.$router.push({
+                  path: '/food/index'
+                })
               })
-            }).catch(() => {
-              this.loading = false
-              this.$message({
-                message: '添加失败!',
-                type: 'warning'
+          } else {
+            foodAdd(this.form)
+              .then(res => {
+                this.loading = false
+                this.$message.success('添加成功')
+                this.$router.push({
+                  path: '/food/index'
+                })
               })
-            })
+          }
         } else {
           this.loading = false
           this.$message({

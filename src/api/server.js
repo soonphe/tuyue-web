@@ -5,7 +5,7 @@ import api from './index'
  * elementh中使用路径直接上传
  * quill(图片)中使用axios单独上传
  */
-export const upload = params => api.put('/common/upload', params)
+export const upload = params => api.post('/common/upload', params)
 
 /**
  * 设备管理
@@ -22,15 +22,15 @@ export const devicesDelete = params => api.get('/devices/delete', params)
 export const login = params => api.post('/sysUser/login', params)
 export const logout = params => api.get('/sysUser/logout', params)
 export const sysUserGetList = params => api.get('/sysUser/getList', params)
-export const sysUserAdd = (data, params) => api.post2('/sysUser/add',data, params)
+export const sysUserAdd = (data, params) => api.put('/sysUser/add', data, params)
 export const sysUserDelete = params => api.get('/sysUser/delete', params)
-export const sysUserUpdate = params => api.post('/sysUser/update', params)
+export const sysUserUpdate = data => api.post('/sysUser/update', data)
 
 /**
  * 角色
  */
 export const sysRoleGetList = params => api.get('/sysRole/getList', params)
-export const sysRoleAdd = (data, params) => api.post2('/sysRole/add', data, params)
+export const sysRoleAdd = (data, params) => api.put('/sysRole/add', data, params)
 export const sysRoleDelete = params => api.get('/sysRole/delete', params)
 export const sysRoleUpdate = params => api.post('/sysRole/update', params)
 
@@ -40,7 +40,7 @@ export const sysRoleUpdate = params => api.post('/sysRole/update', params)
 export const sysMenuGetMenuListByRoleId = params => api.get('/sysMenu/getMenuListByRoleId', params)
 export const sysMenuGetList = params => api.get('/sysMenu/getList', params)
 export const sysMenuAdd = params => api.put('/sysMenu/add', params)
-export const sysMenuDelete = params => api.post('/sysMenu/delete', params)
+export const sysMenuDelete = params => api.get('/sysMenu/delete', params)
 export const sysMenuUpdate = params => api.post('/sysMenu/update', params)
 
 /**

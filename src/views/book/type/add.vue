@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import {bookTypeAdd} from '@/api/server'
+  import {bookTypeAdd, bookTypeUpdate} from '@/api/server'
   import {mapState} from 'vuex'
 
   export default {

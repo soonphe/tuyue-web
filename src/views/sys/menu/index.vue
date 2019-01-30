@@ -81,7 +81,7 @@
         total: 0,
         listQuery: {
           pageNum: 1,
-          pageSize: 100,
+          pageSize: pageSize,
           parentId: -1,
           roleId: -1
         },

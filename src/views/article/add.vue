@@ -56,10 +56,9 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import {VueEditor, Quill} from 'vue2-editor'
   import {upload, articleAdd, articleUpdate} from '@/api/server'
-  import {imageServer, localUploadServer, uploadServer} from '@/utils/global'
+  import {imageServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
   export default {
@@ -67,21 +66,7 @@
       VueEditor
     },
     created() {
-      // 判断是否为dev环境
-      if (process.env.NODE_ENV === 'development') {
-        // dev
-        this.uploadAction = localUploadServer
-      } else {
-        // build
-        this.uploadAction = uploadServer
-      }
-      // if (this.advert.length > 0) {
-      //   this.type = this.advert.type + ''
-      //   this.title = this.advert.title + ''
-      //   this.picurl = this.advert.picurl + ''
-      //   this.sort = this.advert.sort + ''
-      //   this.content = this.advert.content + ''
-      // }
+
     },
     computed: {
       ...mapState({
@@ -101,7 +86,7 @@
         uploadData: {
           file_type: 'img'
         },
-        uploadAction: '',
+        uploadAction: uploadServer,
         imageServer: imageServer,
         // form: {
         //   type: '',
@@ -143,16 +128,13 @@
         var formData = new FormData();
         formData.append('file', file)
         formData.append('file_type', 'img')
-        axios({
-          url: this.uploadAction,
-          method: 'POST',
-          data: formData
-        }).then((result) => {
-          let url = result.data.data // Get url from response
-          Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url);
-          resetUploader();
-        }).catch((err) => {
-          console.log(err);
+        upload(this.formData)
+          .then(res => {
+            let url = result.data.data // Get url from response
+            Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+            resetUploader()
+          }).catch((err) => {
+          console.log(err)
         })
       },
       onSubmit() {
