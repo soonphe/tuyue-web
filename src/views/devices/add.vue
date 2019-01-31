@@ -3,10 +3,15 @@
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
         <el-form-item prop="imcode" label="IM码">
-          <el-input v-model="form.imcode" disabled="true"></el-input>
+          <el-input v-model="form.imcode" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item prop="groupid" label="车组ID">
-          <el-input v-model="form.groupid"></el-input>
+          <!--<el-input v-model="form.groupid"></el-input>-->
+          <el-select clearable  class="filter-item" style="width: 130px" v-model="form.groupid"
+                     placeholder="车组">
+            <el-option label="请选择车组" :value="0"></el-option>
+            <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item prop="remark" label="备注">
           <el-input v-model="form.remark"></el-input>
@@ -23,7 +28,7 @@
 
 <script>
 import {VueEditor, Quill} from 'vue2-editor'
-import {devicesUpdate} from '@/api/server'
+import {groupGetList, devicesUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -32,7 +37,7 @@ export default {
     VueEditor
   },
   created () {
-
+    this.getTypeData()
   },
   computed: {
     ...mapState({
@@ -45,6 +50,7 @@ export default {
       uploadData: {
         file_type: 'img'
       },
+      typeList: [],
       uploadAction: uploadServer,
       imageServer: imageServer,
       formRules: {
@@ -57,6 +63,12 @@ export default {
     }
   },
   methods: {
+    getTypeData() {
+      groupGetList()
+        .then(res => {
+          this.typeList = res.data
+        })
+    },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 100

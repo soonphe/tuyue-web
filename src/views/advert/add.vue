@@ -37,7 +37,12 @@
         </el-form-item>
 
         <el-form-item prop="sponsorid" label="广告主ID">
-          <el-input v-model="form.sponsorid"></el-input>
+          <!--<el-input v-model="form.sponsorid"></el-input>-->
+          <el-select clearable class="filter-item" style="width: 130px" v-model="form.sponsorid"
+                     placeholder="广告主">
+            <el-option label="请选择广告主" :value="0"></el-option>
+            <el-option v-for="item in sponsorTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item prop="starttime" label="执行开始时间">
           <el-date-picker v-model="form.starttime"
@@ -54,7 +59,12 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item prop="groupid" label="车组ID">
-          <el-input v-model="form.groupid"></el-input>
+          <!--<el-input v-model="form.groupid"></el-input>-->
+          <el-select clearable class="filter-item" style="width: 130px" v-model="form.groupid"
+                     placeholder="车组">
+            <el-option label="请选择车组" :value="0"></el-option>
+            <el-option v-for="item in groupTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态">
           <el-select v-model="form.state" placeholder="请选择类型">
@@ -74,7 +84,7 @@
 
 <script>
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertAdd, advertUpdate,} from '@/api/server'
+  import {upload, groupGetList, advertSponsorGetList, advertAdd, advertUpdate,} from '@/api/server'
   import {imageServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
@@ -83,7 +93,8 @@
       VueEditor
     },
     created() {
-
+      this.getGroupTypeData()
+      this.getSponsorTypeData()
     },
     computed: {
       ...mapState({
@@ -93,6 +104,8 @@
     },
     data() {
       return {
+        groupTypeList: [],
+        sponsorTypeList: [],
         uploadData: {
           file_type: 'img'
         },
@@ -110,6 +123,17 @@
       }
     },
     methods: {
+      getGroupTypeData() {
+        groupGetList()
+          .then(res => {
+            this.groupTypeList = res.data
+          })
+      }, getSponsorTypeData() {
+        advertSponsorGetList()
+          .then(res => {
+            this.sponsorTypeList = res.data
+          })
+      },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg'
         const isLt2M = file.size / 1024 / 1024 < 100
@@ -215,6 +239,7 @@
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;

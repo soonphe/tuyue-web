@@ -109,6 +109,7 @@
             this.list = res.data
             this.total = parseInt(res.ext)
             this.listLoading = false
+            this.saveAdvertType(this.list)
             // 延迟进度条1.5秒
             // setTimeout(() => {
             //   this.listLoading = false

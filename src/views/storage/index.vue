@@ -8,9 +8,9 @@
                       start-placeholder="开始日期"
                       end-placeholder="结束日期">
       </el-date-picker>
-      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.group"
+      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.groupId"
                  placeholder="车组">
-        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
       </el-select>
       <el-select clearable @clear="clearType2" class="filter-item" style="width: 130px" v-model="listQuery.status"
                  placeholder="状态">
@@ -89,7 +89,7 @@
         listQuery: {
           pageNum: 1,
           pageSize: pageSize,
-          group: undefined,
+          groupId: undefined,
           status: undefined,
           operator: undefined,
           startDate: '',
@@ -114,7 +114,7 @@
       this.getList()
     },
     methods: {
-      ...mapActions(['saveVideo', 'saveVideoType', 'clearVideo']),
+      ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
       typeFormat(row, column) {
         // this.typeList.forEach((item,index)=>{
         //   console.log(row.type+'___'+item.id);
@@ -169,7 +169,7 @@
       },
       add() {
         // 清除store中存储的advert数据
-        this.clearVideo()
+        this.clearAdvert()
         this.$router.push({
           /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
@@ -182,7 +182,7 @@
         })
       },
       put(row) {
-        this.saveVideo(row)
+        this.saveAdvert(row)
         this.$router.push({
           path: '/storage/add'
         })

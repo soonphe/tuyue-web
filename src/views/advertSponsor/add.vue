@@ -6,7 +6,7 @@
         <el-form-item prop="name" label="名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item prop="phone" label="排序">
+        <el-form-item prop="phone" label="联系方式">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item prop="contact" label="联系人">
@@ -14,12 +14,16 @@
         </el-form-item>
         <el-form-item prop="state" label="状态">
           <el-select v-model="form.state" placeholder="请选择类型">
-            <el-option  label="开启" key="0" value="0"  ></el-option>
-            <el-option  label="关闭" key="1" value="1"  ></el-option>
+            <el-option  label="开启" key="0" :value="0"  ></el-option>
+            <el-option  label="关闭" key="1" :value="1"  ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="advertiserid" label="广告商ID">
-          <el-input v-model="form.advertiserid"></el-input>
+          <!--<el-input v-model="form.advertiserid"></el-input>-->
+            <el-select clearable  class="filter-item" style="width: 130px" v-model="form.advertiserid"
+                       placeholder="广告商">
+              <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -33,7 +37,7 @@
 
 <script>
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, advertSponsorAdd, advertSponsorUpdate} from '@/api/server'
+import {upload, advertiserGetList, advertSponsorAdd, advertSponsorUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -42,7 +46,7 @@ export default {
     VueEditor
   },
   created () {
-
+    this.getTypeData()
   },
   computed: {
     ...mapState({
@@ -52,6 +56,7 @@ export default {
   },
   data () {
     return {
+      typeList: [],
       uploadData: {
         file_type: 'img'
       },
@@ -76,6 +81,12 @@ export default {
     }
   },
   methods: {
+    getTypeData() {
+      advertiserGetList()
+        .then(res => {
+          this.typeList = res.data
+        })
+    },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 100

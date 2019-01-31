@@ -26,13 +26,18 @@
         </el-form-item>
         <el-form-item prop="level" label="级别">
           <el-select v-model="form.level" placeholder="请选择类型">
-            <el-option label="1" value="1"></el-option>
-            <el-option label="2" value="2"></el-option>
-            <el-option label="3" value="3"></el-option>
+            <el-option label="1" :value="1"></el-option>
+            <el-option label="2" :value="2"></el-option>
+            <el-option label="3" :value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="parentid" label="父级ID">
-          <el-input v-model="form.parentid"></el-input>
+          <!--<el-input v-model="form.parentid"></el-input>-->
+          <el-select clearable  class="filter-item" style="width: 130px" v-model="form.parentid"
+                     placeholder="父级广告商">
+            <el-option label="无父级" :value="0"></el-option>
+            <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -46,7 +51,7 @@
 
 <script>
   import {VueEditor, Quill} from 'vue2-editor'
-  import {upload, advertiserAdd, advertiserUpdate} from '@/api/server'
+  import {upload, advertiserGetList,advertiserAdd, advertiserUpdate} from '@/api/server'
   import {imageServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
@@ -55,16 +60,17 @@
       VueEditor
     },
     created() {
-
+      this.getTypeData()
     },
     computed: {
       ...mapState({
         form: state => state.Advert.advert,
-        advertType: state => state.Advert.advertType
+        typeList: state => state.Advert.advertType
       })
     },
     data() {
       return {
+        // typeList: [],
         uploadData: {
           file_type: 'img'
         },
@@ -87,6 +93,13 @@
       }
     },
     methods: {
+      // 这里是网络请求广告商列表
+      getTypeData() {
+        advertiserGetList()
+          .then(res => {
+            // typeList = res.data
+          })
+      },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg'
         const isLt2M = file.size / 1024 / 1024 < 100
