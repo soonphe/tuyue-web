@@ -22,6 +22,7 @@
           <!--<el-input v-model="form.advertiserid"></el-input>-->
             <el-select clearable  class="filter-item" style="width: 130px" v-model="form.advertiserid"
                        placeholder="广告商">
+              <el-option label="无广告商" :value="0"></el-option>
               <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </el-form-item>

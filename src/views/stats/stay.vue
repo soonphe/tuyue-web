@@ -51,113 +51,130 @@
 </template>
 
 <script>
-  import {statsGetStay} from '@/api/server'
-  import waves from '@/directive/waves' // 水波纹指令
-  import {imageServer, pageSize} from '@/utils/global'
-  import {mapActions} from 'vuex'
+import {statsGetStay} from '@/api/server'
+import waves from '@/directive/waves' // 水波纹指令
+import {imageServer, pageSize} from '@/utils/global'
+import {mapActions} from 'vuex'
 
-  export default {
-    // 定义局部指令
-    directives: {
-      waves
-    },
-    data () {
-      return {
-        list: null,
-        listLoading: true,
-        total: 0,
-        searchTime: '',
-        listQuery: {
-          pageNum: 1,
-          pageSize: pageSize,
-          startDate: '',
-          endDate: ''
-        },
-        imageServer: imageServer,
-        typeList: []
+export default {
+  // 定义局部指令
+  directives: {
+    waves
+  },
+  data () {
+    return {
+      list: null,
+      listLoading: true,
+      total: 0,
+      searchTime: '',
+      listQuery: {
+        pageNum: 1,
+        pageSize: pageSize,
+        startDate: '',
+        endDate: ''
+      },
+      imageServer: imageServer,
+      typeList: [],
+      filename: '板块停留统计',
+      autoWidth: true,
+      bookType: 'xlsx'
+    }
+  },
+  filters: {
+    statusFilter (status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
       }
-    },
-    filters: {
-      statusFilter (status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
+      return statusMap[status]
+    }
+  },
+  created () {
+    this.getList()
+  },
+  methods: {
+    ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
+
+    getList () {
+      this.listLoading = true
+      let time = this.searchTime
+      if (time.length) {
+        this.listQuery.startDate = time[0]
+        this.listQuery.endDate = time[1]
       }
+      statsGetStay(this.listQuery)
+        .then(res => {
+          this.list = res.data
+          this.total = parseInt(res.ext)
+          this.listLoading = false
+          // 延迟进度条1.5秒
+          // setTimeout(() => {
+          //   this.listLoading = false
+          // }, 1.5 * 1000)
+        })
     },
-    created () {
+    handleFilter () {
+      this.listQuery.pageNum = 1
       this.getList()
     },
-    methods: {
-      ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
+    handleSizeChange (val) {
+      this.listQuery.pageSize = val
+      this.getList()
+    },
+    handleCurrentChange (val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
+    exportExcel () {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['创建时间', '电影', '电玩', '书吧', '城市', '城铁', '点餐', '总计']
+        const filterVal = ['createDate', 'moviesTime', 'gameTime', 'bookTime', 'cityTime', 'subwayTime', 'foodTime', 'staySum']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      // 提取list中的数据，并转化为数组
+      return jsonData.map(v => filterVal.map(j => {
+        // if (j === 'timestamp') {
+        //   return parseTime(v[j])
+        // } else {
+        console.log(v[j])
+        return v[j]
+        // }
+      }))
+    },
+    detail (row) {
+      this.saveAdvertType(row)
+      this.$router.push({
+        path: '/cityArticle/index'
+      })
+    },
+    put (row) {
+      this.saveAdvert(row)
+      this.$router.push({
+        path: '/city/add'
+      })
+    },
+    del (id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
 
-      getList () {
-        this.listLoading = true
-        let time = this.searchTime
-        if (time.length) {
-          this.listQuery.startDate = time[0]
-          this.listQuery.endDate  = time[1]
-        }
-        statsGetStay(this.listQuery)
-          .then(res => {
-            this.list = res.data
-            this.total = parseInt(res.ext)
-            this.listLoading = false
-            // 延迟进度条1.5秒
-            // setTimeout(() => {
-            //   this.listLoading = false
-            // }, 1.5 * 1000)
-          })
-      },
-      handleFilter () {
-        this.listQuery.pageNum = 1
-        this.getList()
-      },
-      handleSizeChange (val) {
-        this.listQuery.pageSize = val
-        this.getList()
-      },
-      handleCurrentChange (val) {
-        this.listQuery.pageNum = val
-        this.getList()
-      },
-      exportExcel () {
-        alert("导出暂停中")
-      },
-      detail (row) {
-        this.saveAdvertType(row)
-        this.$router.push({
-          path: '/cityArticle/index'
-        })
-      },
-      put (row) {
-        this.saveAdvert(row)
-        this.$router.push({
-          path: '/city/add'
-        })
-      },
-      del (id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          cityDelete({id})
-            .then(res => {
-              this.$message.success('删除成功')
-              this.list = this.list.filter(i => {
-                return i.id != id
-              })
-            })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      }
+      })
     }
   }
+}
 </script>

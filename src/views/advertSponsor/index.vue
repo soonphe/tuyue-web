@@ -19,7 +19,7 @@
           <span v-else>关闭</span>
         </template>
       </el-table-column>
-      <el-table-column prop="advertiserid" label="广告商ID" align="center" ></el-table-column>
+      <el-table-column prop="advertiserid" label="广告商ID" align="center" :formatter="typeFormat" ></el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>
@@ -43,141 +43,144 @@
 </template>
 
 <script>
-  import { advertSponsorGetList, advertSponsorDelete} from '@/api/server'
-  import waves from '@/directive/waves' // 水波纹指令
-  import {imageServer, pageSize} from '@/utils/global'
-  import {mapActions} from 'vuex'
+import { advertiserGetList, advertSponsorGetList, advertSponsorDelete} from '@/api/server'
+import waves from '@/directive/waves' // 水波纹指令
+import {imageServer, pageSize} from '@/utils/global'
+import {mapActions} from 'vuex'
 
-  export default {
-    // 定义局部指令
-    directives: {
-      waves
-    },
-    data() {
-      return {
-        list: null,
-        listLoading: true,
-        total: 0,
-        listQuery: {
-          pageNum: 1,
-          pageSize: pageSize,
-          title: undefined,
-          type: undefined
-        },
-        imageServer: imageServer,
-        typeList: []
+export default {
+  // 定义局部指令
+  directives: {
+    waves
+  },
+  data () {
+    return {
+      advertiserList: null,
+      list: null,
+      listLoading: true,
+      total: 0,
+      listQuery: {
+        pageNum: 1,
+        pageSize: pageSize,
+        title: undefined,
+        type: undefined
+      },
+      imageServer: imageServer,
+      typeList: []
+    }
+  },
+  filters: {
+    statusFilter (status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
       }
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
+      return statusMap[status]
+    }
+  },
+  created () {
+    // this.getTypeData()
+    this.getList()
+  },
+  methods: {
+    ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
+    typeFormat (row, column) {
+      for (var i = 0; i < this.advertiserList.length; i++) {
+        if (row.advertiserid === 0) {
+          return '无'
+        } else if (row.advertiserid === this.advertiserList[i].id) {
+          return this.advertiserList[i].name
         }
-        return statusMap[status]
       }
     },
-    created() {
-      // this.getTypeData()
+    clearType () {
+      this.listQuery.type = undefined
+    },
+    // getTypeData() {
+    //   advertTypeGetList()
+    //     .then(res => {
+    //       this.typeList = res.data
+    //       this.saveAdvertType(this.typeList)
+    //     })
+    // },
+    getList () {
+      this.listLoading = true
+      advertiserGetList(this.listQuery)
+        .then(res => {
+          this.advertiserList = res.data
+        })
+      advertSponsorGetList(this.listQuery)
+        .then(res => {
+          this.list = res.data
+          this.total = parseInt(res.ext)
+          this.listLoading = false
+          // 延迟进度条1.5秒
+          // setTimeout(() => {
+          //   this.listLoading = false
+          // }, 1.5 * 1000)
+        })
+    },
+    handleFilter () {
+      this.listQuery.pageNum = 1
       this.getList()
     },
-    methods: {
-      ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
-      typeFormat(row, column) {
-        // this.typeList.forEach((item,index)=>{
-        //   console.log(row.type+'___'+item.id);
-        //   if (row.type === item.id) {
-        //     console.log('equals___'+item.name);
-        //     return item.name
-        //   }
-        // })
-      },
-      clearType() {
-        this.listQuery.type = undefined
-      },
-      // getTypeData() {
-      //   advertTypeGetList()
-      //     .then(res => {
-      //       this.typeList = res.data
-      //       this.saveAdvertType(this.typeList)
-      //     })
-      // },
-      getList() {
-        this.listLoading = true
-        advertSponsorGetList(this.listQuery)
-          .then(res => {
-            this.list = res.data
-            this.total = parseInt(res.ext)
-            this.listLoading = false
-            // 延迟进度条1.5秒
-            // setTimeout(() => {
-            //   this.listLoading = false
-            // }, 1.5 * 1000)
-          })
-      },
-      handleFilter() {
-        this.listQuery.pageNum = 1
-        this.getList()
-      },
-      handleSizeChange(val) {
-        this.listQuery.pageSize = val
-        this.getList()
-      },
-      handleCurrentChange(val) {
-        this.listQuery.pageNum = val
-        this.getList()
-      },
-      add() {
-        // 清除store中存储的advert数据
-        this.clearAdvert()
-        this.$router.push({
-          /**
+    handleSizeChange (val) {
+      this.listQuery.pageSize = val
+      this.getList()
+    },
+    handleCurrentChange (val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
+    add () {
+      // 清除store中存储的advert数据
+      this.clearAdvert()
+      this.$router.push({
+        /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
            */
-          path: '/advertSponsor/add'
-          // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
-          // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
-          // 通过路由名称跳转，携带参数（已成功）
-          // name: 'advertAdd', params: {typeList: this.typeList}
-        })
-      },
-      put(row) {
-        this.saveAdvert(row)
-        this.$router.push({
-          path: '/advertSponsor/add'
-        })
-      },
-      del(id) {
-        this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          advertSponsorDelete({id})
-            .then(res => {
-              this.$message.success('删除成功')
-              // 两种message写法
-              // this.$message({
-              //   type: 'success',
-              //   message: '删除成功!'
-              // });
-              //删除本地数据
-              this.list=this.list.filter(i => {
-                return i.id != id
-              })
-              //重新请求数据
-              // this.getList()
+        path: '/advertSponsor/add'
+        // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
+        // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
+        // 通过路由名称跳转，携带参数（已成功）
+        // name: 'advertAdd', params: {typeList: this.typeList}
+      })
+    },
+    put (row) {
+      this.saveAdvert(row)
+      this.$router.push({
+        path: '/advertSponsor/add'
+      })
+    },
+    del (id) {
+      this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        advertSponsorDelete({id})
+          .then(res => {
+            this.$message.success('删除成功')
+            // 两种message写法
+            // this.$message({
+            //   type: 'success',
+            //   message: '删除成功!'
+            // });
+            // 删除本地数据
+            this.list = this.list.filter(i => {
+              return i.id != id
             })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '删除异常'
-          });
-        });
-
-      }
+            // 重新请求数据
+            // this.getList()
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '删除异常'
+        })
+      })
     }
   }
+}
 </script>
-

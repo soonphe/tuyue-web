@@ -65,7 +65,10 @@ export default {
         endDate: ''
       },
       imageServer: imageServer,
-      typeList: []
+      typeList: [],
+      filename: '新增用户统计',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   filters: {
@@ -115,7 +118,32 @@ export default {
       this.getList()
     },
     exportExcel () {
-      alert("导出暂停中")
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['创建时间', '新增用户']
+        const filterVal = ['createTime', 'total']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      // 提取list中的数据，并转化为数组
+      return jsonData.map(v => filterVal.map(j => {
+        // if (j === 'timestamp') {
+        //   return parseTime(v[j])
+        // } else {
+        console.log(v[j])
+        return v[j]
+        // }
+      }))
     },
     detail (row) {
       this.saveAdvertType(row)

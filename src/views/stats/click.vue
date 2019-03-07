@@ -9,7 +9,8 @@
                       end-placeholder="结束日期">
       </el-date-picker>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">导出
+      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">
+        导出
       </el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
@@ -30,9 +31,9 @@
       <el-table-column prop="food" label="点餐" align="center"></el-table-column>
       <el-table-column prop="clickSum" label="总计" align="center"></el-table-column>
       <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
-        <!--</template>-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
+      <!--</template>-->
       <!--</el-table-column>-->
     </el-table>
 
@@ -66,7 +67,7 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
-      searchTime:'',
+      searchTime: '',
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
@@ -74,7 +75,10 @@ export default {
         endDate: ''
       },
       imageServer: imageServer,
-      typeList: []
+      typeList: [],
+      filename: '模块点击统计',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   filters: {
@@ -98,7 +102,7 @@ export default {
       let time = this.searchTime
       if (time.length) {
         this.listQuery.startDate = time[0]
-        this.listQuery.endDate  = time[1]
+        this.listQuery.endDate = time[1]
       }
       statsGetClick(this.listQuery)
         .then(res => {
@@ -124,7 +128,32 @@ export default {
       this.getList()
     },
     exportExcel () {
-      alert("导出暂停中")
+      this.downloadLoading = true
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['创建时间', '电影', '电玩', '书吧', '城市', '城铁', '点餐', '总计']
+          const filterVal = ['createDate', 'movies', 'game', 'book', 'city', 'subway', 'food', 'clickSum']
+          const list = this.list
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloadLoading = false
+        })
+    },
+    formatJson (filterVal, jsonData) {
+      // 提取list中的数据，并转化为数组
+      return jsonData.map(v => filterVal.map(j => {
+        // if (j === 'timestamp') {
+        //   return parseTime(v[j])
+        // } else {
+        console.log(v[j])
+        return v[j]
+        // }
+      }))
     },
     detail (row) {
       this.saveAdvertType(row)
@@ -144,18 +173,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        cityDelete({id})
-          .then(res => {
-            this.$message.success('删除成功')
-            this.list = this.list.filter(i => {
-              return i.id != id
-            })
-          })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+
       })
     }
   }

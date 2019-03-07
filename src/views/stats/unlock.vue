@@ -60,7 +60,7 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
-      searchTime:'',
+      searchTime: '',
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
@@ -68,7 +68,10 @@ export default {
         endDate: ''
       },
       imageServer: imageServer,
-      typeList: []
+      typeList: [],
+      filename: '解锁统计',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   filters: {
@@ -92,7 +95,7 @@ export default {
       let time = this.searchTime
       if (time.length) {
         this.listQuery.startDate = time[0]
-        this.listQuery.endDate  = time[1]
+        this.listQuery.endDate = time[1]
       }
       statsGetUnlock(this.listQuery)
         .then(res => {
@@ -118,7 +121,41 @@ export default {
       this.getList()
     },
     exportExcel () {
-      alert("导出暂停中")
+      /* generate workbook object from table */
+      // var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+      // /* get binary string as output */
+      // var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      // try {
+      //   FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
+      // } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+      // return wbout
+
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['创建时间', '解锁次数', '平板台数']
+        const filterVal = ['createDate', 'unlockNum', 'padNum']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      // 提取list中的数据，并转化为数组
+      return jsonData.map(v => filterVal.map(j => {
+        // if (j === 'timestamp') {
+        //   return parseTime(v[j])
+        // } else {
+        console.log(v[j])
+        return v[j]
+        // }
+      }))
     },
     detail (row) {
       this.saveAdvertType(row)
@@ -138,13 +175,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        cityDelete({id})
-          .then(res => {
-            this.$message.success('删除成功')
-            this.list = this.list.filter(i => {
-              return i.id != id
-            })
-          })
+
       }).catch(() => {
         this.$message({
           type: 'info',
