@@ -94,9 +94,9 @@ export default {
       var formData = new FormData()
       formData.append('file', file)
       formData.append('file_type', 'img')
-      upload(this.formData)
+      upload(formData)
         .then(res => {
-          let url = result.data.data // Get url from response
+          let url = res.data // Get url from response
           Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
           resetUploader()
         }).catch((err) => {

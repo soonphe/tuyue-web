@@ -9,10 +9,10 @@ const http = axios.create({
   baseURL: process.env.API_ROOT,
   timeout: 5000,
   withCredentials: true
-  /* 配置请求头，axios默认上传json格式数据 */
+  /* 配置默认请求头，axios默认上传json格式数据 */
   // headers: {
   //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-  // },
+  // }
   // transformRequest: [function (data) {
   //   let newData = ''
   //   for (let k in data) {
@@ -112,9 +112,9 @@ function apiAxios (method, url, data, params) {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         // 上传文件这里使用multipart类型
         // headers: {'content-type': 'multipart/form-data'},
-        // 未格式化则是json参数，{"id":1,"name":"锁屏广告"
+        // 只有一种情况需要qs序列化，那就是type为application/x-www-form-urlencoded
         // qs.stringify格式化之后才是每一个字段对象，id: 1 name: 锁屏广告1
-        // qs.stringify：将params序列化name=hehe&age=10，
+        // 序列化name=hehe&age=10，
         // JSON.stringify序列化结果"{"a":"hehe","age":10}"
         data: qs.stringify(data),
         params: params,
@@ -153,14 +153,14 @@ function apiAxios (method, url, data, params) {
 }
 
 export default {
+  get: function (url, params) {
+    return apiAxios('GET', url, null, params)
+  },
   post: function (url, data, params) {
     return apiAxios('POST', url, data, params)
   },
-  put: function (url, data, params) {
+  postjson: function (url, data, params) {
     return apiAxios('POSTJSON', url, data, params)
-  },
-  get: function (url, params) {
-    return apiAxios('GET', url, null, params)
   },
   delete: function (url, params) {
     return apiAxios('DELETE', url, null, params)

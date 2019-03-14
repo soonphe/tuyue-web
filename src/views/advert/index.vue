@@ -50,6 +50,9 @@
           <span v-else>关闭</span>
         </template>
       </el-table-column>
+      <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
+      <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
+
 
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">

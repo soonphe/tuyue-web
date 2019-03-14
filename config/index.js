@@ -7,17 +7,16 @@ const path = require('path')
 module.exports = {
   dev: {
 
-    // 静态资源文件夹
+    // 编译输出的二级目录，静态资源文件夹
     assetsSubDirectory: 'static',
-    // 发布路径
+    // 编译发布的根目录
     assetsPublicPath: '/',
     // 代理配置表，在这里可以配置特定的请求代理到对应的API接口
     // 例如将'localhost:8080/api/xxx'代理到'www.example.com/api/xxx'
     // 使用方法：https://vuejs-templates.github.io/webpack/proxy.html
     proxyTable: {
       '/api':{ //匹配项，所有带api的路径都会被转到target中
-        // target: 'http://47.98.121.127/tuyue/api',  //要代理的url，服务器提供的接口
-        target: 'http://192.168.1.6/tuyue/api',
+        target: 'http://47.98.121.127/tuyue/api',  //要代理的url，服务器提供的接口
         changeOrigin: true, //是否跨域
         secure: false, //如果是https接口，需要配置这个参数
         pathRewrite: {
@@ -58,18 +57,17 @@ module.exports = {
   },
 
   build: {
-    // Template for index.html
+    // 编译输入的index.html，相对路径，相对于本目录
     index: path.resolve(__dirname, '../dist/index.html'),
-
-    // Paths
+    // 编译输出的静态资源根目录
     assetsRoot: path.resolve(__dirname, '../dist'),
+    // 编译输出的静态资源二级目录
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/dist/',
+    // 静态资源的的公开路径，也就是真正的引用路径
+    assetsPublicPath: './',
+    // assetsPublicPath: '/dist/',
 
-    /**
-     * Source Maps
-     */
-
+    // 构建生产环境版本时是否开启source map，sourcmap是用来debug编译后文件的，通过映射到编译前文件来实现
     productionSourceMap: true,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
