@@ -46,16 +46,18 @@
       <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.state == 0">开启</span>
-          <span v-else>关闭</span>
+          <span v-if="scope.row.state == 0">未审核</span>
+          <span v-else-if="scope.row.state == 1">审核未通过</span>
+          <span v-else-if="scope.row.state == 2">审核通过</span>
         </template>
       </el-table-column>
       <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
       <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
 
-
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" @click="verifyFail(scope.row)">不通过</el-button>
+          <el-button type="primary" @click="verifySuccess(scope.row)">通过</el-button>
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
@@ -77,9 +79,10 @@
 </template>
 
 <script>
-import {advertTypeGetList, advertGetList, advertDelete} from '@/api/server'
+import {advertTypeGetList, advertGetList, advertDelete, advertUpdate, advertiserSelectByUid} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
+import {setStore, getStore} from '@/utils/local'
 import {mapActions} from 'vuex'
 
 export default {
@@ -89,6 +92,10 @@ export default {
   },
   data () {
     return {
+      advertObj: {
+        id: null,
+        state: null
+      },
       list: null,
       listLoading: true,
       total: 0,
@@ -96,8 +103,11 @@ export default {
         pageNum: 1,
         pageSize: pageSize,
         title: undefined,
-        type: undefined
+        type: undefined,
+        sponsorId: undefined,
+        state: -1
       },
+      advertiser: null,
       imageServer: imageServer,
       typeList: []
     }
@@ -138,6 +148,13 @@ export default {
         })
     },
     getList () {
+      let roleid = getStore('roleid')
+      if (roleid === 6) {
+        advertiserSelectByUid(getStore('uid'))
+          .then(res => {
+            this.advertiser = res.data
+          })
+      }
       this.listLoading = true
       advertGetList(this.listQuery)
         .then(res => {
@@ -193,7 +210,7 @@ export default {
             this.$message.success('删除成功')
             // 两种message写法
             // this.$message({
-            //   type: 'success',
+            //   info: 'success',
             //   message: '删除成功!'
             // });
             // 删除本地数据
@@ -208,6 +225,37 @@ export default {
           type: 'info',
           message: '删除异常'
         })
+      })
+    },
+    verifyFail (row) {
+      this.$prompt('请填写审核失败原因?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        // type: 'warning'
+      }).then(({ value }) => {
+        row.state = 1
+        row.remark = value
+        advertUpdate(row)
+          .then(res => {
+            this.$message.success('操作成功')
+            // 重新请求数据
+            this.getList()
+          })
+      })
+    },
+    verifySuccess (row) {
+      this.$confirm('确定要审核通过?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.state = 2
+        advertUpdate(row)
+          .then(res => {
+            this.$message.success('操作成功')
+            // 重新请求数据
+            this.getList()
+          })
       })
     }
   }

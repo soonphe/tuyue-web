@@ -83,7 +83,7 @@
               this.$message.success('删除成功')
               // 两种message写法
               // this.$message({
-              //   type: 'success',
+              //   info: 'success',
               //   message: '删除成功!'
               // });
               //删除本地数据

@@ -35,7 +35,9 @@
             </vue-editor>
           </div>
         </el-form-item>
-
+        <el-form-item prop="sponsorid" label="广告主ID"  v-show="false">
+          <el-input v-model="form.sponsorid"></el-input>
+        </el-form-item>
         <!--<el-form-item prop="sponsorid" label="广告主ID">-->
           <!--&lt;!&ndash;<el-input v-model="form.sponsorid"></el-input>&ndash;&gt;-->
           <!--<el-select clearable class="filter-item" style="width: 130px" v-model="form.sponsorid"-->
@@ -66,12 +68,12 @@
             <el-option v-for="item in groupTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="state" label="状态">
-          <el-select v-model="form.state" placeholder="请选择类型">
-            <el-option label="开启" :value="0"></el-option>
-            <el-option label="关闭" :value="1"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item prop="state" label="状态">-->
+          <!--<el-select v-model="form.state" placeholder="请选择类型">-->
+            <!--<el-option label="开启" :value="0"></el-option>-->
+            <!--<el-option label="关闭" :value="1"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
           <el-button @click="onCancel">取消</el-button>
@@ -83,11 +85,12 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
 import {upload, groupGetList, advertSponsorGetList, advertAdd, advertUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
+import {setStore, getStore} from '@/utils/local'
 
 export default {
   components: {
@@ -96,6 +99,8 @@ export default {
   created () {
     this.getGroupTypeData()
     this.getSponsorTypeData()
+    // this.advertiser = getStore('advertiserId')
+    this.form.sponsorid = getStore('advertiserId')
   },
   computed: {
     ...mapState({
@@ -183,12 +188,13 @@ export default {
         if (valid) {
           this.loading = true
           if (this.form.id) {
+            this.form.sponsorid = 6
             advertUpdate(this.form)
               .then(res => {
                 this.loading = false
                 this.$message.success('更新成功')
                 this.$router.push({
-                  path: '/advert/index'
+                  path: '/advertiserAdvert/index'
                 })
               })
           } else {
@@ -197,7 +203,7 @@ export default {
                 this.loading = false
                 this.$message.success('添加成功')
                 this.$router.push({
-                  path: '/advert/index'
+                  path: '/advertiserAdvert/index'
                 })
               })
           }

@@ -89,8 +89,8 @@
       ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
       typeFormat(row, column) {
         // this.typeList.forEach((item,index)=>{
-        //   console.log(row.type+'___'+item.id);
-        //   if (row.type === item.id) {
+        //   console.log(row.info+'___'+item.id);
+        //   if (row.info === item.id) {
         //     console.log('equals___'+item.name);
         //     return item.name
         //   }
@@ -162,7 +162,7 @@
               this.$message.success('删除成功')
               // 两种message写法
               // this.$message({
-              //   type: 'success',
+              //   info: 'success',
               //   message: '删除成功!'
               // });
               this.list=this.list.filter(i => {

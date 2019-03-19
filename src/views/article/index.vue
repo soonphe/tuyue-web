@@ -96,8 +96,8 @@
       ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
       typeFormat(row, column) {
         // this.typeList.forEach((item,index)=>{
-        //   console.log(row.type+'___'+item.id);
-        //   if (row.type === item.id) {
+        //   console.log(row.info+'___'+item.id);
+        //   if (row.info === item.id) {
         //     console.log('equals___'+item.name);
         //     return item.name
         //   }

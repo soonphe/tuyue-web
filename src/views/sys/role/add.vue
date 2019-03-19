@@ -126,7 +126,7 @@
             //     this.loading = false
             //     this.$message({
             //       message: '添加失败!',
-            //       type: 'warning'
+            //       info: 'warning'
             //     })
             // })
           } else {

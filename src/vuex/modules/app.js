@@ -2,7 +2,7 @@ import Cookies from 'js-cookie'
 
 /**
  * 菜单是否展开状态与设备信号状态
- * @type {{sidebar: {opened: boolean, withoutAnimation: boolean}, device: string}}
+ * @info {{sidebar: {opened: boolean, withoutAnimation: boolean}, device: string}}
  */
 const state = {
   sidebar: {

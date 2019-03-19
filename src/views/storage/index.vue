@@ -20,7 +20,7 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
                 placeholder="操作人" v-model="listQuery.operator"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加</el-button>-->
+      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" info="primary" icon="el-icon-edit">添加</el-button>-->
     </div>
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--<el-button type="primary" @click="put(scope.row)">编辑</el-button>-->
+          <!--<el-button info="primary" @click="put(scope.row)">编辑</el-button>-->
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -117,8 +117,8 @@
       ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
       typeFormat(row, column) {
         // this.typeList.forEach((item,index)=>{
-        //   console.log(row.type+'___'+item.id);
-        //   if (row.type === item.id) {
+        //   console.log(row.info+'___'+item.id);
+        //   if (row.info === item.id) {
         //     console.log('equals___'+item.name);
         //     return item.name
         //   }
@@ -198,7 +198,7 @@
               this.$message.success('删除成功')
               // 两种message写法
               // this.$message({
-              //   type: 'success',
+              //   info: 'success',
               //   message: '删除成功!'
               // });
               this.list=this.list.filter(i => {

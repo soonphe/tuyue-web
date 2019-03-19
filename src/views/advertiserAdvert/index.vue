@@ -2,7 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.name')" v-model="listQuery.name"></el-input>
+                :placeholder="$t('table.title')" v-model="listQuery.title"></el-input>
+      <el-select clearable @clear="clearType" class="filter-item" style="width: 130px" v-model="listQuery.type"
+                 :placeholder="$t('table.type')">
+        <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id">
+        </el-option>
+      </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
       </el-button>
@@ -10,18 +15,46 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="uid" label="联系人" align="center"></el-table-column>
-      <el-table-column prop="companyname" label="公司名称" align="center"></el-table-column>
-      <el-table-column prop="position" label="职位" align="center"></el-table-column>
-      <el-table-column prop="name" label="名称" align="center"></el-table-column>
-      <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
-      <el-table-column prop="state" label="状态" align="center">
+      <el-table-column prop="typename" label="类型" align="center"></el-table-column>
+      <el-table-column prop="title" label="标题" align="center"></el-table-column>
+      <el-table-column label="图片" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.state == 0">开启</span>
-          <span v-else>关闭</span>
+          <img :src="imageServer+scope.row.picurl" style="width:100%;height:100%"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column prop="sort" label="排序" align="center"></el-table-column>
+      <el-table-column prop="click" label="点击量" align="center" ></el-table-column>
+      <el-table-column prop="createtime" label="创建时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.createtime}}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column prop="sponsorid" label="广告主ID" align="center"></el-table-column>-->
+      <el-table-column prop="starttime" label="开始时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.starttime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endtime" label="结束时间" align="center" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.endtime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
+      <el-table-column prop="state" label="状态" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.state == 0">未审核</span>
+          <span v-else-if="scope.row.state == 1">审核未通过</span>
+          <span v-else-if="scope.row.state == 2">审核通过</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
+      <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
+
+      <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
@@ -44,9 +77,10 @@
 </template>
 
 <script>
-import {advertiserGetList, advertiserDelete} from '@/api/server'
+import {advertTypeGetList, advertGetList, advertDelete, advertUpdate, advertiserSelectByUid} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
+import {setStore, getStore} from '@/utils/local'
 import {mapActions} from 'vuex'
 
 export default {
@@ -59,11 +93,18 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
+      advertiserQuery: {
+        uid: null
+      },
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
-        name: ''
+        title: undefined,
+        type: undefined,
+        sponsorId: undefined,
+        state: -1
       },
+      advertiser: null,
       imageServer: imageServer,
       typeList: []
     }
@@ -79,6 +120,7 @@ export default {
     }
   },
   created () {
+    this.getTypeData()
     this.getList()
   },
   methods: {
@@ -88,30 +130,35 @@ export default {
         if (row.parentid === 0) {
           return '无'
         } else if (row.parentid === this.list[i].id) {
-          return this.list[i].name
+          return this.list2[i].name
         }
       }
-      /* foreach 无法通过正常流程停止 */
-      // this.list2.forEach((item, index) => {
-      //   console.log(row.parentid + '___' + item.id)
-      //   if (row.parentid === item.id) {
-      //     console.log('equals___' + item.name)
-      //     return item.name
-      //   }
-      // })
     },
     clearType () {
       this.listQuery.type = undefined
     },
-
+    getTypeData () {
+      advertTypeGetList()
+        .then(res => {
+          this.typeList = res.data
+          this.saveAdvertType(this.typeList)
+        })
+    },
     getList () {
+      // 根据uid获取广告商信息
+      this.advertiserQuery.uid = getStore('uid')
+      advertiserSelectByUid(this.advertiserQuery)
+        .then(res => {
+          this.advertiser = res.data
+          setStore('advertiserId', res.data.id)
+          // setStore('advertiser', res.data)
+        })
       this.listLoading = true
-      advertiserGetList(this.listQuery)
+      advertGetList(this.listQuery)
         .then(res => {
           this.list = res.data
           this.total = parseInt(res.ext)
           this.listLoading = false
-          this.saveAdvertType(this.list)
           // 延迟进度条1.5秒
           // setTimeout(() => {
           //   this.listLoading = false
@@ -137,7 +184,7 @@ export default {
         /**
            * 页面间传值 ①使用路由带参数 ②使用vuex
            */
-        path: '/advertiser/add'
+        path: '/advertiserAdvert/add'
         // 由于动态路由也是传递params的，所以在 this.$router.push() 方法中 path不能和params一起使用，否则params将无效。需要用name来指定页面
         // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
         // 通过路由名称跳转，携带参数（已成功）
@@ -147,7 +194,7 @@ export default {
     put (row) {
       this.saveAdvert(row)
       this.$router.push({
-        path: '/advertiser/add'
+        path: '/advertiserAdvert/add'
       })
     },
     del (id) {
@@ -156,7 +203,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        advertiserDelete({id})
+        advertDelete({id})
           .then(res => {
             this.$message.success('删除成功')
             // 两种message写法
@@ -176,6 +223,40 @@ export default {
           type: 'info',
           message: '删除异常'
         })
+      })
+    },
+    verifyFail (id) {
+      this.$confirm('确定要审核失败?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var formData = new FormData()
+        formData.append('id', id)
+        formData.append('state', 0)
+        advertUpdate(formData)
+          .then(res => {
+            this.$message.success('操作成功')
+            // 重新请求数据
+            this.getList()
+          })
+      })
+    },
+    verifySuccess (id) {
+      this.$confirm('确定要审核通过?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var formData = new FormData()
+        formData.append('id', id)
+        formData.append('state', 1)
+        advertUpdate(formData)
+          .then(res => {
+            this.$message.success('操作成功')
+            // 重新请求数据
+            this.getList()
+          })
       })
     }
   }

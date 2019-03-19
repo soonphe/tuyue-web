@@ -15,6 +15,8 @@ export const upload = params => api.postjson('/common/upload', params)
 export const devicesGetList = params => api.get('/devices/getList', params)
 export const devicesUpdate = params => api.postjson('/devices/update', params)
 export const devicesDelete = params => api.get('/devices/delete', params)
+export const devicesGetStateCount = params => api.get('/devices/getStateCount', params)
+
 
 /**
  * 用户
@@ -105,6 +107,7 @@ export const advertiserGetList = params => api.get('/advertiser/getList', params
 export const advertiserAdd = params => api.postjson('/advertiser/add', params)
 export const advertiserDelete = params => api.get('/advertiser/delete', params)
 export const advertiserUpdate = params => api.postjson('/advertiser/update', params)
+export const advertiserSelectByUid = params => api.get('/advertiser/selectByUid', params)
 
 /**
  * 广告主
@@ -241,6 +244,7 @@ export const groupGetList = params => api.get('/group/getList', params)
 export const groupAdd = params => api.postjson('/group/add', params)
 export const groupDelete = params => api.get('/group/delete', params)
 export const groupUpdate = params => api.postjson('/group/update', params)
+export const groupGetStateCount = params => api.get('/group/getStateCount', params)
 
 /**
  * 出入库

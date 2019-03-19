@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--<el-button type="primary" @click="put(scope.row)">编辑</el-button>-->
+          <!--<el-button info="primary" @click="put(scope.row)">编辑</el-button>-->
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -131,7 +131,7 @@
               this.$message.success('删除成功')
               // 两种message写法
               // this.$message({
-              //   type: 'success',
+              //   info: 'success',
               //   message: '删除成功!'
               // });
               this.getList()

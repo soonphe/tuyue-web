@@ -132,6 +132,9 @@ export default {
                 setStore('password', password)
                 setStore('remember', this.remember)
               }
+              setStore('uid', res.data.id)
+              setStore('roleid', res.data.roleid)
+
               // store保存用户信息
               this.saveLogin(res.data)
               // 获取角色ID

@@ -1,6 +1,20 @@
 <template>
   <div class="dashboard-editor-container">
 
+    <el-row :gutter="32">
+    <el-col :xs="36" :sm="36" :lg="12">
+      <div class="chart-wrapper">
+        <pie-chart-group></pie-chart-group>
+      </div>
+    </el-col>
+
+      <el-col :xs="36" :sm="36" :lg="12">
+        <div class="chart-wrapper">
+          <pie-chart-devices></pie-chart-devices>
+        </div>
+      </el-col>
+    </el-row>
+
     <!-- git导流链接 -->
     <!--<github-corner style="position: absolute; top: 0px; border: 0; right: 0;"></github-corner>-->
 
@@ -49,6 +63,8 @@ import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
+import PieChartGroup from './components/PieChartGroup'
+import PieChartDevices from './components/PieChartDevices'
 import BarChart from './components/BarChart'
 // import BoxCard from './components/BoxCard'
 
@@ -80,6 +96,8 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
+    PieChartGroup,
+    PieChartDevices
   },
   data() {
     return {

@@ -32,7 +32,7 @@
       <el-table-column prop="clickSum" label="总计" align="center"></el-table-column>
       <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
       <!--<template slot-scope="scope">-->
-      <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
+      <!--<el-button info="primary" @click="put(scope.row)">查看详情</el-button>-->
       <!--</template>-->
       <!--</el-table-column>-->
     </el-table>

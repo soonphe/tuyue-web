@@ -156,7 +156,7 @@ export default {
         // {
         //   name: '用户总数',
         //   smooth: true,
-        //   type: 'line',
+        //   info: 'line',
         //   itemStyle: {
         //     normal: {
         //       color: '#3888fa',

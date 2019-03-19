@@ -25,7 +25,7 @@
       <!--<el-table-column prop="isMobile" label="4G台注册" align="center"></el-table-column>-->
       <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
         <!--<template slot-scope="scope">-->
-          <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
+          <!--<el-button info="primary" @click="put(scope.row)">查看详情</el-button>-->
         <!--</template>-->
       <!--</el-table-column>-->
     </el-table>
@@ -124,9 +124,9 @@ export default {
       /* generate workbook object from table */
       // var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
       // /* get binary string as output */
-      // var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      // var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, info: 'array' })
       // try {
-      //   FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
+      //   FileSaver.saveAs(new Blob([wbout], { info: 'application/octet-stream' }), 'sheetjs.xlsx')
       // } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
       // return wbout
 

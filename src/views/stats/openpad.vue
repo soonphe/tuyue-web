@@ -22,7 +22,7 @@
       <!--<el-table-column prop="100%" label="使用率" align="center"></el-table-column>-->
       <!--<el-table-column label="基数" align="center" width="300" class-name="small-padding fixed-width">-->
         <!--<template slot-scope="scope">-->
-          <!--<el-button type="primary" @click="put(scope.row)">查看详情</el-button>-->
+          <!--<el-button info="primary" @click="put(scope.row)">查看详情</el-button>-->
         <!--</template>-->
       <!--</el-table-column>-->
     </el-table>

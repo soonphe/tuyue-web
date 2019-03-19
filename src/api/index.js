@@ -111,7 +111,7 @@ function apiAxios (method, url, data, params) {
         method: 'POST',
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         // 上传文件这里使用multipart类型
-        // headers: {'content-type': 'multipart/form-data'},
+        // headers: {'content-info': 'multipart/form-data'},
         // 只有一种情况需要qs序列化，那就是type为application/x-www-form-urlencoded
         // qs.stringify格式化之后才是每一个字段对象，id: 1 name: 锁屏广告1
         // 序列化name=hehe&age=10，

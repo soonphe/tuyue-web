@@ -4,7 +4,7 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
                 :placeholder="$t('table.name')" v-model="listQuery.imCode"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加</el-button>-->
+      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" info="primary" icon="el-icon-edit">添加</el-button>-->
     </div>
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
@@ -83,8 +83,8 @@ export default {
     ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
     typeFormat (row, column) {
       // this.typeList.forEach((item,index)=>{
-      //   console.log(row.type+'___'+item.id);
-      //   if (row.type === item.id) {
+      //   console.log(row.info+'___'+item.id);
+      //   if (row.info === item.id) {
       //     console.log('equals___'+item.name);
       //     return item.name
       //   }

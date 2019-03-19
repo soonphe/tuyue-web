@@ -2,41 +2,25 @@
   <div>
     <div class="app-container">
       <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
+        <el-form-item prop="uid" label="广告商uid">
+          <el-input v-model="form.uid"></el-input>
+        </el-form-item>
+        <el-form-item prop="companyname" label="公司名称">
+          <el-input v-model="form.companyname"></el-input>
+        </el-form-item>
+        <el-form-item prop="position" label="职位">
+          <el-input v-model="form.position"></el-input>
+        </el-form-item>
         <el-form-item prop="name" label="名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item prop="phone" label="联系方式">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item prop="contact" label="联系人">
-          <el-input v-model="form.contact"></el-input>
-        </el-form-item>
-        <el-form-item prop="agenttime" label="代理时间">
-          <el-date-picker v-model="form.agenttime"
-                          format="yyyy-MM-dd HH:mm:ss"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          type="date">
-          </el-date-picker>
-        </el-form-item>
         <el-form-item prop="state" label="状态">
           <el-select v-model="form.state" placeholder="请选择类型">
             <el-option label="开启" :value="0"></el-option>
             <el-option label="关闭" :value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="level" label="级别">
-          <el-select v-model="form.level" placeholder="请选择类型">
-            <el-option label="1" :value="1"></el-option>
-            <el-option label="2" :value="2"></el-option>
-            <el-option label="3" :value="3"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="parentid" label="父级ID">
-          <!--<el-input v-model="form.parentid"></el-input>-->
-          <el-select clearable  class="filter-item" style="width: 130px" v-model="form.parentid"
-                     placeholder="父级广告商">
-            <el-option label="无父级" :value="0"></el-option>
-            <el-option v-for="item in  typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -77,7 +61,7 @@
         uploadAction: uploadServer,
         imageServer: imageServer,
         // form: {
-        //   type: '',
+        //   info: '',
         //   title: '',
         //   picurl: '',
         //   sort: '',

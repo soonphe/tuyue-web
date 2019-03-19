@@ -25,7 +25,7 @@ const router = new Router({
       redirect: '/dashboard',
       name: 'Dashboard',
       hidden: true,
-      meta: {title: '控制台', icon: 'el-icon-info'},
+      meta: {title: '控制台', icon: 'el-icon-type'},
       children: [
         {
           path: 'dashboard',
@@ -38,7 +38,7 @@ const router = new Router({
       component: Layout,
       redirect: '/dataVersion/index',
       name: 'dataVersion',
-      meta: {title: '版本管理', icon: 'el-icon-info'},
+      meta: {title: '版本管理', icon: 'el-icon-type'},
       children: [
         {
           path: 'index',
@@ -59,7 +59,7 @@ const router = new Router({
       component: Layout,
       redirect: '/devices/index',
       name: 'devices',
-      meta: {title: '设备管理', icon: 'el-icon-info'},
+      meta: {title: '设备管理', icon: 'el-icon-type'},
       children: [
         {
           path: 'index',
@@ -77,7 +77,7 @@ const router = new Router({
       component: Layout,
       redirect: '/push/index',
       name: 'push',
-      meta: {title: '推送管理', icon: 'el-icon-info'},
+      meta: {title: '推送管理', icon: 'el-icon-type'},
       children: [
         {
           path: 'index',
@@ -95,7 +95,7 @@ const router = new Router({
       component: Layout,
       redirect: '/pushLocation/index',
       name: 'pushLocation',
-      meta: {title: '地域推送', icon: 'el-icon-info'},
+      meta: {title: '地域推送', icon: 'el-icon-type'},
       children: [
         {
           path: 'index',
@@ -113,7 +113,7 @@ const router = new Router({
       component: Layout,
       redirect: '/index',
       name: 'user',
-      meta: {title: '用户管理', icon: 'el-icon-info'},
+      meta: {title: '用户管理', icon: 'el-icon-type'},
       children: [{
         path: 'index',
         component: () => import('@/views/user/index')
@@ -124,7 +124,7 @@ const router = new Router({
       component: Layout,
       redirect: '/city/index',
       name: 'city',
-      meta: {title: '城市管理', icon: 'el-icon-info'},
+      meta: {title: '城市管理', icon: 'el-icon-type'},
       children: [{
         path: 'index',
         name: 'cityIndex',
@@ -143,7 +143,7 @@ const router = new Router({
       component: Layout,
       redirect: '/cityArticle/index',
       name: 'cityArticle',
-      meta: {title: '城市文章管理', icon: 'el-icon-info'},
+      meta: {title: '城市文章管理', icon: 'el-icon-type'},
       children: [{
         path: 'index',
         name: 'cityArticleIndex',
@@ -195,7 +195,7 @@ const router = new Router({
       component: Layout,
       redirect: '/version/index',
       name: 'version',
-      meta: {title: '版本管理', icon: 'el-icon-info'},
+      meta: {title: '版本管理', icon: 'el-icon-type'},
       children: [
         {
           path: 'index',
@@ -249,6 +249,27 @@ const router = new Router({
           path: 'add',
           name: 'advertAdd',
           component: () => import('@/views/advert/add'),
+          meta: {title: '添加广告', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
+      path: '/advertiserAdvert',
+      component: Layout,
+      redirect: '/advertiserAdvert/index',
+      name: 'user',
+      meta: {title: '广告商广告', icon: 'el-icon-type'},
+      children: [
+        {
+          path: 'index',
+          name: 'advertiserAdvertIndex',
+          component: () => import('@/views/advertiserAdvert/index'),
+          meta: {title: '广告商广告', icon: 'el-icon-picture-outline'}
+        },
+        {
+          path: 'add',
+          name: 'advertiserAdvertAdd',
+          component: () => import('@/views/advertiserAdvert/add'),
           meta: {title: '添加广告', icon: 'el-icon-picture-outline'}
         }
       ]

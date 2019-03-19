@@ -89,7 +89,7 @@
         uploadAction: uploadServer,
         imageServer: imageServer,
         // form: {
-        //   type: '',
+        //   info: '',
         //   title: '',
         //   picurl: '',
         //   sort: '',
