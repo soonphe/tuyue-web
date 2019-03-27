@@ -6,9 +6,9 @@ module.exports = {
   // dev
   // API_ROOT: '"http://localhost:8080/api"'
   // test
-  API_ROOT: '"http://47.98.121.127/tuyuetest/api"',
+  // API_ROOT: '"http://47.98.121.127/tuyuetest/api"',
   // prod
-  // API_ROOT: '"http://47.98.121.127/tuyue/api"',
+  API_ROOT: '"http://47.98.121.127/tuyue/api"',
   FILE_SERVER : '"http://47.98.121.127/upload"'
 
 }

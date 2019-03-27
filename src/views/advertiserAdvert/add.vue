@@ -87,7 +87,7 @@
 <script>
 import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, groupGetList, advertSponsorGetList, advertAdd, advertUpdate} from '@/api/server'
+import {upload, groupGetList, advertAdd, advertUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 import {setStore, getStore} from '@/utils/local'
@@ -133,12 +133,6 @@ export default {
       groupGetList()
         .then(res => {
           this.groupTypeList = res.data
-        })
-    },
-    getSponsorTypeData () {
-      advertSponsorGetList()
-        .then(res => {
-          this.sponsorTypeList = res.data
         })
     },
     beforeAvatarUpload (file) {

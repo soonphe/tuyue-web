@@ -43,7 +43,8 @@
           <span>{{scope.row.endtime}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
+      <!--<el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>-->
+      <el-table-column prop="displaytime" label="播放秒数" align="center"></el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.state == 0">未审核</span>
@@ -53,7 +54,7 @@
       </el-table-column>
       <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
       <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
-
+      <el-table-column prop="remark" label="说明" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" @click="verifyFail(scope.row)">不通过</el-button>

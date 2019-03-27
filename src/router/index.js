@@ -296,27 +296,6 @@ const router = new Router({
       ]
     },
     {
-      path: '/advertSponsor',
-      component: Layout,
-      redirect: '/advertSponsor/index',
-      name: 'advertSponsor',
-      meta: {title: '广告主管理', icon: 'el-icon-goods'},
-      children: [
-        {
-          path: 'index',
-          name: 'advertSponsorIndex',
-          component: () => import('@/views/advertSponsor/index'),
-          meta: {title: '广告主', icon: 'el-icon-picture-outline'}
-        },
-        {
-          path: 'add',
-          name: 'advertSponsorAdd',
-          component: () => import('@/views/advertSponsor/add'),
-          meta: {title: '添加广告主', icon: 'el-icon-picture-outline'}
-        }
-      ]
-    },
-    {
       path: '/videoType',
       component: Layout,
       redirect: '/videoType/index',

@@ -16,7 +16,7 @@ module.exports = {
     // 使用方法：https://vuejs-templates.github.io/webpack/proxy.html
     proxyTable: {
       '/api':{ //匹配项，所有带api的路径都会被转到target中
-        target: 'http://47.98.121.127/tuyuetest/api',  //要代理的url，服务器提供的接口
+        target: 'http://47.98.121.127/tuyue/api',  //要代理的url，服务器提供的接口
         changeOrigin: true, //是否跨域
         secure: false, //如果是https接口，需要配置这个参数
         pathRewrite: {

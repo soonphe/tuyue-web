@@ -37,12 +37,12 @@
         </el-form-item>
 
         <!--<el-form-item prop="sponsorid" label="广告主ID">-->
-          <!--&lt;!&ndash;<el-input v-model="form.sponsorid"></el-input>&ndash;&gt;-->
-          <!--<el-select clearable class="filter-item" style="width: 130px" v-model="form.sponsorid"-->
-                     <!--placeholder="广告主">-->
-            <!--<el-option label="请选择广告主" :value="0"></el-option>-->
-            <!--<el-option v-for="item in sponsorTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
-          <!--</el-select>-->
+        <!--&lt;!&ndash;<el-input v-model="form.sponsorid"></el-input>&ndash;&gt;-->
+        <!--<el-select clearable class="filter-item" style="width: 130px" v-model="form.sponsorid"-->
+        <!--placeholder="广告主">-->
+        <!--<el-option label="请选择广告主" :value="0"></el-option>-->
+        <!--<el-option v-for="item in sponsorTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+        <!--</el-select>-->
         <!--</el-form-item>-->
         <el-form-item prop="starttime" label="执行开始时间">
           <el-date-picker v-model="form.starttime"
@@ -58,12 +58,16 @@
                           type="date">
           </el-date-picker>
         </el-form-item>
-        <el-form-item prop="groupid" label="车组ID">
+        <el-form-item prop="groupIdAttr" label="车组ID">
           <!--<el-input v-model="form.groupid"></el-input>-->
-          <el-select clearable class="filter-item" style="width: 130px" v-model="form.groupid"
+          <el-select clearable multiple class="filter-item" style="width: 130px" v-model="groupIdAttr"
                      placeholder="车组">
             <el-option label="请选择车组" :value="0"></el-option>
             <el-option v-for="item in groupTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <!--<template v-for="item in groupTypeList">-->
+              <!--<el-option v-if="item.status === 999" selected="selected" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+              <!--<el-option v-else :key="item.id" :label="item.name"  :value="item.id"></el-option>-->
+            <!--</template>-->
           </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态">
@@ -71,6 +75,9 @@
             <el-option label="开启" :value="0"></el-option>
             <el-option label="关闭" :value="1"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item prop="displaytime" label="播放秒数">
+          <el-input v-model="form.displaytime"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">提交</el-button>
@@ -83,9 +90,9 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
 import {VueEditor, Quill} from 'vue2-editor'
-import {upload, groupGetList, advertSponsorGetList, advertAdd, advertUpdate} from '@/api/server'
+import {upload, groupGetList, advertAdd, advertUpdate, advertGetGroupListByAdvertId} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 
@@ -95,7 +102,10 @@ export default {
   },
   created () {
     this.getGroupTypeData()
-    this.getSponsorTypeData()
+    // 判断是否为修改
+    if (this.form.id) {
+      this.getGroupByAdvertId(this.form.id)
+    }
   },
   computed: {
     ...mapState({
@@ -105,8 +115,12 @@ export default {
   },
   data () {
     return {
+      groupIdAttr: [],
       groupTypeList: [],
-      sponsorTypeList: [],
+      advertGroupList: [],
+      advertGroupQuery: {
+        id: null
+      },
       uploadData: {
         file_type: 'img'
       },
@@ -124,16 +138,30 @@ export default {
     }
   },
   methods: {
+    typeFormat (row, column) {
+      for (var i = 0; i < this.list.length; i++) {
+        if (row.parentid === 0) {
+          return '无'
+        } else if (row.parentid === this.list[i].id) {
+          return this.list2[i].name
+        }
+      }
+    },
     getGroupTypeData () {
       groupGetList()
         .then(res => {
           this.groupTypeList = res.data
         })
     },
-    getSponsorTypeData () {
-      advertSponsorGetList()
+    getGroupByAdvertId (id) {
+      this.advertGroupQuery.id = id
+      advertGetGroupListByAdvertId(this.advertGroupQuery)
         .then(res => {
-          this.sponsorTypeList = res.data
+          this.advertGroupList = res.data
+          // 循环判断车组状态
+          this.advertGroupList.forEach((item, index) => {
+            this.groupIdAttr.push(item.groupid)
+          })
         })
     },
     beforeAvatarUpload (file) {
@@ -165,25 +193,36 @@ export default {
         }).catch((err) => {
           console.log(err)
         })
-      // 封装axios上传
-      // axios({
-      //   url: this.uploadAction,
-      //   method: 'POST',
-      //   data: formData
-      // }).then((result) => {
-      //   let url = result.data.data // Get url from response
-      //   Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
-      //   resetUploader()
-      // }).catch((err) => {
-      //   console.log(err)
-      // })
+        // 封装axios上传
+        // axios({
+        //   url: this.uploadAction,
+        //   method: 'POST',
+        //   data: formData
+        // }).then((result) => {
+        //   let url = result.data.data // Get url from response
+        //   Editor.insertEmbed(cursorLocation, 'image', this.imageServer + url)
+        //   resetUploader()
+        // }).catch((err) => {
+        //   console.log(err)
+        // })
     },
     onSubmit () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
+          let groupArr = ''
+          // 切分form.groupid
+          if (this.groupIdAttr.length > 0) {
+            groupArr = this.groupIdAttr.join('@@')
+            // this.groupIdAttr.forEach((item, index) => {
+            //   groupArr = item + '@@'
+            // })
+          }
+          let param = {
+            groupArr: groupArr
+          }
           if (this.form.id) {
-            advertUpdate(this.form)
+            advertUpdate(this.form, param)
               .then(res => {
                 this.loading = false
                 this.$message.success('更新成功')
@@ -192,7 +231,7 @@ export default {
                 })
               })
           } else {
-            advertAdd(this.form)
+            advertAdd(this.form, param)
               .then(res => {
                 this.loading = false
                 this.$message.success('添加成功')

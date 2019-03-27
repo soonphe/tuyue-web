@@ -17,7 +17,6 @@ export const devicesUpdate = params => api.postjson('/devices/update', params)
 export const devicesDelete = params => api.get('/devices/delete', params)
 export const devicesGetStateCount = params => api.get('/devices/getStateCount', params)
 
-
 /**
  * 用户
  */
@@ -96,9 +95,10 @@ export const advertTypeUpdate = params => api.post('/advertType/update', params)
  * 广告
  */
 export const advertGetList = params => api.get('/advert/getList', params)
-export const advertAdd = params => api.postjson('/advert/add', params)
+export const advertAdd = (data, params) => api.postjson('/advert/add', data, params)
 export const advertDelete = params => api.get('/advert/delete', params)
-export const advertUpdate = params => api.postjson('/advert/update', params)
+export const advertUpdate = (data, params) => api.postjson('/advert/update', data, params)
+export const advertGetGroupListByAdvertId = params => api.get('/advert/getGroupListByAdvertId', params)
 
 /**
  * 广告商
@@ -108,14 +108,6 @@ export const advertiserAdd = params => api.postjson('/advertiser/add', params)
 export const advertiserDelete = params => api.get('/advertiser/delete', params)
 export const advertiserUpdate = params => api.postjson('/advertiser/update', params)
 export const advertiserSelectByUid = params => api.get('/advertiser/selectByUid', params)
-
-/**
- * 广告主
- */
-export const advertSponsorGetList = params => api.get('/advertSponsor/getList', params)
-export const advertSponsorAdd = params => api.postjson('/advertSponsor/add', params)
-export const advertSponsorDelete = params => api.get('/advertSponsor/delete', params)
-export const advertSponsorUpdate = params => api.postjson('/advertSponsor/update', params)
 
 /**
  * 电影类别
