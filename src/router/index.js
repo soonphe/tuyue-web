@@ -158,6 +158,20 @@ const router = new Router({
       ]
     },
     {
+      path: '/padUser',
+      component: Layout,
+      redirect: '/padUser/index',
+      name: 'stats',
+      meta: {title: '平板用户统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'padUserIndex',
+          component: () => import('@/views/stats/padUser'),
+          meta: {title: '平板用户统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
       path: '/stats',
       component: Layout,
       redirect: '/stats/unlock',

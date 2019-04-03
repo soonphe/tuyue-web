@@ -23,6 +23,11 @@
 
     <!-- 曲线图 -->
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart-pad-user :chart-data="lineChartData"></line-chart-pad-user>
+    </el-row>
+
+    <!-- 曲线图 -->
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData"></line-chart>
     </el-row>
 
@@ -60,6 +65,7 @@
 <script>
 import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
+import LineChartPadUser from './components/LineChartPadUser'
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
@@ -92,6 +98,7 @@ export default {
   components: {
     GithubCorner,
     PanelGroup,
+    LineChartPadUser,
     LineChart,
     RaddarChart,
     PieChart,

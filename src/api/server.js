@@ -84,6 +84,11 @@ export const statsGetStay = params => api.get('/stats/getStay', params)
 export const statsGetDatail = params => api.get('/stats/getDetail', params)
 
 /**
+ * 平板用户统计
+ */
+export const statsGetPadUser = params => api.get('/padUser/getList', params)
+
+/**
  * 广告类别
  */
 export const advertTypeGetList = params => api.get('/advertType/getList', params)
