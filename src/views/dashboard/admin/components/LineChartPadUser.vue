@@ -93,13 +93,13 @@ export default {
         },
         xAxis: {
           data: [
-            this.list[0].createdate,
-            this.list[1].createdate,
-            this.list[2].createdate,
-            this.list[3].createdate,
-            this.list[4].createdate,
-            this.list[5].createdate,
-            this.list[6].createdate
+            this.list[0].createDate,
+            this.list[1].createDate,
+            this.list[2].createDate,
+            this.list[3].createDate,
+            this.list[4].createDate,
+            this.list[5].createDate,
+            this.list[6].createDate
           ],
           boundaryGap: false,
           axisTick: {
@@ -142,13 +142,13 @@ export default {
             }
           },
           data: [
-            this.list[0].totalnum,
-            this.list[1].totalnum,
-            this.list[2].totalnum,
-            this.list[3].totalnum,
-            this.list[4].totalnum,
-            this.list[5].totalnum,
-            this.list[6].totalnum
+            this.list[0].totalNum,
+            this.list[1].totalNum,
+            this.list[2].totalNum,
+            this.list[3].totalNum,
+            this.list[4].totalNum,
+            this.list[5].totalNum,
+            this.list[6].totalNum
           ],
           animationDuration: 2800,
           animationEasing: 'cubicInOut'

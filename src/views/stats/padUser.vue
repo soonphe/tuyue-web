@@ -12,13 +12,13 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">导出</el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column prop="createdate" label="创建时间" align="center" width="200">
+      <el-table-column prop="createDate" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span>{{scope.row.createdate}}</span>
+          <span>{{scope.row.createDate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalnum" label="平板用户" align="center"></el-table-column>
+      <el-table-column prop="totalNum" label="平板用户" align="center"></el-table-column>
 
     </el-table>
 
