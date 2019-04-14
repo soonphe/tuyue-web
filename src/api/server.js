@@ -84,6 +84,14 @@ export const statsGetStay = params => api.get('/stats/getStay', params)
 export const statsGetDatail = params => api.get('/stats/getDetail', params)
 
 /**
+ * 统计管理副本
+ */
+export const statsClickGetList = params => api.get('/statsClick/getList', params)
+export const statsStayGetList = params => api.get('/statsStay/getList', params)
+export const statsLockGetList = params => api.get('/statsLock/getList', params)
+export const statsUserGetList = params => api.get('/statsUser/getList', params)
+
+/**
  * 平板用户统计
  */
 export const statsGetPadUser = params => api.get('/padUser/getList', params)

@@ -9,18 +9,32 @@
                       end-placeholder="结束日期">
       </el-date-picker>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">导出</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">
+        导出
+      </el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column prop="createDate" label="创建时间" align="center" width="200">
+      <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span>{{scope.row.createDate}}</span>
+          <span>{{scope.row.createdate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalNum" label="5分钟解锁用户" align="center"></el-table-column>
-      <el-table-column prop="clickNum" label="全部解锁用户" align="center"></el-table-column>
-
+      <!--<el-table-column prop="userNum" label="平板台数" align="center"></el-table-column>-->
+      <!--<el-table-column prop="noMobile" label="非4G台数" align="center"></el-table-column>-->
+      <!--<el-table-column prop="isMobile" label="4G台数" align="center"></el-table-column>-->
+      <el-table-column prop="movies" label="电影" align="center"></el-table-column>
+      <el-table-column prop="game" label="电玩" align="center"></el-table-column>
+      <el-table-column prop="book" label="书吧" align="center"></el-table-column>
+      <el-table-column prop="city" label="城市" align="center"></el-table-column>
+      <el-table-column prop="subway" label="城铁" align="center"></el-table-column>
+      <el-table-column prop="food" label="点餐" align="center"></el-table-column>
+      <el-table-column prop="clicksum" label="总计" align="center"></el-table-column>
+      <!--<el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button info="primary" @click="put(scope.row)">查看详情</el-button>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
 
     <div class="pagination-container">
@@ -38,7 +52,7 @@
 </template>
 
 <script>
-import {statsGetPadUser} from '@/api/server'
+import {statsClickGetList} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
 import {mapActions} from 'vuex'
@@ -62,7 +76,7 @@ export default {
       },
       imageServer: imageServer,
       typeList: [],
-      filename: '新增用户统计',
+      filename: '模块点击统计',
       autoWidth: true,
       bookType: 'xlsx'
     }
@@ -88,9 +102,9 @@ export default {
       let time = this.searchTime
       if (time.length) {
         this.listQuery.startDate = time[0]
-        this.listQuery.endDate  = time[1]
+        this.listQuery.endDate = time[1]
       }
-      statsGetPadUser(this.listQuery)
+      statsClickGetList(this.listQuery)
         .then(res => {
           this.list = res.data
           this.total = parseInt(res.ext)
@@ -115,20 +129,20 @@ export default {
     },
     exportExcel () {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['创建时间', '新增用户']
-        const filterVal = ['createTime', 'total']
-        const list = this.list
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['创建时间', '电影', '电玩', '书吧', '城市', '城铁', '点餐', '总计']
+          const filterVal = ['createDate', 'movies', 'game', 'book', 'city', 'subway', 'food', 'clickSum']
+          const list = this.list
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloadLoading = false
         })
-        this.downloadLoading = false
-      })
     },
     formatJson (filterVal, jsonData) {
       // 提取list中的数据，并转化为数组
@@ -151,6 +165,15 @@ export default {
       this.saveAdvert(row)
       this.$router.push({
         path: '/city/add'
+      })
+    },
+    del (id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+
       })
     }
   }

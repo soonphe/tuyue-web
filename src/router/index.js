@@ -172,6 +172,62 @@ const router = new Router({
         }]
     },
     {
+      path: '/statsUser',
+      component: Layout,
+      redirect: '/statsUser/index',
+      name: 'stats',
+      meta: {title: '新增用户统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'statsUserIndex',
+          component: () => import('@/views/stats2/openpad'),
+          meta: {title: '新增用户统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
+      path: '/statsLock',
+      component: Layout,
+      redirect: '/statsLock/index',
+      name: 'stats',
+      meta: {title: '解锁统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'statsLockIndex',
+          component: () => import('@/views/stats2/unlock'),
+          meta: {title: '解锁统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
+      path: '/statsClick',
+      component: Layout,
+      redirect: '/statsClick/index',
+      name: 'stats',
+      meta: {title: '模块点击统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'statsClickIndex',
+          component: () => import('@/views/stats2/click'),
+          meta: {title: '模块点击统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
+      path: '/statsStay',
+      component: Layout,
+      redirect: '/statsStay/index',
+      name: 'stats',
+      meta: {title: '模块停留统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'statsStayIndex',
+          component: () => import('@/views/stats2/stay'),
+          meta: {title: '模块停留统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
       path: '/stats',
       component: Layout,
       redirect: '/stats/unlock',

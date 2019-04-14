@@ -8,7 +8,8 @@
 /**
  * ——已废弃，不再通过此方法判断本地上传和服务器上传
  // 判断是否为dev环境
- if (process.env.NODE_ENV === 'development') {
+ if (process.env.NODE_ENV === 'develop
+ ment') {
         // dev
         this.uploadAction = localUploadServer
       } else {

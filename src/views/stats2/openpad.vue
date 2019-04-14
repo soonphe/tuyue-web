@@ -15,12 +15,16 @@
       <el-table-column prop="createDate" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span>{{scope.row.createDate}}</span>
+          <span>{{scope.row.createdate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalNum" label="5分钟解锁用户" align="center"></el-table-column>
-      <el-table-column prop="clickNum" label="全部解锁用户" align="center"></el-table-column>
-
+      <el-table-column prop="totalNum" label="新增用户" align="center"></el-table-column>
+      <!--<el-table-column prop="100%" label="使用率" align="center"></el-table-column>-->
+      <!--<el-table-column label="基数" align="center" width="300" class-name="small-padding fixed-width">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button info="primary" @click="put(scope.row)">查看详情</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
 
     <div class="pagination-container">
@@ -38,7 +42,7 @@
 </template>
 
 <script>
-import {statsGetPadUser} from '@/api/server'
+import {statsUserGetList} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
 import {mapActions} from 'vuex'
@@ -90,7 +94,7 @@ export default {
         this.listQuery.startDate = time[0]
         this.listQuery.endDate  = time[1]
       }
-      statsGetPadUser(this.listQuery)
+      statsUserGetList(this.listQuery)
         .then(res => {
           this.list = res.data
           this.total = parseInt(res.ext)
