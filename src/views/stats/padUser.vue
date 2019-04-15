@@ -18,9 +18,9 @@
           <span>{{scope.row.createDate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalNum" label="5分钟解锁用户" align="center"></el-table-column>
-      <el-table-column prop="clickNum" label="全部解锁用户" align="center"></el-table-column>
-
+      <el-table-column prop="totalNum" label="总使用用户" align="center"></el-table-column>
+      <el-table-column prop="clickNum" label="总解锁次数" align="center"></el-table-column>
+      <el-table-column prop="padNum" label="平板台数" align="center"></el-table-column>
     </el-table>
 
     <div class="pagination-container">

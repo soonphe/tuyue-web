@@ -24,6 +24,8 @@
       </el-table-column>
       <el-table-column prop="sort" label="排序" align="center"></el-table-column>
       <el-table-column prop="click" label="点击量" align="center" ></el-table-column>
+      <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
+      <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
       <el-table-column prop="createtime" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -52,8 +54,7 @@
           <span v-else-if="scope.row.state == 2">审核通过</span>
         </template>
       </el-table-column>
-      <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
-      <el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>
+
       <el-table-column prop="remark" label="说明" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
