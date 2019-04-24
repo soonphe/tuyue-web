@@ -90,6 +90,7 @@ export const statsClickGetList = params => api.get('/statsClick/getList', params
 export const statsStayGetList = params => api.get('/statsStay/getList', params)
 export const statsLockGetList = params => api.get('/statsLock/getList', params)
 export const statsUserGetList = params => api.get('/statsUser/getList', params)
+export const statsPadGetList = params => api.get('/statsPad/getList', params)
 
 /**
  * 平板用户统计

@@ -228,6 +228,20 @@ const router = new Router({
         }]
     },
     {
+      path: '/statsPad',
+      component: Layout,
+      redirect: '/statsPad/index',
+      name: 'stats',
+      meta: {title: '平板用户统计', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'statsPadIndex',
+          component: () => import('@/views/stats2/pad'),
+          meta: {title: '平板用户统计', icon: 'el-icon-picture-outline'}
+        }]
+    },
+    {
       path: '/stats',
       component: Layout,
       redirect: '/stats/unlock',

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {articleTypeAdd} from '@/api/server'
+import {articleTypeAdd, articleTypeUpdate} from '@/api/server'
 import {mapState} from 'vuex'
 
 
