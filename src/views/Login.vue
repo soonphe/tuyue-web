@@ -134,9 +134,20 @@ export default {
                 // setStore('m', items)
                 // //保存用户菜单
                 // self.saveMenus(items)
-              self.$router.push({
-                path: '/'
-              })
+              alert(1)
+              if (roleId==2){
+                alert(222)
+                self.$router.push({
+                  path: '/dashboard2'
+                })
+              }else{
+                alert()
+                self.$router.push({
+                  path: '/'
+                })
+              }
+
+
             })
         } else {
           console.log('error submit!!')

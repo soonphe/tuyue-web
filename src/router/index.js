@@ -161,7 +161,7 @@ const router = new Router({
       path: '/padUser',
       component: Layout,
       redirect: '/padUser/index',
-      name: 'stats',
+      name: 'padUser',
       meta: {title: '平板用户统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -175,7 +175,7 @@ const router = new Router({
       path: '/statsUser',
       component: Layout,
       redirect: '/statsUser/index',
-      name: 'stats',
+      name: 'statsUser',
       meta: {title: '新增用户统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -189,7 +189,7 @@ const router = new Router({
       path: '/statsLock',
       component: Layout,
       redirect: '/statsLock/index',
-      name: 'stats',
+      name: 'statsLock',
       meta: {title: '解锁统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -203,7 +203,7 @@ const router = new Router({
       path: '/statsClick',
       component: Layout,
       redirect: '/statsClick/index',
-      name: 'stats',
+      name: 'statsClick',
       meta: {title: '模块点击统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -217,7 +217,7 @@ const router = new Router({
       path: '/statsStay',
       component: Layout,
       redirect: '/statsStay/index',
-      name: 'stats',
+      name: 'statsStay',
       meta: {title: '模块停留统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -231,7 +231,7 @@ const router = new Router({
       path: '/statsPad',
       component: Layout,
       redirect: '/statsPad/index',
-      name: 'stats',
+      name: 'statsPad',
       meta: {title: '平板用户统计', icon: 'el-icon-goods'},
       children: [
         {
@@ -341,7 +341,7 @@ const router = new Router({
       path: '/advertiserAdvert',
       component: Layout,
       redirect: '/advertiserAdvert/index',
-      name: 'user',
+      name: 'advertiserAdvert',
       meta: {title: '广告商广告', icon: 'el-icon-type'},
       children: [
         {

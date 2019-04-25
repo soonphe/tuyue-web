@@ -5,7 +5,8 @@
 <script>
 import echarts from 'echarts' // echarts theme
 import { debounce } from '@/utils'
-import {userGetUserCount} from '@/api/server'
+import {userGetUserCount,statsUserGetList} from '@/api/server'
+import {setStore, getStore, rasPublic} from '@/utils/local'
 require('echarts/theme/macarons')
 
 export default {
@@ -78,13 +79,24 @@ export default {
   },
   methods: {
     getList () {
-      userGetUserCount()
-        .then(res => {
-          this.list = res.data
-          if (this.list.length) {
-            this.initChart()
-          }
-        })
+      if (getStore('roleid') == 2) {
+        statsUserGetList()
+          .then(res => {
+            this.list = res.data
+            if (this.list.length) {
+              this.initChart()
+            }
+          })
+      }else {
+        userGetUserCount()
+          .then(res => {
+            this.list = res.data
+            if (this.list.length) {
+              this.initChart()
+            }
+          })
+      }
+
     },
     setOptions ({ expectedData, actualData } = {}) {
       this.chart.setOption({
@@ -93,13 +105,13 @@ export default {
         },
         xAxis: {
           data: [
-            this.list[0].createTime,
-            this.list[1].createTime,
-            this.list[2].createTime,
-            this.list[3].createTime,
-            this.list[4].createTime,
-            this.list[5].createTime,
-            this.list[6].createTime
+            this.list[0].createTime != null ? this.list[0].createTime : this.list[0].createdate,
+            this.list[1].createTime != null ? this.list[1].createTime : this.list[1].createdate,
+            this.list[2].createTime != null ? this.list[2].createTime : this.list[2].createdate,
+            this.list[3].createTime != null ? this.list[3].createTime : this.list[3].createdate,
+            this.list[4].createTime != null ? this.list[4].createTime : this.list[4].createdate,
+            this.list[5].createTime != null ? this.list[5].createTime : this.list[5].createdate,
+            this.list[6].createTime != null ? this.list[6].createTime : this.list[6].createdate
           ],
           boundaryGap: false,
           axisTick: {
@@ -142,13 +154,13 @@ export default {
             }
           },
           data: [
-            this.list[0].total,
-            this.list[1].total,
-            this.list[2].total,
-            this.list[3].total,
-            this.list[4].total,
-            this.list[5].total,
-            this.list[6].total
+            this.list[0].total != null ? this.list[0].total : this.list[0].totalNum,
+            this.list[1].total != null ? this.list[1].total : this.list[1].totalNum,
+            this.list[2].total != null ? this.list[2].total : this.list[2].totalNum,
+            this.list[3].total != null ? this.list[3].total : this.list[3].totalNum,
+            this.list[4].total != null ? this.list[4].total : this.list[4].totalNum,
+            this.list[5].total != null ? this.list[5].total : this.list[5].totalNum,
+            this.list[6].total != null ? this.list[6].total : this.list[6].totalNum
           ],
           animationDuration: 2800,
           animationEasing: 'cubicInOut'

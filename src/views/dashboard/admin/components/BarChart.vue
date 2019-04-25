@@ -7,7 +7,8 @@
 
   require('echarts/theme/macarons') // echarts theme
   import {debounce} from '@/utils'
-  import {statsGetClick} from '@/api/server'
+  import {statsGetClick, statsClickGetList} from '@/api/server'
+  import {setStore, getStore, rasPublic} from '@/utils/local'
 
   const animationDuration = 6000
 
@@ -54,13 +55,24 @@
     },
     methods: {
       getList() {
-        statsGetClick()
-          .then(res => {
-            this.list = res.data
-            if (this.list.length) {
-              this.initChart()
-            }
-          })
+        if (getStore('roleid') == 2) {
+          statsClickGetList()
+            .then(res => {
+              this.list = res.data
+              if (this.list.length) {
+                this.initChart()
+              }
+            })
+        }else {
+          statsGetClick()
+            .then(res => {
+              this.list = res.data
+              if (this.list.length) {
+                this.initChart()
+              }
+            })
+        }
+
       },
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons')
@@ -83,13 +95,13 @@
           xAxis: [{
             type: 'category',
             data: [
-              this.list[0].createDate,
-              this.list[1].createDate,
-              this.list[2].createDate,
-              this.list[3].createDate,
-              this.list[4].createDate,
-              this.list[5].createDate,
-              this.list[6].createDate
+              this.list[0].createDate != null ? this.list[0].createDate : this.list[0].createdate,
+              this.list[1].createDate != null ? this.list[1].createDate : this.list[1].createdate,
+              this.list[2].createDate != null ? this.list[2].createDate : this.list[2].createdate,
+              this.list[3].createDate != null ? this.list[3].createDate : this.list[3].createdate,
+              this.list[4].createDate != null ? this.list[4].createDate : this.list[4].createdate,
+              this.list[5].createDate != null ? this.list[5].createDate : this.list[5].createdate,
+              this.list[6].createDate != null ? this.list[6].createDate : this.list[6].createdate
             ],
             axisTick: {
               alignWithLabel: true

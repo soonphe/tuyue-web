@@ -11,11 +11,11 @@
       active-text-color="#409EFF"
     >
       <template>
-        <el-menu-item index="/dashboard" class="submenu-title-noDropdown">
-          <!--<i class="el-icon-info"></i>-->
-          <i class="sidebar-icon fa fa-tachometer"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
+        <!--<el-menu-item index="/dashboard" class="submenu-title-noDropdown">-->
+          <!--&lt;!&ndash;<i class="el-icon-info"></i>&ndash;&gt;-->
+          <!--<i class="sidebar-icon fa fa-tachometer"></i>-->
+          <!--<span slot="title">首页</span>-->
+        <!--</el-menu-item>-->
       </template>
       <sidebar-item v-for="route in routes" :key="route.id" :item="route" :base-path="route.url"></sidebar-item>
     </el-menu>

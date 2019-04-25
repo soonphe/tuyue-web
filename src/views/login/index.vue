@@ -150,7 +150,8 @@ export default {
                   this.saveMenus(arr)
                 })
               this.loading = false
-              this.$router.push({path: '/'})
+              this.$router.push({path: '/dashboard'})
+
             }).catch(() => {
               this.loading = false
             })
