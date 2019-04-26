@@ -10,9 +10,9 @@ Vue.use(Router)
 
 // export default new Router({
 const router = new Router({
-  // 定义基础路径 //
-  base: '/dist/',
-  // 后端支持可开
+  // 定义基础路径，例如，如果整个单页应用服务在 /app/ 下，然后 base 就应该设为 "/app/"
+  // base: '/dist/',
+  // 后端支持可开，可选值："hash"(浏览器环境) | "history" | "abstract"(Node.js 环境)
   // mode: 'history',
   scrollBehavior: () => ({y: 0}),
   routes: [

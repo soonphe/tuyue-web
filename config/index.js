@@ -67,8 +67,9 @@ module.exports = {
     assetsPublicPath: './',
     // assetsPublicPath: '/dist/',
 
-    // 构建生产环境版本时是否开启source map，sourcmap是用来debug编译后文件的，通过映射到编译前文件来实现
-    productionSourceMap: true,
+    // 构建生产环境版本时是否开启source map，sourcmap是用来debug编译后文件的，
+    // 通过映射到编译前文件来实现确定是哪一行代码报错，但同时也暴露项目源码
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
