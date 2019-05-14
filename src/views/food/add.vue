@@ -42,7 +42,7 @@
 
 <script>
 import {VueEditor, Quill} from 'vue2-editor'
-import {foodAdd, foodUpdate} from '@/api/server'
+import {upload,foodAdd, foodUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 

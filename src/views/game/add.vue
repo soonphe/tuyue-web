@@ -39,7 +39,7 @@
 
 <script>
 import {VueEditor, Quill} from 'vue2-editor'
-import {gameAdd, gameUpdate} from '@/api/server'
+import {upload,gameAdd, gameUpdate} from '@/api/server'
 import {imageServer, uploadServer} from '@/utils/global'
 import {mapState} from 'vuex'
 

@@ -51,7 +51,7 @@
 
 <script>
   import {VueEditor, Quill} from 'vue2-editor'
-  import {cityArticleAdd, cityArticleUpdate} from '@/api/server'
+  import {upload,cityArticleAdd, cityArticleUpdate} from '@/api/server'
   import {imageServer, uploadServer} from '@/utils/global'
   import {mapState} from 'vuex'
 
