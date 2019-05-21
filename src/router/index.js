@@ -237,7 +237,7 @@ const router = new Router({
         {
           path: 'index',
           name: 'statsPadIndex',
-          component: () => import('@/views/stats2/pad'),
+          component: () => import('@/views/stats2/padUser'),
           meta: {title: '平板用户统计', icon: 'el-icon-picture-outline'}
         }]
     },
@@ -270,7 +270,7 @@ const router = new Router({
           path: 'open',
           name: 'open',
           component: () => import('@/views/stats/openpad'),
-          meta: {title: '开机统计', icon: 'el-icon-picture-outline'}
+          meta: {title: '新增用户统计', icon: 'el-icon-picture-outline'}
         }
       ]
     },

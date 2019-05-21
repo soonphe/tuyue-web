@@ -10,6 +10,7 @@
       </el-date-picker>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel" type="primary" icon="el-icon-edit">导出</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="syncData" type="primary" icon="el-icon-edit">数据同步</el-button>
     </div>
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="createdate" label="创建时间" align="center" width="200">
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import {statsPadGetList} from '@/api/server'
+import {statsPadGetList, statsSyncPadUser} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
 import {mapActions} from 'vuex'
@@ -129,6 +130,17 @@ export default {
         })
         this.downloadLoading = false
       })
+    },
+    syncData () {
+      this.listLoading = true
+      statsSyncPadUser()
+        .then(res => {
+          //延迟进度条1.5秒
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        })
+      this.getList()
     },
     formatJson (filterVal, jsonData) {
       // 提取list中的数据，并转化为数组

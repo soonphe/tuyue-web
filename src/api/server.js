@@ -93,6 +93,15 @@ export const statsUserGetList = params => api.get('/statsUser/getList', params)
 export const statsPadGetList = params => api.get('/statsPad/getList', params)
 
 /**
+ * 统计数据同步
+ */
+export const statsSyncClick = params => api.get('/statsClick/syncData', params)
+export const statsSyncOpenpad = params => api.get('/statsUser/syncData', params)
+export const statsSyncPadUser = params => api.get('/statsPad/syncData', params)
+export const statsSyncStay = params => api.get('/statsStay/syncData', params)
+export const statsSyncUnlock = params => api.get('/statsLock/syncData', params)
+
+/**
  * 平板用户统计
  */
 export const statsGetPadUser = params => api.get('/padUser/getList', params)

@@ -7,7 +7,8 @@ import {Message, MessageBox} from 'element-ui'
 const http = axios.create({
   // baseURL: 'http://localhost:8080/',
   baseURL: process.env.API_ROOT,
-  timeout: 5000,
+  // timeout: 5000,
+  timeout: 120000,
   withCredentials: true
   /* 配置默认请求头，axios默认上传json格式数据 */
   // headers: {
