@@ -380,6 +380,27 @@ const router = new Router({
       ]
     },
     {
+      path: '/advertStats',
+      component: Layout,
+      redirect: '/advertiserAdvert/index',
+      name: 'advertStats',
+      meta: {title: '广告商广告', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'advertStatsIndex',
+          component: () => import('@/views/advertStats/index'),
+          meta: {title: '查看数据', icon: 'el-icon-picture-outline'}
+        },
+        {
+          path: 'groupIndex',
+          name: 'advertStatsAdd',
+          component: () => import('@/views/advertStats/groupIndex'),
+          meta: {title: '查看车组', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
       path: '/videoType',
       component: Layout,
       redirect: '/videoType/index',

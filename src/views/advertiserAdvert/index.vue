@@ -43,7 +43,6 @@
           <span>{{scope.row.endtime}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="groupid" label="车组ID" align="center"></el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.state == 0">未审核</span>
@@ -54,8 +53,9 @@
       <!--<el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>-->
       <!--<el-table-column prop="showduration" label="展示时长" align="center"></el-table-column>-->
       <el-table-column prop="remark" label="说明" align="center"></el-table-column>
-      <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="350" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" @click="goGroup(scope.row)">查看车组</el-button>
           <el-button type="primary" @click="put(scope.row)">编辑</el-button>
           <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
         </template>
@@ -189,6 +189,13 @@ export default {
         // path: ({path: '/advert/add', params: {typeList: this.typeList}}) 错误
         // 通过路由名称跳转，携带参数（已成功）
         // name: 'advertAdd', params: {typeList: this.typeList}
+      })
+    },
+    goGroup (row) {
+      this.saveAdvert(row)
+      setStore('advertId', row.id)
+      this.$router.push({
+        path: '/advertStats/groupIndex'
       })
     },
     put (row) {

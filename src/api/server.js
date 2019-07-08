@@ -121,7 +121,16 @@ export const advertGetList = params => api.get('/advert/getList', params)
 export const advertAdd = (data, params) => api.postjson('/advert/add', data, params)
 export const advertDelete = params => api.get('/advert/delete', params)
 export const advertUpdate = (data, params) => api.postjson('/advert/update', data, params)
-export const advertGetGroupListByAdvertId = params => api.get('/advert/getGroupListByAdvertId', params)
+
+/**
+ * 广告车组关联
+ */
+export const advertGetGroupListByAdvertId = params => api.get('/advertGroup/getListByAdvertId', params)
+
+/**
+ * 广告统计
+ */
+export const advertStatsGetList = params => api.get('/advertStats/getList', params)
 
 /**
  * 广告商

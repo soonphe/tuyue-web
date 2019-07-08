@@ -10,7 +10,11 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
       <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
       <el-table-column prop="name" label="车组名称" align="center"></el-table-column>
-      <el-table-column prop="spec" label="规格" align="center"></el-table-column>
+      <el-table-column prop="spec" label="规格" align="center">
+        <template slot-scope="scope">
+          <span>{{scope.row.spec}}</span>台
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="是否运行" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.status == 0">未运营</span>

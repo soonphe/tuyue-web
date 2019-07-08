@@ -4,28 +4,21 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
                 :placeholder="$t('table.name')" v-model="listQuery.name"></el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加
+      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="add" type="primary" icon="el-icon-edit">添加-->
       </el-button>
     </div>
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column prop="id" label="ID" align="center" width="95"></el-table-column>
-      <el-table-column prop="name" label="名称" align="center"></el-table-column>
-      <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
-      <el-table-column prop="contact" label="联系人" align="center" ></el-table-column>
-      <el-table-column prop="state" label="状态" align="center" >
+      <el-table-column prop="createdate" label="创建时间" align="center" width="200">
         <template slot-scope="scope">
-          <span v-if="scope.row.state == 0">开启</span>
-          <span v-else>关闭</span>
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.createdate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="advertiserid" label="广告商ID" align="center" :formatter="typeFormat" ></el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="put(scope.row)">编辑</el-button>
-          <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column prop="click" label="点击次数" align="center"></el-table-column>
+      <el-table-column prop="staytime" label="停留时长" align="center"></el-table-column>
+      <el-table-column prop="carouselcount" label="轮播次数" align="center"></el-table-column>
+      <el-table-column prop="exposure" label="曝光次数" align="center"></el-table-column>
     </el-table>
 
     <div class="pagination-container">
@@ -43,15 +36,29 @@
 </template>
 
 <script>
-import { advertiserGetList, advertSponsorGetList, advertSponsorDelete} from '@/api/server'
+import { advertStatsGetList} from '@/api/server'
 import waves from '@/directive/waves' // 水波纹指令
 import {imageServer, pageSize} from '@/utils/global'
 import {mapActions} from 'vuex'
+import {mapState} from 'vuex'
+import {setStore, getStore} from '@/utils/local'
 
 export default {
   // 定义局部指令
   directives: {
     waves
+  },
+  created () {
+    this.listQuery.advertId = this.form.advertId
+    this.listQuery.groupId = this.form.groupId
+    this.listQuery.advertId = getStore('advertId')
+    this.listQuery.groupId = getStore('groupId')
+    this.getList()
+  },
+  computed: {
+    ...mapState({
+      form: state => state.Advert.advert,
+    })
   },
   data () {
     return {
@@ -62,8 +69,8 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: pageSize,
-        title: undefined,
-        type: undefined
+        advertId: undefined,
+        groupId: undefined,
       },
       imageServer: imageServer,
       typeList: []
@@ -78,10 +85,6 @@ export default {
       }
       return statusMap[status]
     }
-  },
-  created () {
-    // this.getTypeData()
-    this.getList()
   },
   methods: {
     ...mapActions(['saveAdvert', 'saveAdvertType', 'clearAdvert']),
@@ -106,11 +109,7 @@ export default {
     // },
     getList () {
       this.listLoading = true
-      advertiserGetList(this.listQuery)
-        .then(res => {
-          this.advertiserList = res.data
-        })
-      advertSponsorGetList(this.listQuery)
+      advertStatsGetList(this.listQuery)
         .then(res => {
           this.list = res.data
           this.total = parseInt(res.ext)
