@@ -198,6 +198,11 @@ export const bookDelete = params => api.get('/book/delete', params)
 export const bookUpdate = params => api.postjson('/book/update', params)
 
 /**
+ *
+ */
+export const zhbookGetList = params => api.get('/zhbook/getList', params)
+
+/**
  * 游戏类别
  */
 export const gameTypeGetList = params => api.get('/gameType/getList', params)

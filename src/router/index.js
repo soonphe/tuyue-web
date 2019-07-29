@@ -479,6 +479,21 @@ const router = new Router({
       ]
     },
     {
+      path: '/zhbook',
+      component: Layout,
+      redirect: '/zhbook/index',
+      name: 'zhbook',
+      meta: {title: '纵横书籍管理', icon: 'el-icon-goods'},
+      children: [
+        {
+          path: 'index',
+          name: 'zhbookIndex',
+          component: () => import('@/views/zhbook/index'),
+          meta: {title: '纵横书籍管理', icon: 'el-icon-picture-outline'}
+        }
+      ]
+    },
+    {
       path: '/book',
       component: Layout,
       redirect: '/book/index',
