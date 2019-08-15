@@ -1,6 +1,6 @@
-# Vue_tuyue项目架构：
+# Vue Project Structure：
 
-## 1.基础项目架构
+## 1.Base framework
 + 技术选型：vue
 + 路由管理：router
 + 网络请求：axios
@@ -11,7 +11,7 @@
 + cookie管理：js-cookie
 + 加密工具：js-md5
 
-## 2.业务模块
+## 2.module
 + api：网络请求
 + assets：基础静态资源(图片和css)
 + components：自定义控件组件(首页面包屑，错误日志，github引流，左部菜单展开收缩控件，全屏控件)
@@ -23,7 +23,7 @@
 + views：UI组件
 + vuex：状态管理
 
-## 2.view渲染
+## 3.view
 + UI框架：element-ui
 + CSS：less + sass
 + 图表：echarts
