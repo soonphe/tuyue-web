@@ -121,6 +121,9 @@ export default {
       advertGroupQuery: {
         id: null
       },
+      groupQuery: {
+        pageSize: 999
+      },
       uploadData: {
         file_type: 'img'
       },
@@ -148,7 +151,7 @@ export default {
       }
     },
     getGroupTypeData () {
-      groupGetList()
+      groupGetList(this.groupQuery)
         .then(res => {
           this.groupTypeList = res.data
         })
@@ -160,7 +163,8 @@ export default {
           this.advertGroupList = res.data
           // 循环判断车组状态
           this.advertGroupList.forEach((item, index) => {
-            this.groupIdAttr.push(item.groupid)
+            this.groupIdAttr.push(item.groupId)
+            console.log(this.groupIdAttr)
           })
         })
     },

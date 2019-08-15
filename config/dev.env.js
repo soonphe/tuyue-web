@@ -7,5 +7,5 @@ module.exports = merge(prodEnv, {
   // 定义开发模式接口访问根路径，例：API_ROOT: '"//www.baidu.com/api"'
   API_ROOT: '"/api"',
   // 文件访问路径
-  FILE_SERVER :  '"http://47.98.121.127/upload"'
+  FILE_SERVER :  '"http://47.98.121.127/uploadtuyue"'
 })
